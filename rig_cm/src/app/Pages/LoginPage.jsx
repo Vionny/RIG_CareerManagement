@@ -6,7 +6,6 @@ import { connectToSOAP } from "../SLC/SOAP"
 import { useRouter } from "next/navigation";
 import HomePage from "./HomePage"
 
-
 export function LoginPage () {
 
     var [initialInput, setInitialInput] =useState()
@@ -20,7 +19,9 @@ export function LoginPage () {
         var res = connectToSOAP(initial,passwordInput)
         // console.log(res.object);
         if(res == 'Success'){
-            return <HomePage/>
+            console.log('Success')
+            var router = useRouter
+            router.push('/src/app/Pages/HomePage.jsx')
         }
     }
 
