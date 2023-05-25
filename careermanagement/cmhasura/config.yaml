@@ -1,6 +1,0 @@
-version: 3
-endpoint: postgres://postgres:postgres@localhost:5432/rigcm
-metadata_directory: metadata
-actions:
-  kind: synchronous
-  handler_webhook_baseurl: http://localhost:3000
