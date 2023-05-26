@@ -35,7 +35,7 @@ const LoginPage = () => {
                         <h2 className="card-title">Login</h2>
                         <input className="input input-bordered input-primary w-full max-w-xs" onChange={(e) =>{setInitialInput(e.target.value)}} type="text" placeholder="Initial"></input>
                         <input className="input input-bordered input-primary w-full max-w-xs" onChange={(e)=>{setPasswordInput(e.target.value)}} type="password" placeholder="Password"></input>
-                        <button className="btn btn-primary w-32" onClick ={pushHome}>Login</button>
+                        <button className="btn btn-primary w-32" onClick ={()=>{loginButtonClick()}}>Login</button>
                         <p value={errText}></p>
                     </div>
                 </div>
