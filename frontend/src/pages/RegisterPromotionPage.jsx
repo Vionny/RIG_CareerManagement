@@ -1,5 +1,5 @@
 
-
+import "../app/globals.css"
 const RegisterPromotionPage = ()=>{
 
 

@@ -2,18 +2,19 @@
 
 # dependencies
 /frontend/node_modules
+/frontend/node_modules/.bin
 /.pnp
 .pnp.js
 /backend/node_modules
 
 #SLC
-frontend/src/SLC
+/frontend/src/SLC
 
 # testing
 /coverage
 
 # next.js
-/.next/
+/frontend/.next/
 /out/
 
 # production
@@ -37,3 +38,7 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+
+
+
