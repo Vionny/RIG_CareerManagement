@@ -1,15 +1,16 @@
 import Navbar from "@/components/Navbar"
 import Sidebar from "@/components/Sidebar"
-import  HomePage  from "@/pages/HomePage"
+import ManageCareerChoice from "@/pages/ManageCareerChoice"
 
-function Home(){
+
+function ChoiceManage(){
 
     return (
         <div>
             <Navbar/>
             <div className="flex flex-row">
                 <Sidebar/>
-                <HomePage/>
+                <ManageCareerChoice/>
             </div>
             
         </div>
@@ -17,4 +18,4 @@ function Home(){
 
 
 }   
-export default Home
+export default ChoiceManage

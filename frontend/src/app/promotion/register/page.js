@@ -1,3 +1,5 @@
+import Navbar from "@/components/Navbar"
+import Sidebar from "@/components/Sidebar"
 import RegisterPromotionPage from "@/pages/RegisterPromotionPage"
 
 function RegisterPromotion(){
@@ -5,7 +7,11 @@ function RegisterPromotion(){
 
     return (
         <div>
-            <RegisterPromotionPage/>
+            <Navbar/>
+            <div className="flex flex-row">
+                <Sidebar/>
+                <RegisterPromotionPage/>
+            </div>
         </div>
     )
 }

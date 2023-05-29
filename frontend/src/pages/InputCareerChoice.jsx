@@ -1,6 +1,6 @@
 import "@/app/globals.css"
 
-const InputCareer = () => {
+const InputCareerChoice = () => {
 
 
     return (
@@ -47,4 +47,4 @@ const InputCareer = () => {
 
 }
 
-export default InputCareer
+export default InputCareerChoice

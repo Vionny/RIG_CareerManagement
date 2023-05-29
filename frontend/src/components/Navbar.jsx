@@ -7,7 +7,7 @@ const Navbar = () => {
   return (
     <div className="navbar bg-base-100 drop-shadow-md">
       <div className="navbar-start ">
-        <a className="btn btn-ghost normal-case text-lg h-8">Career Management</a>
+        <a className="btn btn-ghost normal-case text-lg h-8" href="/home">Career Management</a>
       </div>
 
       <div className=" navbar-center">
@@ -16,10 +16,10 @@ const Navbar = () => {
             <Link href="/">Division</Link>
           </li>
           <li>
-            <Link href="/promotion">Promotion</Link>
+            <Link href="/promotion/register">Promotion</Link>
           </li>
           <li>
-            <Link href="/about">Career Choice</Link>
+            <Link href="/career/choice">Career Choice</Link>
           </li>
         </ul>
       </div>
@@ -28,19 +28,18 @@ const Navbar = () => {
         <div className="dropdown">
           <label tabIndex={0} className="btn btn-ghost normal-case text-base w-40">Hi, Profile Name</label>
           <ul tabIndex={0} className="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-40">
-            <li><Link href="/LoginPage" className="h-8">Logout</Link></li>
+            <li><Link href="/" className="h-8">Logout</Link></li>
           </ul>
          </div>
 
 
-         <div className="dropdown">
-          <label tabIndex={0} className="btn btn-ghost normal-case text-base w-44">Even 2022/2023</label>
-          <ul tabIndex={0} className="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-44 h-max">
-            <li><a className="h-8">Odd 2022/2023</a></li>
-            <li><a className="h-8">Short 2022/2023</a></li>
-            <li><a className="h-8">Odd 2021/2022</a></li>
-          </ul>
-         </div>
+         <div className="btn btn-ghost">
+            <select className="normal-case text-base bg-base-100">
+              <option>Even 2022/2023</option>
+              <option>Odd 2022/2023</option>
+              <option>Short 2022/2023</option>
+            </select>
+        </div>
          
       </div>
     </div>

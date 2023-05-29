@@ -1,4 +1,4 @@
-
+"use client"
 import "../app/globals.css"
 import {useState} from 'react'
 const RegisterPromotionPage = ()=>{

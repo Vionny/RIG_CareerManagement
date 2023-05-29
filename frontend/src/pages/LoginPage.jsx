@@ -19,7 +19,7 @@ const LoginPage = () => {
         console.log(res)
         if(res == 'Success'){
             console.log('Success')
-            router.push('/home')
+            router.push('/HomePage')
             // axios.get(process.env.NEXT_PUBLIC_BACKEND_URL).then((res) => {
             //     console.log(res.data.users)
             //     // setUsers(res.data.users)
