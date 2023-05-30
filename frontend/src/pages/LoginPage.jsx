@@ -30,7 +30,7 @@ const LoginPage = () => {
     }
 
     return (
-        <div className="flex justify-center items-center h-max">
+        <div className="flex justify-center items-center min-h-screen bg-base-200">
             <div >  
                 <div className="card w-96 bg-base-100 shadow-xl flex-auto">
                     <div className="card-body flex flex-col items-center">
