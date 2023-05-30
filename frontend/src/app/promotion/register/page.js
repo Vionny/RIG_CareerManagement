@@ -1,6 +1,6 @@
 import Navbar from "@/components/Navbar"
 import Sidebar from "@/components/Sidebar"
-import RegisterPromotionPage from "@/pages/RegisterPromotionPage"
+import RegisterPromotionPage from "@/pages/Promotion/RegisterPromotionPage"
 
 function RegisterPromotion(){
 

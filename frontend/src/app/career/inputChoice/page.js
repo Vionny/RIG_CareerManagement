@@ -1,6 +1,6 @@
 import Navbar from "@/components/Navbar"
 import Sidebar from "@/components/Sidebar"
-import InputCareerChoice from "@/pages/InputCareerChoice"
+import InputCareerChoice from "@/pages/Career/InputCareerChoice"
 
 function InputCareer(){
 

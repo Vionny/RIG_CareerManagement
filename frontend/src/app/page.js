@@ -1,4 +1,4 @@
-import Navbar from "@/components/Navbar";
+
 import LoginPage from "@/pages/LoginPage";
 
 function Login() {
@@ -8,7 +8,7 @@ function Login() {
       <div>
           
           <LoginPage/>
-          {/* <InputCareerChoicePage/> */}
+
 
       </div>
     )
