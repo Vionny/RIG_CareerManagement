@@ -1,6 +1,4 @@
 
-import "../app/globals.css"
-
 function ManageCareerChoice(){
 
 

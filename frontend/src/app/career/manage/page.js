@@ -1,6 +1,6 @@
 import Navbar from "@/components/Navbar"
 import Sidebar from "@/components/Sidebar"
-import ManageCareerChoice from "@/pages/ManageCareerChoice"
+import ManageCareerChoice from "@/pages/Career/ManageCareerChoice"
 
 
 function ChoiceManage(){

@@ -1,20 +1,20 @@
+
 import Navbar from "@/components/Navbar"
 import Sidebar from "@/components/Sidebar"
-import RegisterPromotionPage from "@/pages/Promotion/RegisterPromotionPage"
 import "@/app/globals.css"
+import ViewSnP from "@/pages/Semester/ViewSnP"
 
-function RegisterPromotion(){
+function viewSemesterNPeriod(){
 
-
-    return (
+    return(
         <div>
             <Navbar/>
             <div className="flex flex-row">
                 <Sidebar/>
-                <RegisterPromotionPage/>
+                <ViewSnP/>
             </div>
         </div>
-    )
+    )    
 }
 
-export default RegisterPromotion
+export default viewSemesterNPeriod
