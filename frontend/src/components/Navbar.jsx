@@ -19,7 +19,7 @@ const Navbar = () => {
             <Link href="/promotion/register">Promotion</Link>
           </li>
           <li>
-            <Link href="/career/choice">Career Choice</Link>
+            <Link href="/career/inputChoice">Career Choice</Link>
           </li>
         </ul>
       </div>

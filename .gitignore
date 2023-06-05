@@ -6,7 +6,6 @@
 /.pnp
 .pnp.js
 /backend/node_modules
-
 #SLC
 /frontend/src/SLC
 

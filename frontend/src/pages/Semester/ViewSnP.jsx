@@ -4,8 +4,8 @@ const ViewSnP= ()=>{
 
 
     return(
-        <div className="min-h-screen">
-            <div className="bg-base-200 flex justify-center w-full ">
+        <div className="min-h-screen  w-full ">
+            <div className="bg-base-200 flex justify-center  w-full ">
                 <p className="font-bold text-left ">Semester & Period</p>
                 
             </div>
@@ -15,7 +15,42 @@ const ViewSnP= ()=>{
                             <p className="text-lg text-left">Semester List</p>
                             <button className="btn text-xs bg-blue-700 h-0">+ Add</button>
                         </div>
-                        <p>If a dog chews shoes whose shoes does he choose?</p>
+                        <div className="overflow-x-auto">
+                            <table className="table w-full">
+                                {/* head */}
+                                <thead>
+                                <tr>
+                                    <th></th>
+                                    <th>Name</th>
+                                    <th>Job</th>
+                                    <th>Favorite Color</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {/* row 1 */}
+                                <tr>
+                                    <th>1</th>
+                                    <td>Cy Ganderton</td>
+                                    <td>Quality Control Specialist</td>
+                                    <td>Blue</td>
+                                </tr>
+                                {/* row 2 */}
+                                <tr className="hover">
+                                    <th>2</th>
+                                    <td>Hart Hagerty</td>
+                                    <td>Desktop Support Technician</td>
+                                    <td>Purple</td>
+                                </tr>
+                                {/* row 3 */}
+                                <tr>
+                                    <th>3</th>
+                                    <td>Brice Swyre</td>
+                                    <td>Tax Accountant</td>
+                                    <td>Red</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                            </div>
                     </div>
                 </div>
         </div>
