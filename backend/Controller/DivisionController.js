@@ -1,18 +1,15 @@
 const { pool } = require("../Database/DatabaseConfig");
 
-function getAllDivision(){
-    return new Promise((resolve, reject) => {
-        const query = "SELECT * FROM division"
+const getAllDivision = (req, res, next) =>{
+    const query = "SELECT * FROM division"
 
-        pool.query(query, (error, result) => {
-            if (error) {
-                console.log(error)
-                reject(error);
+    pool.query(query, (error, result) => {
+        if (error) {
+            console.log(error)
             res.status(500).send('Error fetching division');
-            } else {
-                resolve(result.rows);
-            }
-        });
+        } else {
+            res.status(200).send(result.rows);
+        }
     });
 }
 
