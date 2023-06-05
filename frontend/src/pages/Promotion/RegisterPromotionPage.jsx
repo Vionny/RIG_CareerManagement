@@ -29,7 +29,7 @@ const RegisterPromotionPage = ()=>{
     if(!loadDiv) return <div></div>
     else
     return(
-        <div className=" pl-10 pr-10 pt-5 bg-base-200 h-full">
+        <div className=" pl-10 pr-10 py-5 bg-base-200 min-h-full w-full ">
 
             <article className="prose base mb-5">
                 <h2>Promotion Registration for Even 2022/2023</h2>
@@ -44,7 +44,7 @@ const RegisterPromotionPage = ()=>{
             </div>
 
             <div className="flex flex-row gap-x-5 mb-5">
-                <div className="rounded-md shadow-xl flex items-center p-3 bg-slate-300 w-1/4 h-12">
+                <div className="rounded-md flex items-center p-3 bg-slate-300 w-1/4 h-12">
                     <h2 className="card-title ">Priority 1</h2>    
                 </div>
 
@@ -75,15 +75,15 @@ const RegisterPromotionPage = ()=>{
                 </div>
             </div>
 
-            <div className="card bg-base-100 shadow-xl flex-auto h-2/5">
+            <div className="card bg-base-100  flex-auto h-96 ">
                 <div className="card-body flex flex-col">
                     <h2 className="card-title ">Reason :</h2>
-                    <textarea className="textarea-md w-full h-3/4 resize-none bg-base-200" placeholder="My reason is..."></textarea>
+                    <textarea className="textarea-md w-full h-64 resize-none bg-base-200" placeholder="My reason is..."></textarea>
                 </div>
             </div>   
 
 
-            <div className="flex justify-end mt-5">
+            <div className="flex justify-end my-5">
                 <button className="btn btn-primary w-32 mr-3" >Submit</button>
             </div>
 
