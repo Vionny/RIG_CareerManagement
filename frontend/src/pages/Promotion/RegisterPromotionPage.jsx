@@ -1,21 +1,30 @@
 "use client"
 import "@/app/globals.css"
 import {useEffect, useState} from 'react'
+import { getRoleByDivision } from "../Controller/RoleController"
 const axios = require("axios")
 
 const RegisterPromotionPage = ()=>{
     const [divisions,setDivisions] = useState({})
     const [loadDiv,setLoadDiv] = useState(false)
     const [selectedDivision, setSelectedDivision] = useState();
+    const [roles,setRoles] = useState();
+    const [selectedRole, setSelectedRole] = useState();
+    async function getRoles(divisionid){
+        await axios.get(process.env.NEXT_PUBLIC_BACKEND_URL+'/getRoleByDivision/'+divisionid).then((res)=>{
+            setRoles(res.data)
+        })
+        // console.log(roles)
+        
+    } 
     useEffect(()=>{
-        axios.get(process.env.NEXT_PUBLIC_BACKEND_URL+'/getAllDivision').then((res) => {
+        axios.get(process.env.NEXT_PUBLIC_BACKEND_URL+'/getAllDivision').then(async (res) => {
             // console.log(res.data)
             setDivisions(res.data)  
-            setSelectedDivision(divisions[0])
             setLoadDiv(true)
-            console.log(divisions)
         })
     },[!loadDiv])
+
 
     const btnActive = false;
     if(!loadDiv) return <div></div>
@@ -51,15 +60,16 @@ const RegisterPromotionPage = ()=>{
 
                 <div className="dropdown justify-start w-2/4">
                     <label tabIndex={0} className="btn btn-ghost bg-base-100 flex justify-start  normal-case card-title ">{
-                       (selectedDivision == undefined ? "Loading..." : selectedDivision.divisionname)
+                       (selectedDivision == undefined ? "Choose Division" : selectedDivision.divisionname)
                     }</label>
                     <ul tabIndex={0} className="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-full h-max">
                         {
                             divisions.map((division,index)=>{
-                                if(division.divisionid != 'DIV007')
-                                return(<li key={index} onClick={()=>{
+                                if(division.divisionid.substring(0,division.divisionid.indexOf(' ')) !== "DIV007")
+                                {return(<li key={index} onClick={()=>{
                                     setSelectedDivision(division)
-                                }}><a className="h-8">{division.divisionname}</a></li>)
+                                    getRoles(division.divisionid)
+                                }}><a className="h-8">{division.divisionname}</a></li>)}
                             })
                         }
                     </ul>
@@ -68,7 +78,7 @@ const RegisterPromotionPage = ()=>{
 
             <div className="card bg-base-100 shadow-xl flex-auto h-2/5">
                 <div className="card-body flex flex-col">
-                    <h2 className="card-title ">Reason:</h2>
+                    <h2 className="card-title ">Reason :</h2>
                     <textarea className="textarea-md w-full h-3/4 resize-none bg-base-200" placeholder="My reason is..."></textarea>
                 </div>
             </div>   
@@ -81,10 +91,8 @@ const RegisterPromotionPage = ()=>{
             <div className="flex flex-row gap-x-5">
                 <div className="card bg-base-100 w-3/5">
                     <div className="card-body ">
-                        <h2 className="card-title">Operations Management Officer</h2>
-                        <p>
-                            Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quis, pariatur. Quos qui soluta, blanditiis cumque ducimus earum quo deleniti non sapiente voluptas sed minus laboriosam magni quam? Asperiores, doloribus vel?Lorem ipsum dolor sit amet consectetur adipisicing elit. Placeat repellendus atque aspernatur officia illo temporibus. Excepturi sapiente, eaque, quia voluptas voluptate quod sint dolor cumque distinctio laudantium sit! Quis, aliquam!
-                        </p>
+                        <h2 className="card-title">{(selectedRole !== undefined ? selectedRole.rolename : "")}</h2>
+                        {(selectedRole !== undefined ? <p>{selectedRole.rolerequirements}</p> : <p></p>)}
                     </div>
                 </div>
 
@@ -92,16 +100,17 @@ const RegisterPromotionPage = ()=>{
                     <div className="card-body ">
                         <h2 className="card-title">Requirements / Job Description</h2>
                         <div>
-                        {divisions.map((division) => (
-                            <button
-                                onClick={() => setSelectedDivision(division)}
-                                className={"badge badge-ghost" + (selectedDivision === division ? " badge badge-primary" : "")}
-                            >
-                                {division.name}
-                            </button>
+                        {((selectedDivision == undefined ||roles == undefined) ? "" :
+                            roles.map((role,index) => (
+                                <button key={index}
+                                    onClick={() => setSelectedRole(role)}
+                                    className={"badge badge-ghost" + (selectedRole === role ? " badge badge-primary" : "")}
+                                >{role.rolename}
+                                </button>)
+                            
                         ))}
 
-                                {/* <p>{selectedDivision.requirements}</p> */}
+                                {(selectedDivision !== undefined ? <p>{selectedDivision.divisiondescription}</p> : <p></p>)}
                             
                         </div>
                         
