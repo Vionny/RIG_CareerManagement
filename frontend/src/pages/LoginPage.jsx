@@ -24,6 +24,8 @@ const LoginPage = () => {
             //     console.log(res.data.users)
             //     // setUsers(res.data.users)
             // })
+        }else{
+            setErrorText(res)
         }
 
         // soap3()
@@ -38,7 +40,7 @@ const LoginPage = () => {
                         <input className="input input-bordered input-primary w-full max-w-xs" onChange={(e) =>{setInitialInput(e.target.value)}} type="text" placeholder="Initial"></input>
                         <input className="input input-bordered input-primary w-full max-w-xs" onChange={(e)=>{setPasswordInput(e.target.value)}} type="password" placeholder="Password"></input>
                         <button className="btn btn-primary w-64" onClick ={()=>{loginButtonClick()}}>Login</button>
-                        <p value={errText}></p>
+                        <p className= "text-error">{errText}</p>
                     </div>
                 </div>
             </div>
