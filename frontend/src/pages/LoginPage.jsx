@@ -6,6 +6,7 @@ const axios = require("axios")
 
 import { useRouter } from "next/navigation"
 import { connectToSOAP } from "@/SLC/SOAP"
+import { getAst } from "../components/UserContext";
 const LoginPage = () => {
     const router = useRouter();
     const [initialInput, setInitialInput] =useState()
@@ -23,7 +24,6 @@ const LoginPage = () => {
             axios.get(process.env.NEXT_PUBLIC_BACKEND_URL+'/getUser/'+initial.toUpperCase()).then((res) => {
                 // console.log(res.data.userrole)
                 sessionStorage.setItem('initial', initialInput)
-                
                 router.push('/home')
                 // setUsers(res.data.users)
             })

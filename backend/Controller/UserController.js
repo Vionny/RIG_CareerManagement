@@ -2,7 +2,7 @@ const { pool } = require("../Database/DatabaseConfig");
 
 const getUser = (req, res, next) =>{
     const initial = req.params.initial
-    const query = "SELECT * FROM assistant WHERE initial = $1"
+    const query = "SELECT initial, assistantname, roleid FROM assistant WHERE initial = $1"
 
     pool.query(query, [initial], (error, result) => {
         if (error) {
