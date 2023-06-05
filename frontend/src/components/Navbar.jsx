@@ -10,7 +10,7 @@ const Navbar = () => {
     
   useEffect(() => {
     axios.get(process.env.NEXT_PUBLIC_BACKEND_URL+'/getAllSemester').then((res) => {
-      console.log(res.data)
+      // console.log(res.data)
       setSemester(res.data)
       setLoadSem(true)
     })
@@ -49,8 +49,8 @@ const Navbar = () => {
            <div className="btn btn-ghost">
               <select className="normal-case text-base bg-base-100">
                 {
-                  semesters.map((sem)=>{
-                    return(<option>{sem.semestername}</option>)
+                  semesters.map((sem,index)=>{
+                    return(<option key={index}>{sem.semestername}</option>)
                   })
                 }
               </select>
