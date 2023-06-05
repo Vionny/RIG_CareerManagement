@@ -4,11 +4,15 @@ const InputCareerChoice = () => {
 
 
     return (
-        <div  className="pl-10 pr-10 pt-5 bg-base-200 h-screen">
+        <div  className="pl-10 pr-10 pt-5 bg-base-200 min-h-screen w-full">
             
 
             <article className="prose base mb-5">
-                <h2>Career Choice for Even 2022/2023</h2>
+                <h2>
+                    <span>Career Choice for </span> 
+                    <span>Even 2022/2023</span> 
+                    </h2>
+
             </article>
 
 
@@ -21,7 +25,7 @@ const InputCareerChoice = () => {
 
             
 
-            <div className="card bg-base-100 shadow-xl flex-auto h-2/5">
+            <div className="card bg-base-100 shadow-xl flex-auto h-96">
                 <div className="card-body flex flex-col">
                     <div className="flex ">
                         <h2 className="card-title mr-3">Desicion:</h2>
@@ -32,7 +36,7 @@ const InputCareerChoice = () => {
                             </select>
                     </div>
                         <h2 className="card-title ">Rencana Ke Depannya</h2>
-                    <textarea className="textarea-md w-full h-3/4 resize-none bg-base-200" placeholder="Rencana ke depannya saya akan.."></textarea>
+                    <textarea className="textarea-md w-full h-56 resize-none bg-base-200" placeholder="Rencana ke depannya saya akan.."></textarea>
                 </div>
             </div>   
 
