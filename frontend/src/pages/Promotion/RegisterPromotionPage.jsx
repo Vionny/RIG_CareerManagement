@@ -6,16 +6,16 @@ const axios = require("axios")
 const RegisterPromotionPage = ()=>{
     const [divisions,setDivisions] = useState({})
     const [loadDiv,setLoadDiv] = useState(false)
+    const [selectedDivision, setSelectedDivision] = useState();
     useEffect(()=>{
         axios.get(process.env.NEXT_PUBLIC_BACKEND_URL+'/getAllDivision').then((res) => {
-            console.log(res.data)
+            // console.log(res.data)
             setDivisions(res.data)  
+            setSelectedDivision(divisions[0])
             setLoadDiv(true)
+            console.log(divisions)
         })
     },[!loadDiv])
-
-    
-    const [selectedDivision, setSelectedDivision] = useState(divisions[0]);
 
     const btnActive = false;
     if(!loadDiv) return <div></div>
@@ -50,11 +50,18 @@ const RegisterPromotionPage = ()=>{
                 </div>
 
                 <div className="dropdown justify-start w-2/4">
-                    <label tabIndex={0} className="btn btn-ghost bg-base-100 flex justify-start  normal-case card-title ">Choose Division</label>
+                    <label tabIndex={0} className="btn btn-ghost bg-base-100 flex justify-start  normal-case card-title ">{
+                       (selectedDivision == undefined ? "Loading..." : selectedDivision.divisionname)
+                    }</label>
                     <ul tabIndex={0} className="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-full h-max">
-                        <li><a className="h-8">Operation Management</a></li>
-                        <li><a className="h-8">Network Administrator</a></li>
-                        <li><a className="h-8">Database Administrator</a></li>
+                        {
+                            divisions.map((division,index)=>{
+                                if(division.divisionid != 'DIV007')
+                                return(<li key={index} onClick={()=>{
+                                    setSelectedDivision(division)
+                                }}><a className="h-8">{division.divisionname}</a></li>)
+                            })
+                        }
                     </ul>
                 </div>
             </div>
@@ -85,17 +92,16 @@ const RegisterPromotionPage = ()=>{
                     <div className="card-body ">
                         <h2 className="card-title">Requirements / Job Description</h2>
                         <div>
-                            {divisions.map((division, index) => (
-                                <button
-                                key={index}
+                        {divisions.map((division) => (
+                            <button
                                 onClick={() => setSelectedDivision(division)}
-                                className= 'badge badge-ghost ${selectedDivision === division ? "badge badge-primary" : ""}'
-                                >
+                                className={"badge badge-ghost" + (selectedDivision === division ? " badge badge-primary" : "")}
+                            >
                                 {division.name}
-                                </button>
-                            ))}
-                               
-                                <p>{selectedDivision.description}</p>
+                            </button>
+                        ))}
+
+                                {/* <p>{selectedDivision.requirements}</p> */}
                             
                         </div>
                         

@@ -50,12 +50,9 @@ const Navbar = () => {
               <select className="normal-case text-base bg-base-100">
                 {
                   semesters.map((sem)=>{
-                    <option>{sem.semestername}</option>
+                    return(<option>{sem.semestername}</option>)
                   })
                 }
-                <option>Even 2022/2023</option>
-                <option>Odd 2022/2023</option>
-                <option>Short 2022/2023</option>
               </select>
           </div>
            
