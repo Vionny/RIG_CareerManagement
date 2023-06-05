@@ -1,21 +1,25 @@
 "use client"
 import "@/app/globals.css"
-import {useState} from 'react'
+import {useEffect, useState} from 'react'
+const axios = require("axios")
+
 const RegisterPromotionPage = ()=>{
-
-
-    let divisions = [
-        { name: "Division 1", description: "Description 1" },
-        { name: "Division 2", description: "Description 2" },
-        { name: "Division 3", description: "Description 3" },
-        // Add more divisions as needed
-    ];
+    const [divisions,setDivisions] = useState({})
+    const [loadDiv,setLoadDiv] = useState(false)
+    useEffect(()=>{
+        axios.get(process.env.NEXT_PUBLIC_BACKEND_URL+'/getAllDivision').then((res) => {
+            console.log(res.data)
+            setDivisions(res.data)  
+            setLoadDiv(true)
+        })
+    },[!loadDiv])
 
     
     const [selectedDivision, setSelectedDivision] = useState(divisions[0]);
 
     const btnActive = false;
-
+    if(!loadDiv) return <div></div>
+    else
     return(
         <div className=" pl-10 pr-10 pt-5 bg-base-200 h-full">
 
