@@ -1,9 +1,9 @@
 
 const express = require('express');
-const { getAllSemester } = require('../Controller/SemesterController');
+const { getAllSemester, getCurrentSemester } = require('../Controller/SemesterController');
 const router = express.Router()
 
 router.get('/getAllSemester',getAllSemester)
-
+router.get('/getCurrSemester',getCurrentSemester)
 
 module.exports = router
