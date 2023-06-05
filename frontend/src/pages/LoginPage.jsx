@@ -8,9 +8,9 @@ import { useRouter } from "next/navigation"
 import { connectToSOAP } from "@/SLC/SOAP"
 const LoginPage = () => {
     const router = useRouter();
-    var [initialInput, setInitialInput] =useState()
-    var [passwordInput, setPasswordInput] = useState()
-    var [errText, setErrorText] = useState()
+    const [initialInput, setInitialInput] =useState()
+    const [passwordInput, setPasswordInput] = useState()
+    const [errText, setErrorText] = useState()
     const loginButtonClick = async (e) =>{
         var lower = initialInput.substring(0,2).toLowerCase()
         var gen = initialInput.substring(2,initialInput.length)
@@ -18,17 +18,18 @@ const LoginPage = () => {
         var res = await connectToSOAP(initial,passwordInput)
         console.log(res)
         if(res == 'Success'){
+            
             console.log('Success')
-            router.push('/home')
-            axios.get(process.env.NEXT_PUBLIC_BACKEND_URL).then((res) => {
-                console.log(res.data.users)
+            axios.get(process.env.NEXT_PUBLIC_BACKEND_URL+'/getUser/'+initial.toUpperCase()).then((res) => {
+                // console.log(res.data.userrole)
+                sessionStorage.setItem('initial', initialInput)
+                
+                router.push('/home')
                 // setUsers(res.data.users)
             })
         }else{
             setErrorText(res)
         }
-
-        // soap3()
     }
 
     return (

@@ -1,7 +1,6 @@
 "use client"
 import "@/app/globals.css"
 import {useEffect, useState} from 'react'
-import { getRoleByDivision } from "../Controller/RoleController"
 const axios = require("axios")
 
 const RegisterPromotionPage = ()=>{
