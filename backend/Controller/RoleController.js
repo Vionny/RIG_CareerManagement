@@ -1,38 +1,32 @@
 const { pool } = require("../Database/DatabaseConfig");
 
-function getAllRole(){
-    return new Promise((resolve, reject) => {
-        const query = "SELECT * FROM role"
+const getAllRole = (req, res, next) =>{
+    const query = "SELECT * FROM role"
 
-        pool.query(query, (error, result) => {
-            if (error) {
-                console.log(error)
-                reject(error);
+    pool.query(query, (error, result) => {
+        if (error) {
+            console.log(error)
             res.status(500).send('Error fetching role');
-            } else {
-                resolve(result.rows);
-            }
-        });
+        } else {
+            res.status(200).send(result.rows);
+        }
     });
 }
 
-function getRoleByDivision(divID){
-    return new Promise((resolve, reject) => {
-        const query = "SELECT * FROM role WHERE divisionid = $1"
-
-        pool.query(query,[divID], (error, result) => {
-            if (error) {
-                console.log(error)
-                reject(error);
+const getRoleByDivision = (req, res, next) =>{
+    const query = "SELECT * FROM role WHERE divisionid = $1"
+    const divID = req.params.divID
+    pool.query(query,[divID], (error, result) => {
+        if (error) {
+            console.log(error)
             res.status(500).send('Error fetching role');
-            } else {
-                resolve(result.rows);
-            }
-        });
+        } else {
+            res.status(200).send(result.rows);
+        }
     });
 }
 
 module.exports = {
     getAllRole,
     getRoleByDivision
- };
+};
