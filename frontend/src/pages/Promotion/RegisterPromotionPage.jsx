@@ -49,12 +49,7 @@ const RegisterPromotionPage = ()=>{
                 </div>
 
                 <div className="dropdown w-1/4">
-                    <label tabIndex={0} className="btn btn-ghost bg-base-100 flex justify-start normal-case card-title ">Total Period</label>
-                    <ul tabIndex={0} className="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-full h-max">
-                        <li><a className="h-8">1 semester</a></li>
-                        <li><a className="h-8">2 semester</a></li>
-                        <li><a className="h-8">3 semester</a></li>
-                    </ul>
+                    <input type="text" placeholder="Type here" className="input input-bordered w-full max-w-xs" />
                 </div>
 
                 <div className="dropdown justify-start w-2/4">
