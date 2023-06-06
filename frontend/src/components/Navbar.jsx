@@ -56,7 +56,7 @@ const Navbar = () => {
   
   
            <div className="btn btn-ghost">
-              <select className="normal-case text-base bg-base-100"  onChange={(event) => setCurrSemester(event.target.value)}>
+              <select className="normal-case text-base bg-base-300 p-2"  onChange={(event) => setCurrSemester(event.target.value)}>
                 {
                   semesters.map((sem,index)=>{
                     return(<option key={index} value={sem.semesterid}>{sem.semestername}</option>)
