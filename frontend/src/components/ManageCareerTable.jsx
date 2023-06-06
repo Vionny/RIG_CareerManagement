@@ -1,5 +1,7 @@
 "use client"
 import "@/app/globals.css"
+import "@/components/EditCareerModal.jsx"
+import EditCareerModal from "@/components/EditCareerModal.jsx";
 import React from 'react';
 
 const ManageCareerTable = ({ staff }) => {
@@ -38,7 +40,7 @@ const ManageCareerTable = ({ staff }) => {
                 </div>
             </td>
             <td>
-                <button>Edit</button>
+                <EditCareerModal staff={staffItem.initial}/>
             </td>
             
           </tr>
