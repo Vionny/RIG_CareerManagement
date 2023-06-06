@@ -50,7 +50,7 @@ const getLastPriorityInsert = (req,res,next) =>{
             res.status(500).send('Error fetching semester');
         } else {
             if(result.rowCount == 0) res.status(200).send('0')
-            else res.status(200).send(result.rowCount)
+            else result.status(200).send(result.rowCount)
         }
     });
 
