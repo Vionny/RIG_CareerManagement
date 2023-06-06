@@ -47,11 +47,7 @@ const RegisterPromotionPage = ()=>{
         
         console.log(data)
         axios
-          .post(process.env.NEXT_PUBLIC_BACKEND_URL + '/promotion/registerPromotion', data, {
-            headers: {
-              'Content-Type': 'application/json',
-            },
-          })
+          .post(process.env.NEXT_PUBLIC_BACKEND_URL + '/promotion/registerPromotion', data)
           .then((res) => {
             console.log(res);
           })
