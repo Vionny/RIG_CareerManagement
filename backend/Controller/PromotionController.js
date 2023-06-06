@@ -1,9 +1,9 @@
 const { pool } = require("../Database/DatabaseConfig");
 
 const insertPromotionRegistration = (req, res, next) =>{
-    console.log(req)
+    console.log(req.body)
     console.log('hi')
-    // res.send(req)
+    res.send(req.body)
 }
 
 const getLastPriorityInsert = (req, res, next) =>{

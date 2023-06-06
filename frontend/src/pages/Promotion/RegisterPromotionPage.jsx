@@ -37,16 +37,21 @@ const RegisterPromotionPage = ()=>{
     const insertPromotion = () => {
         var data = {
           initial: sessionStorage.getItem('initial'),
-          semesterid: sessionStorage.getItem('selectedsemester'),
+          semesterid: sessionStorage.getItem('selectedSemester'),
           roleid: selectedRole.roleid,
           priority: priority,
           registrationreason: reasonInput,
           iscandidate: false,
           period: periodInput,
         };
-      
+        
+        console.log(data)
         axios
-          .post(process.env.NEXT_PUBLIC_BACKEND_URL + '/promotion/registerPromotion', data)
+          .post(process.env.NEXT_PUBLIC_BACKEND_URL + '/promotion/registerPromotion', data, {
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          })
           .then((res) => {
             console.log(res);
           })
@@ -54,6 +59,7 @@ const RegisterPromotionPage = ()=>{
             console.error(error);
           });
       };
+      
 
     const btnActive = false;
 
