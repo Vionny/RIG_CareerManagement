@@ -17,8 +17,13 @@ const Navbar = () => {
       setSemester(res.data)
       setLoadSem(true)
     })
-  },[!loadSem])
+  },[loadSem])
 
+  function setCurrSemester (semesterid){
+    console.log(semesterid)
+    // if(sessionStorage.getItem('selectedSemester') !== semesterid) {
+    // sessionStorage.setItem('selectedSemester',semesterid)}
+  }
 
   if(loadSem){
     return (
@@ -51,10 +56,10 @@ const Navbar = () => {
   
   
            <div className="btn btn-ghost">
-              <select className="normal-case text-base bg-base-100">
+              <select className="normal-case text-base bg-base-100"  onChange={(event) => setCurrSemester(event.target.value)}>
                 {
                   semesters.map((sem,index)=>{
-                    return(<option key={index}>{sem.semestername}</option>)
+                    return(<option key={index} value={sem.semesterid}>{sem.semestername}</option>)
                   })
                 }
               </select>

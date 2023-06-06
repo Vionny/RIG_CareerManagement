@@ -24,7 +24,11 @@ const LoginPage = () => {
             axios.get(process.env.NEXT_PUBLIC_BACKEND_URL+'/getUser/'+initial.toUpperCase()).then((res) => {
                 // console.log(res.data.userrole)
                 sessionStorage.setItem('initial', initialInput)
-                router.push('/home')
+
+                axios.get(process.env.NEXT_PUBLIC_BACKEND_URL+ '/getCurrSemester').then((res)=>{
+                    sessionStorage.setItem('selectedSemester',res.data[0].semesterid)
+                    router.push('/home')
+                })
                 // setUsers(res.data.users)
             })
         }else{
