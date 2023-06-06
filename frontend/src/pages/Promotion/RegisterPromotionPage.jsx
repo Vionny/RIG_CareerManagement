@@ -1,7 +1,9 @@
 "use client"
 import "@/app/globals.css"
-import {useEffect, useState} from 'react'
+import { UserContext } from "@/components/UserContext"
+import {useContext, useEffect, useState} from 'react'
 const axios = require("axios")
+axios.defaults.headers.post['Content-Type'] = 'application/json';
 
 const RegisterPromotionPage = ()=>{
     const [divisions,setDivisions] = useState({})
@@ -9,6 +11,11 @@ const RegisterPromotionPage = ()=>{
     const [selectedDivision, setSelectedDivision] = useState();
     const [roles,setRoles] = useState();
     const [selectedRole, setSelectedRole] = useState();
+    const [priority, setPriority] = useState()
+    const [periodInput, setPeriodInput] = useState()
+    const [reasonInput, setReasonInput] = useState()
+    const { user } = useContext(UserContext);
+
     async function getRoles(divisionid){
         await axios.get(process.env.NEXT_PUBLIC_BACKEND_URL+'/getRoleByDivision/'+divisionid).then((res)=>{
             setRoles(res.data)
@@ -21,11 +28,36 @@ const RegisterPromotionPage = ()=>{
             // console.log(res.data)
             setDivisions(res.data)  
             setLoadDiv(true)
+            
+        })
+        axios.get(process.env.NEXT_PUBLIC_BACKEND_URL+'/promotion/getLastPriorityInsert').then((res)=>{
+            setPriority(res.data + 1)
         })
     },[!loadDiv])
-
+    const insertPromotion = () => {
+        var data = {
+          initial: sessionStorage.getItem('initial'),
+          semesterid: sessionStorage.getItem('selectedsemester'),
+          roleid: selectedRole.roleid,
+          priority: priority,
+          registrationreason: reasonInput,
+          iscandidate: false,
+          period: periodInput,
+        };
+      
+        axios
+          .post(process.env.NEXT_PUBLIC_BACKEND_URL + '/promotion/registerPromotion', data)
+          .then((res) => {
+            console.log(res);
+          })
+          .catch((error) => {
+            console.error(error);
+          });
+      };
 
     const btnActive = false;
+
+
     if(!loadDiv) return <div></div>
     else
     return(
@@ -45,11 +77,13 @@ const RegisterPromotionPage = ()=>{
 
             <div className="flex flex-row gap-x-5 mb-5">
                 <div className="rounded-md flex items-center p-3 bg-slate-300 w-1/4 h-12">
-                    <h2 className="card-title ">Priority 1</h2>    
+                    <h2 className="card-title ">Priority {
+                       (priority == undefined ? "0" : priority)
+                    }</h2>    
                 </div>
 
                 <div className="dropdown w-1/4">
-                    <input type="text" placeholder="Type here" className="input input-bordered w-full max-w-xs" />
+                    <input onChange={(e)=>{setPeriodInput(e.target.value)}} type="text" placeholder="Type here" className="input input-bordered w-full max-w-xs" />
                 </div>
 
                 <div className="dropdown justify-start w-2/4">
@@ -73,13 +107,13 @@ const RegisterPromotionPage = ()=>{
             <div className="card bg-base-100  flex-auto h-96 ">
                 <div className="card-body flex flex-col">
                     <h2 className="card-title ">Reason :</h2>
-                    <textarea className="textarea-md w-full h-64 resize-none bg-base-200" placeholder="My reason is..."></textarea>
+                    <textarea onChange={(e)=>{setReasonInput(e.target.value)}} className="textarea-md w-full h-64 resize-none bg-base-200" placeholder="My reason is..."></textarea>
                 </div>
             </div>   
 
 
             <div className="flex justify-end my-5">
-                <button className="btn btn-primary w-32 mr-3" >Submit</button>
+                <button onClick={()=>insertPromotion()} className="btn btn-primary w-32 mr-3" >Submit</button>
             </div>
 
             <div className="flex flex-row gap-x-5">
