@@ -33,7 +33,7 @@ function ManageCareerChoice(){
 
     return(
         <div className="bg-base-200 flex flex-col pl-10 pr-10 pt-5 justify-center w-full min-h-max">
-            <div className="bg-base-300 h-max">
+            <div className=" h-max">
 
                 <article className="prose base mb-5">
                     <h2>Career Choice Management</h2>
@@ -49,7 +49,7 @@ function ManageCareerChoice(){
                 </div>
             </div>
 
-            <div className="bg-slate-400 flex flex-row  gap-x-5 h-96 mt-8">
+            <div className=" flex flex-row  gap-x-5 h-96 mt-8">
                     <div className='card bg-base-100 w-2/5'>
                         <div className='card-body'>
                             <h2 className='card-title'>Career Choice Statistic</h2>
