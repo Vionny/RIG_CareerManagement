@@ -23,7 +23,7 @@ const LoginPage = () => {
             console.log('Success')
             axios.get(process.env.NEXT_PUBLIC_BACKEND_URL+'/getUser/'+initial.toUpperCase()).then((res) => {
                 // console.log(res.data.userrole)
-                sessionStorage.setItem('initial', initialInput)
+                sessionStorage.setItem('initial', initial.toUpperCase())
 
                 axios.get(process.env.NEXT_PUBLIC_BACKEND_URL+ '/getCurrSemester').then((res)=>{
                     sessionStorage.setItem('selectedSemester',res.data[0].semesterid)

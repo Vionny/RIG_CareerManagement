@@ -22,8 +22,8 @@ const Navbar = () => {
   function setCurrSemester (semesterid){
     console.log(semesterid)
     // if(sessionStorage.getItem('selectedSemester') !== semesterid) {
-    // sessionStorage.setItem('selectedSemester',semesterid)}
-  }
+    sessionStorage.setItem('selectedSemester',semesterid)}
+  
 
   if(loadSem){
     return (
@@ -48,7 +48,7 @@ const Navbar = () => {
   
         <div className="navbar-end">
           <div className="dropdown">
-            <label tabIndex={0} className="btn btn-ghost normal-case text-base w-40 text-right">Hi, {(user==undefined ? "" : user.assistantname.substring(0,user.assistantname.indexOf(' ')))}</label>
+            <label tabIndex={0} className="btn btn-ghost normal-case text-base w-40 text-right">Hi, {(user==undefined ? "" : user.initial)}</label>
             <ul tabIndex={0} className="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-40">
               <li><Link href="/" className="h-8">Logout</Link></li>
             </ul>
