@@ -1,8 +1,5 @@
 const { pool } = require("../Database/DatabaseConfig");
 
-const insertPromotionDetail= ()=>{
-
-}
 
 const insertPromotionRegistration = (req, res, next) =>{
     console.log(req.body)
@@ -20,40 +17,49 @@ const insertPromotionRegistration = (req, res, next) =>{
     const insertTableHeaderQuery = "INSERT INTO promotionregistration VALUES ($1,$2,$3)"
     const insertTableDetailQuery = "INSERT INTO promotionregistrationdetail VALUES($1,$2,$3,$4,$5,$6)"
     if(req.body.priority ==1 ){
-        pool.query(insertTableHeaderQuery,[promoRegisID,initial,semesterid], (error, res) => {
+        pool.query(insertTableHeaderQuery,[promoRegisID,initial,semesterid], (error, result) => {
         if (error) {
             console.log(error)
             res.status(500).send('Error adding table header promotion registration');
         } else {
-            res.status(200).send('Success')
+            // res.status(200).send('Success')
+            insertTableDetail()
         }
         });
+    }else{
+        insertTableDetail()
     }
 
-    pool.query(insertTableDetailQuery,[promoRegisID,roleID,priority, registrationreason, iscandidate,period], (error, res) => {
-        if (error) {
-            console.log(error)
-            res.status(500).send('Error adding table detail promotion registration');
-        } else {
-            res.status(200).send('Success')
-            
-        }
+  function insertTableDetail() {
+    pool.query(insertTableDetailQuery, [promoRegisID, roleID, priority, registrationreason, iscandidate, period], (error, result) => {
+      if (error) {
+        console.log(error);
+        res.status(500).send('Error adding table detail promotion registration');
+      } else {
+        res.status(200).send('Success');
+      }
     });
+  }
 }
 
 const getLastPriorityInsert = (req,res,next) =>{
-    const query = "SELECT priority FROM promotionregistration pr JOIN promotionregistrationdetail prd ON pr.promotionregistrationid = prd.promotionregistrationid WHERE initial = 'VA22-1' ORDER BY priority DESC LIMIT 1"
 
-    pool.query(query, (error, result) => {
+    const initial = req.params.initial
+    const query = "SELECT priority FROM promotionregistration pr JOIN promotionregistrationdetail prd ON pr.promotionregistrationid = prd.promotionregistrationid WHERE initial = $1 ORDER BY priority DESC LIMIT 1"
+
+    pool.query(query,[initial], (error, result) => {
         if (error) {
             console.log(error)
-            res.status(500).send('Error fetching semester');
+            res.send('Error fetching semester');
         } else {
-            if(result.rowCount == 0) res.status(200).send('0')
-            else result.status(200).send(result.rowCount)
+            
+            // console.log(result.rows[0].priority)
+            if (result.rows.length === 0) {
+                res.status(200).send('0');
+              } 
+            else res.status(200).send(result.rows);
         }
     });
-
 }
 module.exports={
     insertPromotionRegistration,

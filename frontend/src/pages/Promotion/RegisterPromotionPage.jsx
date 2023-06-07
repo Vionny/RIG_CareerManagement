@@ -28,11 +28,13 @@ const RegisterPromotionPage = ()=>{
             // console.log(res.data)
             setDivisions(res.data)  
             setLoadDiv(true)
-            
+            axios.get(process.env.NEXT_PUBLIC_BACKEND_URL+'/promotion/getLastPriorityInsert/'+sessionStorage.getItem('initial')).then((res)=>{
+                console.log(res.data)
+                if(res.data === 0) setPriority(1)
+                else setPriority(res.data[0].priority + 1)
+            })
         })
-        axios.get(process.env.NEXT_PUBLIC_BACKEND_URL+'/promotion/getLastPriorityInsert').then((res)=>{
-            setPriority(res.data + 1)
-        })
+        
     },[!loadDiv])
     const insertPromotion = () => {
         var data = {
