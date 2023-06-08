@@ -19,6 +19,7 @@ const insertPromotionRegistration = (req, res, next) =>{
     if(req.body.priority ==1 ){
         pool.query(insertTableHeaderQuery,[promoRegisID,initial,semesterid], (error, result) => {
         if (error) {
+          console.log(insertTableDetailQuery,insertTableDetailQuery)
             console.log(error)
             res.status(500).send('Error adding table header promotion registration');
         } else {
@@ -45,9 +46,10 @@ const insertPromotionRegistration = (req, res, next) =>{
 const getLastPriorityInsert = (req,res,next) =>{
 
     const initial = req.params.initial
-    const query = "SELECT priority FROM promotionregistration pr JOIN promotionregistrationdetail prd ON pr.promotionregistrationid = prd.promotionregistrationid WHERE initial = $1 ORDER BY priority DESC LIMIT 1"
+    const semesterid = req.params.semesterid
+    const query = "SELECT priority FROM promotionregistration pr JOIN promotionregistrationdetail prd ON pr.promotionregistrationid = prd.promotionregistrationid WHERE initial = $1 AND semesterid = $2 ORDER BY priority DESC LIMIT 1"
 
-    pool.query(query,[initial], (error, result) => {
+    pool.query(query,[initial,semesterid], (error, result) => {
         if (error) {
             console.log(error)
             res.send('Error fetching semester');

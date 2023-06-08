@@ -15,6 +15,8 @@ const RegisterPromotionPage = ()=>{
     const [periodInput, setPeriodInput] = useState()
     const [reasonInput, setReasonInput] = useState()
     const { user } = useContext(UserContext);
+    const [errText, setErrText] = useState("")
+
 
     async function getDivision(divisionid){
         await axios.get(process.env.NEXT_PUBLIC_BACKEND_URL+'/getDivisionByRole/'+divisionid).then((res)=>{
@@ -29,7 +31,7 @@ const RegisterPromotionPage = ()=>{
             // console.log(res.data)
             setRoles(res.data)  
             setLoadRole(true)
-            axios.get(process.env.NEXT_PUBLIC_BACKEND_URL+'/promotion/getLastPriorityInsert/'+sessionStorage.getItem('initial')).then((res)=>{
+            axios.get(process.env.NEXT_PUBLIC_BACKEND_URL+'/promotion/getLastPriorityInsert/'+sessionStorage.getItem('initial')+'/'+sessionStorage.getItem('selectedSemester')).then((res)=>{
                 console.log(res.data)
                 if(res.data === 0) setPriority(1)
                 else setPriority(res.data[0].priority + 1)
@@ -38,25 +40,32 @@ const RegisterPromotionPage = ()=>{
         
     },[loadRole])
     const insertPromotion = () => {
-        var data = {
-          initial: sessionStorage.getItem('initial'),
-          semesterid: sessionStorage.getItem('selectedSemester'),
-          roleid: selectedRole.roleid,
-          priority: priority,
-          registrationreason: reasonInput,
-          iscandidate: false,
-          period: periodInput,
-        };
-        
-        console.log(data)
-        axios
-          .post(process.env.NEXT_PUBLIC_BACKEND_URL + '/promotion/registerPromotion', data)
-          .then((res) => {
-            console.log(res);
-          })
-          .catch((error) => {
-            console.error(error);
-          });
+        if(periodInput == null || periodInput.length == 0) setErrText("Please input period field")
+        else if(selectedRole == undefined) setErrText("Please choose a role to register")
+        else if(reasonInput == null || reasonInput.length == 0) setErrText("Please input reason field")
+        else if(isNaN(periodInput)) setErrText("Period must be numeric")
+        else {
+            var data = {
+                initial: sessionStorage.getItem('initial'),
+                semesterid: sessionStorage.getItem('selectedSemester'),
+                roleid: selectedRole.roleid,
+                priority: priority,
+                registrationreason: reasonInput,
+                iscandidate: false,
+                period: periodInput,
+              };
+              
+              console.log(data)
+              axios
+                .post(process.env.NEXT_PUBLIC_BACKEND_URL + '/promotion/registerPromotion', data)
+                .then((res) => {
+                  console.log(res);
+                })
+                .catch((error) => {
+                  console.error(error);
+                });
+        }
+       
       };
       
 
@@ -79,7 +88,6 @@ const RegisterPromotionPage = ()=>{
                     <span className="font-bold text-red-800">You can only choose 3, so think wisely. The registration period will be ended on Friday, June 2nd, 2023</span>
                 </div>
             </div>
-
             <div className="flex flex-row gap-x-5 mb-5">
                 <div className="rounded-md flex items-center p-3 bg-slate-300 w-1/4 h-12">
                     <h2 className="card-title ">Priority {
@@ -112,7 +120,15 @@ const RegisterPromotionPage = ()=>{
                     <textarea onChange={(e)=>{setReasonInput(e.target.value)}} className="textarea-md w-full h-64 resize-none bg-base-200" placeholder="My reason is..."></textarea>
                 </div>
             </div>   
-
+            
+            {((errText == ""||errText==null)? <div></div>:
+            <div className="alert bg-red-200 shadow-lg mb-5">
+                <div>
+                    <svg xmlns="http://www.w3.org/2000/svg" className="stroke-current flex-shrink-0 h-6 w-6 text-red-800" fill="none" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                    <span className="font-bold text-red-800">{errText}</span>
+                </div>
+            </div>
+            )}
 
             <div className="flex justify-end my-5">
                 <button onClick={()=>insertPromotion()} className="btn btn-primary w-32 mr-3" >Submit</button>
