@@ -15,18 +15,30 @@ const Navbar = () => {
   useEffect(() => {
     axios.get(process.env.NEXT_PUBLIC_BACKEND_URL+'/getAllSemester').then((res) => {
       setSemester(res.data)
-      axios.get(process.env.NEXT_PUBLIC_BACKEND_URL+ '/getCurrSemester').then((res)=>{
-        // console.log(res)
-        if(!sessionStorage.getItem('selectedSemester')){setCurrSemester(res.data[0].semesterid)}
-        setLoadSem(true)
-      })
+      if(sessionStorage.getItem('selectedSemester')==undefined){
+        axios.get(process.env.NEXT_PUBLIC_BACKEND_URL+ '/getCurrSemester').then((res)=>{
+          // console.log(res)
+          setCurrSemester(res.data[0].semesterid)
+          setLoadSem(true)
+        })
+      }
+      else{
+        axios.get(process.env.NEXT_PUBLIC_BACKEND_URL+ '/getSelectedSemester/'+sessionStorage.getItem('selectedSemester')).then((res)=>{
+          // console.log(res)
+          setCurrSemester(res.data[0].semesterid)
+          setLoadSem(true)
+        })
+      }
     })
   },[loadSem])
 
   function setCurrSemester (semesterid){
-    // console.log(semesterid[0].semesterid)
+    console.log(parent.window.navigation.currentEntry.url)
+    const url = parent.window.navigation.currentEntry.url
+    const pathname = url.substring(url.indexOf('3000')+4, url.length)
+    console.log(url,pathname)
     sessionStorage.setItem('selectedSemester',semesterid)
-    router.refresh()
+    router.push(pathname)
   }
   const logoutHandler =()=>{
     sessionStorage.removeItem('selectedSemester')
@@ -65,7 +77,7 @@ const Navbar = () => {
   
            <div className="btn btn-ghost">
               <select className="normal-case text-base bg-base-300 p-2"  onChange={(event) => {
-                console.log(event.target.value)
+                // console.log(event.target.value)
                 setCurrSemester(event.target.value)
                 }}>
                 {

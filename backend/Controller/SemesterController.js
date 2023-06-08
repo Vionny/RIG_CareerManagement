@@ -26,7 +26,23 @@ const getCurrentSemester = (req, res, next) =>{
     });
 }
 
+const getSelectedSemester = (req, res, next) =>{
+
+    const query = "SELECT * FROM semester WHERE semesterid = $1"
+    const semesterid = req.params.semesterid
+
+    pool.query(query,[semesterid], (error, result) => {
+        if (error) {
+            console.log(error)
+            res.status(500).send('Error fetching current semester');
+        } else {
+            res.status(200).send(result.rows)
+        }
+    });
+}
+
 module.exports = {
     getAllSemester,
-    getCurrentSemester
+    getCurrentSemester,
+    getSelectedSemester
 };
