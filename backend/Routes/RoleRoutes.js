@@ -1,6 +1,6 @@
 
 const express = require('express');
-const { getRoleByDivision, getAllRole, getAstRegisteredRole } = require('../Controller/RoleController');
+const { getRoleByDivision, getAllRole, getAstRegisteredRole, getAllRoleForPromotion } = require('../Controller/RoleController');
 const router = express.Router()
 
 router.get('/getAllRole',getAllRole)

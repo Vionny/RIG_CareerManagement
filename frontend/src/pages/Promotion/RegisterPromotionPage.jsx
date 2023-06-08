@@ -6,8 +6,8 @@ const axios = require("axios")
 axios.defaults.headers.post['Content-Type'] = 'application/json';
 
 const RegisterPromotionPage = ()=>{
-    const [divisions,setDivisions] = useState({})
-    const [loadDiv,setLoadDiv] = useState(false)
+    const [division,setDivision] = useState({})
+    const [loadRole,setLoadRole] = useState(false)
     const [selectedDivision, setSelectedDivision] = useState();
     const [roles,setRoles] = useState();
     const [selectedRole, setSelectedRole] = useState();
@@ -16,18 +16,19 @@ const RegisterPromotionPage = ()=>{
     const [reasonInput, setReasonInput] = useState()
     const { user } = useContext(UserContext);
 
-    async function getRoles(divisionid){
-        await axios.get(process.env.NEXT_PUBLIC_BACKEND_URL+'/getRoleByDivision/'+divisionid).then((res)=>{
-            setRoles(res.data)
+    async function getDivision(divisionid){
+        await axios.get(process.env.NEXT_PUBLIC_BACKEND_URL+'/getDivisionByRole/'+divisionid).then((res)=>{
+            console.log(res)
+            setDivision(res.data[0])
         })
         // console.log(roles)
         
     } 
     useEffect(()=>{
-        axios.get(process.env.NEXT_PUBLIC_BACKEND_URL+'/getAllDivision').then(async (res) => {
+        axios.get(process.env.NEXT_PUBLIC_BACKEND_URL+'/getAstRegisteredRole/'+sessionStorage.getItem('initial')+'/'+ sessionStorage.getItem('selectedSemester')).then(async (res) => {
             // console.log(res.data)
-            setDivisions(res.data)  
-            setLoadDiv(true)
+            setRoles(res.data)  
+            setLoadRole(true)
             axios.get(process.env.NEXT_PUBLIC_BACKEND_URL+'/promotion/getLastPriorityInsert/'+sessionStorage.getItem('initial')).then((res)=>{
                 console.log(res.data)
                 if(res.data === 0) setPriority(1)
@@ -35,7 +36,7 @@ const RegisterPromotionPage = ()=>{
             })
         })
         
-    },[!loadDiv])
+    },[loadRole])
     const insertPromotion = () => {
         var data = {
           initial: sessionStorage.getItem('initial'),
@@ -62,7 +63,7 @@ const RegisterPromotionPage = ()=>{
     const btnActive = false;
 
 
-    if(!loadDiv) return <div></div>
+    if(!loadRole) return <div></div>
     else
     return(
         <div className=" pl-10 pr-10 py-5 bg-base-200 min-h-full w-full ">
@@ -91,17 +92,14 @@ const RegisterPromotionPage = ()=>{
                 </div>
 
                 <div className="dropdown justify-start w-2/4">
-                    <label tabIndex={0} className="btn btn-ghost bg-base-100 flex justify-start  normal-case card-title ">{
-                       (selectedDivision == undefined ? "Choose Division" : selectedDivision.divisionname)
-                    }</label>
+                    <label tabIndex={0} className="btn btn-ghost bg-base-100 flex justify-start  normal-case card-title ">{(selectedRole !== undefined ? selectedRole.rolename : "Choose Role")}</label>
                     <ul tabIndex={0} className="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-full h-max">
                         {
-                            divisions.map((division,index)=>{
-                                if(division.divisionid.substring(0,division.divisionid.indexOf(' ')) !== "DIV007")
-                                {return(<li key={index} onClick={()=>{
-                                    setSelectedDivision(division)
-                                    getRoles(division.divisionid)
-                                }}><a className="h-8">{division.divisionname}</a></li>)}
+                            roles.map((role,index)=>{
+                                return(<li key={index} onClick={()=>{
+                                    setSelectedRole(role)
+                                    getDivision(role.divisionid)
+                                }}><a className="h-8">{role.rolename}</a></li>)
                             })
                         }
                     </ul>
@@ -130,19 +128,10 @@ const RegisterPromotionPage = ()=>{
 
                 <div className="card bg-base-100 w-2/5">
                     <div className="card-body ">
-                        <h2 className="card-title">Requirements / Job Description</h2>
+                        <h2 className="card-title">{(division !== undefined) ? <p>{division.divisionname}</p> : <p></p>}</h2>
                         <div>
-                        {((selectedDivision == undefined ||roles == undefined) ? "" :
-                            roles.map((role,index) => (
-                                <button key={index}
-                                    onClick={() => setSelectedRole(role)}
-                                    className={"badge badge-ghost" + (selectedRole === role ? " badge badge-primary" : "")}
-                                >{role.rolename}
-                                </button>)
-                            
-                        ))}
-
-                                {(selectedDivision !== undefined ? <p>{selectedDivision.divisiondescription}</p> : <p></p>)}
+                                <h2>Division Desciption</h2>
+                                {(division !== undefined) ? <p>{division.divisiondescription}</p> : <p></p>}
                             
                         </div>
                         
