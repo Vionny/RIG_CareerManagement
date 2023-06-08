@@ -1,6 +1,6 @@
 "use client"
 import "@/app/globals.css"
-import { EditSemesterModal } from "@/components/Edit/EditSemesterModal"
+import { EditSemesterModal } from "@/components/Modals/Edit/EditSemesterModal"
 import {useEffect, useState} from 'react'
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'

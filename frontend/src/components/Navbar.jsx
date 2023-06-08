@@ -2,6 +2,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import Link from "next/link";
 import { UserContext} from "./UserContext";
+import { useRouter } from "next/navigation";
 const axios = require("axios")
 
 const Navbar = () => {
@@ -9,21 +10,23 @@ const Navbar = () => {
   const [semesters,setSemester] = useState({})
   const [loadSem,setLoadSem] = useState(false)
   const { user } = useContext(UserContext);
-
+  const router = useRouter()
   // console.log(user)
   useEffect(() => {
     axios.get(process.env.NEXT_PUBLIC_BACKEND_URL+'/getAllSemester').then((res) => {
+      setSemester(res.data)
       axios.get(process.env.NEXT_PUBLIC_BACKEND_URL+ '/getCurrSemester').then((res)=>{
-        setSemester(res.data)
+        // console.log(res)
+        if(!sessionStorage.getItem('selectedSemester')){setCurrSemester(res.data[0].semesterid)}
         setLoadSem(true)
       })
     })
   },[loadSem])
 
   function setCurrSemester (semesterid){
-    console.log(semesterid)
-    // if(sessionStorage.getItem('selectedSemester') !== semesterid) {
+    // console.log(semesterid[0].semesterid)
     sessionStorage.setItem('selectedSemester',semesterid)
+    router.refresh()
   }
   const logoutHandler =()=>{
     sessionStorage.removeItem('selectedSemester')
@@ -61,7 +64,10 @@ const Navbar = () => {
   
   
            <div className="btn btn-ghost">
-              <select className="normal-case text-base bg-base-300 p-2"  onChange={(event) => setCurrSemester(event.target.value)}>
+              <select className="normal-case text-base bg-base-300 p-2"  onChange={(event) => {
+                console.log(event.target.value)
+                setCurrSemester(event.target.value)
+                }}>
                 {
                   semesters.map((sem,index)=>{
                     return(<option key={index} value={sem.semesterid}>{sem.semestername}</option>)
