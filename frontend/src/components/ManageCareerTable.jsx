@@ -1,7 +1,7 @@
 "use client"
 import "@/app/globals.css"
-import "@/components/Edit/EditCareerModal.jsx"
-import EditCareerModal from "@/components/Edit/EditCareerModal.jsx";
+import "@/components/Modals/Edit/EditCareerModal.jsx"
+import EditCareerModal from "@/components/Modals/Edit/EditCareerModal.jsx";
 import React from 'react';
 
 const ManageCareerTable = ({ staff }) => {

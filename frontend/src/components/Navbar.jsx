@@ -9,6 +9,7 @@ const Navbar = () => {
 
   const [semesters,setSemester] = useState({})
   const [loadSem,setLoadSem] = useState(false)
+  const [selectedSem,setSelectedSem] = useState ()
   const { user } = useContext(UserContext);
   const router = useRouter()
   // console.log(user)
@@ -21,24 +22,25 @@ const Navbar = () => {
           setCurrSemester(res.data[0].semesterid)
           setLoadSem(true)
         })
-      }
-      else{
+      }else{
         axios.get(process.env.NEXT_PUBLIC_BACKEND_URL+ '/getSelectedSemester/'+sessionStorage.getItem('selectedSemester')).then((res)=>{
           // console.log(res)
-          setCurrSemester(res.data[0].semesterid)
+          setSelectedSem(res.data[0])
           setLoadSem(true)
         })
       }
     })
+    // console.log()
+    
   },[loadSem])
 
   function setCurrSemester (semesterid){
     console.log(parent.window.navigation.currentEntry.url)
     const url = parent.window.navigation.currentEntry.url
     const pathname = url.substring(url.indexOf('3000')+4, url.length)
-    console.log(url,pathname)
+    // console.log(url,pathname)
     sessionStorage.setItem('selectedSemester',semesterid)
-    router.push(pathname)
+    router.replace(pathname)
   }
   const logoutHandler =()=>{
     sessionStorage.removeItem('selectedSemester')
@@ -76,13 +78,13 @@ const Navbar = () => {
   
   
            <div className="btn btn-ghost">
-              <select className="normal-case text-base bg-base-300 p-2"  onChange={(event) => {
+              <select className="normal-case text-base bg-base-300 p-2" value={sessionStorage.getItem('selectedSemester')} onChange={(event) => {
                 // console.log(event.target.value)
-                setCurrSemester(event.target.value)
+                  setCurrSemester(event.target.value)
                 }}>
                 {
                   semesters.map((sem,index)=>{
-                    return(<option key={index} value={sem.semesterid}>{sem.semestername}</option>)
+                      return <option key={index} value={sem.semesterid}>{sem.semestername}</option>
                   })
                 }
               </select>

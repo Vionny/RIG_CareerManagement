@@ -1,7 +1,7 @@
 const { pool } = require("../Database/DatabaseConfig");
 
 const  getAllSemester = (req, res, next) =>{
-    const query = "SELECT RTRIM(semesterid) semesterid, semestername, TO_CHAR(semesterstartdate:: DATE, 'yyyy-mm-dd') semesterstartdate, TO_CHAR(semesterstartdate:: DATE, 'yyyy-mm-dd') semesterenddate FROM semester"
+    const query = "SELECT semesterid, semestername, TO_CHAR(semesterstartdate:: DATE, 'yyyy-mm-dd') semesterstartdate, TO_CHAR(semesterstartdate:: DATE, 'yyyy-mm-dd') semesterenddate FROM semester"
 
     pool.query(query, (error, result) => {
         if (error) {
@@ -14,7 +14,7 @@ const  getAllSemester = (req, res, next) =>{
 }
 
 const getCurrentSemester = (req, res, next) =>{
-    const query = "SELECT RTRIM(semesterid) semesterid, semestername, TO_CHAR(semesterstartdate:: DATE, 'yyyy-mm-dd') semesterstartdate, TO_CHAR(semesterstartdate:: DATE, 'yyyy-mm-dd') semesterenddate FROM semester WHERE NOW() BETWEEN semesterstartdate AND semesterenddate "
+    const query = "SELECT semesterid, semestername, TO_CHAR(semesterstartdate:: DATE, 'yyyy-mm-dd') semesterstartdate, TO_CHAR(semesterstartdate:: DATE, 'yyyy-mm-dd') semesterenddate FROM semester WHERE NOW() BETWEEN semesterstartdate AND semesterenddate "
 
     pool.query(query, (error, result) => {
         if (error) {
