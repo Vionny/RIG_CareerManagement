@@ -3,30 +3,44 @@ import "@/app/globals.css"
 import {useEffect, useState} from 'react'
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
+const axios = require("axios")
+axios.defaults.headers.post['Content-Type'] = 'application/json';
 
 const ViewSnP= ()=>{
 
-    //semester
-    const smtList = [
-        { start: 'GH22-1', semester: 'Gratia Honestha', end: 'Assistant'},
-        { start: 'VA22-1', semester: 'Vionny Audrey Sen', end: 'Assistant'},
-        { start: 'CH21-1', semester: 'Chelsey', end: 'OP Man' },
-        { start: 'JM22-1', semester: 'Jeremy Loa', end: 'NA Staff' },
-      ];
-
-    
+    const [semesters,setSemesters] =useState({})
+    const [loadSem, setLoadSem] =useState(false)
     //date
     const [startPromotion, setStartP] = useState(new Date());
     const [endPromotion, setEndP] = useState(new Date());
 
     const [startRegistration, setStartR] = useState(new Date());
     const [endRegistration, setEndR] = useState(new Date());
+    useEffect(()=>{
+        axios.get(process.env.NEXT_PUBLIC_BACKEND_URL+'/getAllSemester').then((res) => {
+            // console.log(res.data)
+            setSemesters(res.data)  
+            setLoadSem(true)
+        })
+        
+    },[loadSem])
 
 
+    if(!loadSem) return <div></div>
+    else
     return(
-        <div className="bg-base-200 flex flex-col pl-10 pr-10 pt-5  w-full min-h-screen">
+        <div className="bg-base-200 flex flex-col pl-10 pr-10 pt-5 w-full min-h-screen">
+            <dialog id="my_modal_2" className="modal-box">
+                <form method="dialog">
+                    <h3 className="font-bold text-lg">Hello!</h3>
+                    <p className="py-4">Press ESC key or click outside to close</p>
+                    </form>
+                    <form method="dialog" className="modal-backdrop">
+                    <button>close</button>
+                </form>
+            </dialog>
             <article className="prose base mb-5">
-                    <h2>Semester and Period</h2>
+                <h2>Semester and Period</h2>
             </article>
 
             {/* table */}
@@ -49,14 +63,14 @@ const ViewSnP= ()=>{
                                 </tr>
                                 </thead>
                                 <tbody>
-                                {smtList.map((smt, index) => (
+                                {semesters.map((sem, index) => (
                                     <tr key={index}  >
-                                        <td>{smt.semester}</td>
-                                        <td>{smt.start}</td>
-                                        <td>{smt.end}</td>
+                                        <td>{sem.semestername}</td>
+                                        <td>{sem.semesterstartdate}</td>
+                                        <td>{sem.semesterenddate}</td>
                                         
                                         <td className="flex flex-col items-center">
-                                            <button>Edit</button>
+                                            <button onClick={() => window.my_modal_2.showModal()}>Edit</button>
                                             <button>Delete</button>
                                         </td>
                                         

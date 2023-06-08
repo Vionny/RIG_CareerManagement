@@ -13,16 +13,21 @@ const Navbar = () => {
   // console.log(user)
   useEffect(() => {
     axios.get(process.env.NEXT_PUBLIC_BACKEND_URL+'/getAllSemester').then((res) => {
-      // console.log(res.data)
-      setSemester(res.data)
-      setLoadSem(true)
+      axios.get(process.env.NEXT_PUBLIC_BACKEND_URL+ '/getCurrSemester').then((res)=>{
+        setSemester(res.data)
+        setLoadSem(true)
+      })
     })
   },[loadSem])
 
   function setCurrSemester (semesterid){
     console.log(semesterid)
     // if(sessionStorage.getItem('selectedSemester') !== semesterid) {
-    // sessionStorage.setItem('selectedSemester',semesterid)}
+    sessionStorage.setItem('selectedSemester',semesterid)
+  }
+  const logoutHandler =()=>{
+    sessionStorage.removeItem('selectedSemester')
+    sessionStorage.removeItem('initial')
   }
 
   if(loadSem){
@@ -48,9 +53,9 @@ const Navbar = () => {
   
         <div className="navbar-end">
           <div className="dropdown">
-            <label tabIndex={0} className="btn btn-ghost normal-case text-base w-40 text-right">Hi, {(user==undefined ? "" : user.assistantname.substring(0,user.assistantname.indexOf(' ')))}</label>
+            <label tabIndex={0} className="btn btn-ghost normal-case text-base w-40 text-right">Hi, {(user==undefined ? "" : user.initial)}</label>
             <ul tabIndex={0} className="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-40">
-              <li><Link href="/" className="h-8">Logout</Link></li>
+              <li><Link href="/" onClick={logoutHandler} className="h-8">Logout</Link></li>
             </ul>
            </div>
   

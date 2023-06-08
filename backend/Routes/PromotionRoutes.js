@@ -3,6 +3,6 @@ const { insertPromotionRegistration, getLastPriorityInsert } = require('../Contr
 const router = express.Router()
 
 router.post('/promotion/registerPromotion',insertPromotionRegistration)
-router.get('/promotion/getLastPriorityInsert',getLastPriorityInsert)
+router.get('/promotion/getLastPriorityInsert/:initial/:semesterid',getLastPriorityInsert)
 
 module.exports = router
