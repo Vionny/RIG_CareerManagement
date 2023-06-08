@@ -96,7 +96,7 @@ const RegisterPromotionPage = ()=>{
                 </div>
 
                 <div className="dropdown w-1/4">
-                    <input onChange={(e)=>{setPeriodInput(e.target.value)}} type="text" placeholder="Type here" className="input input-bordered w-full max-w-xs" />
+                    <input onChange={(e)=>{setPeriodInput(e.target.value)}} type="text" placeholder="Period" className="input input-bordered w-full max-w-xs" />
                 </div>
 
                 <div className="dropdown justify-start w-2/4">
