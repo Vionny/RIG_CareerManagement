@@ -35,10 +35,14 @@ const Navbar = () => {
   },[loadSem])
 
   function setCurrSemester (semesterid){
+    // console.log(idid)
     console.log(parent.window.navigation.currentEntry.url)
     const url = parent.window.navigation.currentEntry.url
     const pathname = url.substring(url.indexOf('3000')+4, url.length)
     // console.log(url,pathname)
+    setSelectedSem(semesters.find((semester) => semester.semesterid === semesterid))
+
+    console.log(selectedSem)
     sessionStorage.setItem('selectedSemester',semesterid)
     router.replace(pathname)
   }
@@ -78,9 +82,9 @@ const Navbar = () => {
   
   
            <div className="btn btn-ghost">
-              <select className="normal-case text-base bg-base-300 p-2" value={sessionStorage.getItem('selectedSemester')} onChange={(event) => {
+              <select className="normal-case text-base bg-base-300 p-2" value={selectedSem.semesterid} onChange={(event) => {
                 // console.log(event.target.value)
-                  setCurrSemester(event.target.value)
+                  setCurrSemester(event.currentTarget.value)
                 }}>
                 {
                   semesters.map((sem,index)=>{
