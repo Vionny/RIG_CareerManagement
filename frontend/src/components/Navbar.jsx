@@ -13,16 +13,18 @@ const Navbar = () => {
   // console.log(user)
   useEffect(() => {
     axios.get(process.env.NEXT_PUBLIC_BACKEND_URL+'/getAllSemester').then((res) => {
-      // console.log(res.data)
-      setSemester(res.data)
-      setLoadSem(true)
+      axios.get(process.env.NEXT_PUBLIC_BACKEND_URL+ '/getCurrSemester').then((res)=>{
+        setSemester(res.data)
+        setLoadSem(true)
+      })
     })
   },[loadSem])
 
   function setCurrSemester (semesterid){
     console.log(semesterid)
     // if(sessionStorage.getItem('selectedSemester') !== semesterid) {
-    sessionStorage.setItem('selectedSemester',semesterid)}
+    sessionStorage.setItem('selectedSemester',semesterid)
+  }
   
 
   if(loadSem){
