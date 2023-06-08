@@ -9,7 +9,7 @@ function viewSemesterNPeriod(){
 
     return(
         <UserProvider>
-            <div>
+            <div >
                 <Navbar/>
                 <div className="flex flex-row">
                     <Sidebar/>
