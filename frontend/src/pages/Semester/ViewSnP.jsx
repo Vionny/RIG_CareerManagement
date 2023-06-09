@@ -1,5 +1,6 @@
 "use client"
 import "@/app/globals.css"
+import { EditSemesterModal } from "@/components/Modals/Edit/EditSemesterModal"
 import {useEffect, useState} from 'react'
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
@@ -10,12 +11,29 @@ const ViewSnP= ()=>{
 
     const [semesters,setSemesters] =useState({})
     const [loadSem, setLoadSem] =useState(false)
+    const [selectedSemesterId, setSelectedSemesterId] = useState(null)
+
+    const [isModalOpen, setIsModalOpen] = useState(false)
+
+    const openModal = (semesterId) => {
+        console.log("open")
+        setSelectedSemesterId(semesterId)
+        setIsModalOpen(true)
+      }
+
+    const closeModal = () => {
+        setIsModalOpen(false)
+    }
+
     //date
     const [startPromotion, setStartP] = useState(new Date());
     const [endPromotion, setEndP] = useState(new Date());
 
     const [startRegistration, setStartR] = useState(new Date());
     const [endRegistration, setEndR] = useState(new Date());
+
+
+
     useEffect(()=>{
         axios.get(process.env.NEXT_PUBLIC_BACKEND_URL+'/getAllSemester').then((res) => {
             // console.log(res.data)
@@ -30,19 +48,15 @@ const ViewSnP= ()=>{
     else
     return(
         <div className="bg-base-200 flex flex-col pl-10 pr-10 pt-5 w-full min-h-screen">
-            <dialog id="my_modal_2" className="modal-box">
-                <form method="dialog">
-                    <h3 className="font-bold text-lg">Hello!</h3>
-                    <p className="py-4">Press ESC key or click outside to close</p>
-                    </form>
-                    <form method="dialog" className="modal-backdrop">
-                    <button>close</button>
-                </form>
-            </dialog>
+            
             <article className="prose base mb-5">
                 <h2>Semester and Period</h2>
             </article>
-
+            {isModalOpen && (
+                    <div className="modal-backdrop bg-black" onClick={closeModal}>
+                        <EditSemesterModal semesterid={selectedSemesterId} closeModal={closeModal} />
+                    </div>
+            )}
             {/* table */}
             <div className="card w-full bg-base-100 ">
                     <div className="card-body w-full">
@@ -70,7 +84,7 @@ const ViewSnP= ()=>{
                                         <td>{sem.semesterenddate}</td>
                                         
                                         <td className="flex flex-col items-center">
-                                            <button onClick={() => window.my_modal_2.showModal()}>Edit</button>
+                                            <button onClick={() => openModal(sem.semesterid)}>Edit</button>
                                             <button>Delete</button>
                                         </td>
                                         

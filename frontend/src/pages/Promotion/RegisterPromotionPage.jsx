@@ -60,6 +60,9 @@ const RegisterPromotionPage = ()=>{
                 .post(process.env.NEXT_PUBLIC_BACKEND_URL + '/promotion/registerPromotion', data)
                 .then((res) => {
                   console.log(res);
+                  if(res.data== 'Success'){
+                    window.location.reload();
+                  }
                 })
                 .catch((error) => {
                   console.error(error);
