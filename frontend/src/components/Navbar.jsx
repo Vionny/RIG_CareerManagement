@@ -44,7 +44,7 @@ const Navbar = () => {
 
     console.log(selectedSem)
     sessionStorage.setItem('selectedSemester',semesterid)
-    router.replace(pathname)
+    window.location.reload();
   }
   const logoutHandler =()=>{
     sessionStorage.removeItem('selectedSemester')

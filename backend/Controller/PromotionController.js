@@ -18,14 +18,14 @@ const insertPromotionRegistration = (req, res, next) =>{
     const insertTableDetailQuery = "INSERT INTO promotionregistrationdetail VALUES($1,$2,$3,$4,$5,$6)"
     if(req.body.priority ==1 ){
         pool.query(insertTableHeaderQuery,[promoRegisID,initial,semesterid], (error, result) => {
-        if (error) {
-          console.log(insertTableDetailQuery,insertTableDetailQuery)
-            console.log(error)
-            res.status(500).send('Error adding table header promotion registration');
-        } else {
-            // res.status(200).send('Success')
-            insertTableDetail()
-        }
+          if (error) {
+            console.log(insertTableDetailQuery,insertTableDetailQuery)
+              console.log(error)
+              res.status(500).send('Error adding table header promotion registration');
+          } else {
+              // res.status(200).send('Success')
+              insertTableDetail()
+          }
         });
     }else{
         insertTableDetail()
