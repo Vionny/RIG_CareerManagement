@@ -10,6 +10,7 @@ axios.defaults.headers.post['Content-Type'] = 'application/json';
 const ViewSnP= ()=>{
 
     const [semesters,setSemesters] =useState({})
+    const [currSemester,setCurrSemesters] =useState()
     const [loadSem, setLoadSem] =useState(false)
     const [selectedSemesterId, setSelectedSemesterId] = useState(null)
 
@@ -40,9 +41,46 @@ const ViewSnP= ()=>{
             setSemesters(res.data)  
             setLoadSem(true)
         })
+
+        setCurrSemesters(sessionStorage.getItem('selectedSemester'))
+        // console.log("curr smt" +currSemester);
+
         
     },[loadSem])
+    
+    // useEffect(()=>{
 
+    //     axios.get(process.env.NEXT_PUBLIC_BACKEND_URL+'/getPromotionStart/'+currSemester).then((res) => {
+    //         console.log(res.data)
+            
+    //     })
+
+    // },[])
+
+
+    const updatePromotionDate = () =>{
+        // console.log(startPromotion);
+        // console.log(endPromotion);
+
+        var data = {
+            promotionstartdate: startPromotion,
+            promotionenddate: endPromotion,
+            semesterid: currSemester
+        }
+        console.log(data);
+        axios
+        .post(process.env.NEXT_PUBLIC_BACKEND_URL + '/updatePromotionDate', data)
+        .then((res) =>{
+            console.log(res)
+            if(res.data== 'Success'){
+                // window.location.reload();
+              }
+        })
+        .catch((error)=>{
+            console.error(error)
+        })
+
+    }
 
     if(!loadSem) return <div></div>
     else
@@ -112,12 +150,16 @@ const ViewSnP= ()=>{
                         <div className="card bg-base-100 w-48 flex p-3">
                             <h3 className="text-lg font-semibold">Start Date</h3>
                             <DatePicker className="w-32" selected={startPromotion} onChange={(startPromotion) => setStartP(startPromotion)} />                
+                            
                         </div>
 
                         <div className="card bg-base-100 w-48 flex p-3">
                             <h3 className="text-lg font-semibold">End Date</h3>
                             <DatePicker className="w-32" selected={endPromotion} onChange={(endPromotion) => setEndP(endPromotion)} />                
                         </div>
+
+                        <button className="btn btn-primary" onClick={()=>updatePromotionDate()}>Update</button>
+
                     </div>
                 </div>
                 <div>
@@ -134,6 +176,8 @@ const ViewSnP= ()=>{
                             <h3 className="text-lg font-semibold">End Date</h3>
                             <DatePicker className="w-32" selected={endRegistration} onChange={(endRegistration) => setEndR(endRegistration)} />                
                         </div>
+
+                        <button className="btn btn-primary">Update</button>
                     </div>
                 </div>
 

@@ -7,7 +7,7 @@ const router = express.Router()
 router.get('/getUser/:initial',getUser)
 router.post('/insertCareerChoice',insertCareerChoice)
 router.post('/finalizeCareerChoice',finalizeCareerChoice)
-router.post('/getTeamMember/:roleid', getTeamMember)
+router.get('/getTeamMember/:roleid', getTeamMember)
 
 
 module.exports = router

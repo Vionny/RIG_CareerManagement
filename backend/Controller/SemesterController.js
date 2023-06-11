@@ -41,8 +41,47 @@ const getSelectedSemester = (req, res, next) =>{
     });
 }
 
+
+const updatePromotionDate = (req, res, next) =>{
+    const promotionstartdate = req.body.promotionstartdate
+    const promotionenddate = req.body.promotionenddate
+    const semesterid = req.body.semesterid
+
+    const query = "UPDATE semester SET promotionstartdate = $1, promotionenddate=$2 WHERE semesterid = $3"
+    
+    
+    pool.query(query,[promotionstartdate, promotionenddate, semesterid], (error, result) =>{
+        if (error) {
+            console.log(error)
+            res.status(500).send('Error updating');
+        } else {
+            console.log(result)
+            res.status(200).send('Success')
+        }
+    })
+}
+
+const getPhases = (req, res, next) =>{
+
+    const semesterid = req.body.semesterid
+    const query = "SELECT promotionstartdate FROM semester WHERE semesterid=$1"
+
+    pool.query(query,[semesterid], (error, result) => {
+        if (error) {
+            console.log(error)
+            res.status(500).send('Error fetching current semester');
+        } else {
+            res.status(200).send(result.rows)
+        }
+    });
+}
+
+
+
 module.exports = {
     getAllSemester,
     getCurrentSemester,
-    getSelectedSemester
+    getSelectedSemester,
+    updatePromotionDate,
+    getPhases
 };
