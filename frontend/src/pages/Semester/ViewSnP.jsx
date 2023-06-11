@@ -33,6 +33,7 @@ const ViewSnP= ()=>{
     const [endRegistration, setEndR] = useState(new Date());
 
 
+    
 
     useEffect(()=>{
         axios.get(process.env.NEXT_PUBLIC_BACKEND_URL+'/getAllSemester').then((res) => {
