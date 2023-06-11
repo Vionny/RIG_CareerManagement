@@ -48,8 +48,23 @@ const finalizeCareerChoice = (req, res, next) =>{
     })
 }
 
+const getTeamMember = (req, res, next) => {
+    const roleid = req.params.roleid
+    const query = "SELECT * FROM assistant WHERE roleid = $1"
+    console.log(query);
+
+    pool.query(query, [roleid], (error, result) => {
+        if (error) {
+            res.status(500).send('Error fetching user');
+        } else {
+           res.status(200).send(result.rows);
+        }
+    
+    })
+}
 module.exports = {
     getUser,
     insertCareerChoice,
-    finalizeCareerChoice
+    finalizeCareerChoice,
+    getTeamMember
 }
