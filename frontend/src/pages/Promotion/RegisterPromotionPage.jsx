@@ -20,7 +20,7 @@ const RegisterPromotionPage = ()=>{
 
     async function getDivision(divisionid){
         await axios.get(process.env.NEXT_PUBLIC_BACKEND_URL+'/getDivisionByRole/'+divisionid).then((res)=>{
-            console.log(res)
+            console.log("res in registerpage" + res)
             setDivision(res.data[0])
         })
         // console.log(roles)
@@ -29,10 +29,10 @@ const RegisterPromotionPage = ()=>{
     useEffect(()=>{
         axios.get(process.env.NEXT_PUBLIC_BACKEND_URL+'/getAstRegisteredRole/'+sessionStorage.getItem('initial')+'/'+ sessionStorage.getItem('selectedSemester')).then(async (res) => {
             // console.log(res.data)
+            console.log(res.data)
             setRoles(res.data)  
             setLoadRole(true)
             axios.get(process.env.NEXT_PUBLIC_BACKEND_URL+'/promotion/getLastPriorityInsert/'+sessionStorage.getItem('initial')+'/'+sessionStorage.getItem('selectedSemester')).then((res)=>{
-                console.log(res.data)
                 if(res.data === 0) setPriority(1)
                 else setPriority(res.data[0].priority + 1)
             })
