@@ -9,10 +9,17 @@ axios.defaults.headers.post['Content-Type'] = 'application/json';
 
 const ViewSnP= ()=>{
 
-    const [semesters,setSemesters] =useState({})
-    const [currSemester,setCurrSemesters] =useState()
-    const [loadSem, setLoadSem] =useState(false)
+    const [semesters,setSemesters] = useState({})
+    const [currSemester,setCurrSemesters] = useState()
+    const [loadSem, setLoadSem] = useState(false)
     const [selectedSemesterId, setSelectedSemesterId] = useState(null)
+
+    //date
+    const [startPromotion, setStartP] = useState();
+    const [endPromotion, setEndP] = useState();
+    // const [endPromotion, setEndP] = useState(new Date());
+    const [startRegistration, setStartR] = useState();
+    const [endRegistration, setEndR] = useState();
 
     const [isModalOpen, setIsModalOpen] = useState(false)
 
@@ -26,12 +33,6 @@ const ViewSnP= ()=>{
         setIsModalOpen(false)
     }
 
-    //date
-    const [startPromotion, setStartP] = useState(new Date());
-    const [endPromotion, setEndP] = useState(new Date());
-
-    const [startRegistration, setStartR] = useState(new Date());
-    const [endRegistration, setEndR] = useState(new Date());
 
 
 
@@ -43,19 +44,20 @@ const ViewSnP= ()=>{
         })
 
         setCurrSemesters(sessionStorage.getItem('selectedSemester'))
-        // console.log("curr smt" +currSemester);
+        console.log("curr smt" +currSemester);
 
         
     },[loadSem])
     
-    // useEffect(()=>{
+    useEffect(()=>{
 
-    //     axios.get(process.env.NEXT_PUBLIC_BACKEND_URL+'/getPromotionStart/'+currSemester).then((res) => {
-    //         console.log(res.data)
-            
-    //     })
+        axios.get(process.env.NEXT_PUBLIC_BACKEND_URL+'/getPhases/'+currSemester).then((res) => {
+            console.log(res.data[0])
+            console.log(res.data[0].promotionenddate)
+            // setStartP(res)
+        })
 
-    // },[])
+    },[])
 
 
     const updatePromotionDate = () =>{
@@ -73,6 +75,7 @@ const ViewSnP= ()=>{
         .then((res) =>{
             console.log(res)
             if(res.data== 'Success'){
+
                 // window.location.reload();
               }
         })
