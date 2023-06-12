@@ -47,6 +47,9 @@ const updatePromotionDate = (req, res, next) =>{
     const promotionenddate = req.body.promotionenddate
     const semesterid = req.body.semesterid
 
+    console.log(req.body.promotionstartdate,req.body.promotionenddate)
+    console.log(promotionstartdate,promotionenddate)
+
     const query = "UPDATE semester SET promotionstartdate = $1, promotionenddate=$2 WHERE semesterid = $3"
     
     
@@ -61,17 +64,39 @@ const updatePromotionDate = (req, res, next) =>{
     })
 }
 
+
+const updateChoiceDate = (req, res, next) =>{
+    const choicestartdate = req.body.choicestartdate
+    const choiceenddate = req.body.choiceenddate
+    const semesterid = req.body.semesterid
+
+    const query = "UPDATE semester SET choicestartdate = $1, choiceenddate=$2 WHERE semesterid = $3"
+    
+    
+    pool.query(query,[choicestartdate, choiceenddate, semesterid], (error, result) =>{
+        if (error) {
+            console.log(error)
+            res.status(500).send('Error updating');
+        } else {
+            console.log(result)
+            res.status(200).send('Success')
+        }
+    })
+}
+
+
+
 const getPhases = (req, res, next) =>{
 
     const semesterid = req.params.semesterid
-    const query = "SELECT promotionstartdate, promotionenddate, choicestartdate, choiceenddate FROM semester WHERE semesterid=$1"
+    const query = "SELECT TO_CHAR(promotionstartdate:: DATE, 'yyyy-mm-dd') promotionstartdate, TO_CHAR(promotionenddate:: DATE, 'yyyy-mm-dd') promotionenddate, TO_CHAR(choicestartdate:: DATE, 'yyyy-mm-dd') choicestartdate, TO_CHAR(choiceenddate:: DATE, 'yyyy-mm-dd') choiceenddate FROM semester WHERE semesterid=$1"
 
     pool.query(query,[semesterid], (error, result) => {
         if (error) {
-            console.log(error)
+            console.log(error);
             res.status(500).send('Error fetching current semester');
         } else {
-            res.status(200).send(result.rows)
+            res.status(200).send(result.rows);
         }
     });
 }
@@ -162,11 +187,12 @@ module.exports = {
     getAllSemester,
     getCurrentSemester,
     getSelectedSemester,
-    updatePromotionDate,
     getPhases,
     getPromotionEnd,
     getChoiceEnd,
     insertSemester,
     deleteSemester,
-    updateSemester
+    updateSemester,
+    updatePromotionDate,
+    updateChoiceDate
 };

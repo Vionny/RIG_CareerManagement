@@ -17,7 +17,7 @@ const ViewSnP= ()=>{
     //date
     const [startPromotion, setStartP] = useState();
     const [endPromotion, setEndP] = useState();
-    // const [endPromotion, setEndP] = useState(new Date());
+
     const [startRegistration, setStartR] = useState();
     const [endRegistration, setEndR] = useState();
 
@@ -33,51 +33,86 @@ const ViewSnP= ()=>{
         setIsModalOpen(false)
     }
 
-
-
-    
-
     useEffect(()=>{
         axios.get(process.env.NEXT_PUBLIC_BACKEND_URL+'/getAllSemester').then((res) => {
-            // console.log(res.data)
+            console.log(res.data)
             setSemesters(res.data)  
             setLoadSem(true)
         })
 
         setCurrSemesters(sessionStorage.getItem('selectedSemester'))
-        console.log("curr smt" +currSemester);
+        // console.log("curr smt" +currSemester);
 
         
     },[loadSem])
     
     useEffect(()=>{
+        if (currSemester) {
+            axios.get(process.env.NEXT_PUBLIC_BACKEND_URL+'/getPhases/'+currSemester).then((res) => {
+                
+                console.log(res.data[0])
+                handlePromotionEndDate(res.data[0].promotionenddate)
+                handlePromotionStartDate(res.data[0].promotionstartdate)
+                handleChoiceStartDate(res.data[0].choicestartdate)
+                handleChoiceEndDate(res.data[0].choiceenddate)
+            })
+        }
+        
+    },[currSemester])
 
-        axios.get(process.env.NEXT_PUBLIC_BACKEND_URL+'/getPhases/'+currSemester).then((res) => {
-            console.log(res.data[0])
-            console.log(res.data[0].promotionenddate)
-            // setStartP(res)
-        })
-
-    },[])
+    function handlePromotionEndDate(res) {
+        // console.log(res)
+        // console.log()
+        if (res !== null) {
+            setEndP(new Date(res)); // Convert res to a Date object before setting the state
+          } else {
+            setEndP(new Date()); // Set the current date as the default value
+          }
+      }
+    function handlePromotionStartDate(res) {
+        // console.log(res)
+        // console.log()
+        if (res !== null) {
+            setStartP(new Date(res)); // Convert res to a Date object before setting the state
+          } else {
+            setStartP(new Date()); // Set the current date as the default value
+          }
+      }
+    function handleChoiceEndDate(res) {
+        // console.log(res)
+        // console.log()
+        if (res !== null) {
+            setEndR(new Date(res)); // Convert res to a Date object before setting the state
+          } else {
+            setEndR(new Date()); // Set the current date as the default value
+          }
+      }
+    function handleChoiceStartDate(res) {
+        // console.log(res)
+        // console.log()
+        if (res !== null) {
+            setStartR(new Date(res)); // Convert res to a Date object before setting the state
+          } else {
+            setStartR(new Date()); // Set the current date as the default value
+          }
+      }
 
 
     const updatePromotionDate = () =>{
-        // console.log(startPromotion);
-        // console.log(endPromotion);
-
+        
         var data = {
             promotionstartdate: startPromotion,
             promotionenddate: endPromotion,
             semesterid: currSemester
         }
-        console.log(data);
+       
         axios
         .post(process.env.NEXT_PUBLIC_BACKEND_URL + '/updatePromotionDate', data)
         .then((res) =>{
-            console.log(res)
+            // console.log(res)
             if(res.data== 'Success'){
 
-                // window.location.reload();
+                window.location.reload();
               }
         })
         .catch((error)=>{
@@ -85,6 +120,34 @@ const ViewSnP= ()=>{
         })
 
     }
+
+    const updateChoiceDate = () =>{
+        // console.log(startRegistration);
+        // console.log(endRegistration);
+
+        var data = {
+            choicestartdate: startRegistration,
+            choiceenddate: endRegistration,
+            semesterid: currSemester
+        }
+
+        // console.log(data);
+        axios
+        .post(process.env.NEXT_PUBLIC_BACKEND_URL + '/updateChoiceDate', data)
+        .then((res) =>{
+            console.log(res)
+            if(res.data== 'Success'){
+
+                window.location.reload();
+              }
+        })
+        .catch((error)=>{
+            console.error(error)
+        })
+
+    }
+
+
 
     if(!loadSem) return <div></div>
     else
@@ -153,13 +216,13 @@ const ViewSnP= ()=>{
 
                         <div className="card bg-base-100 w-48 flex p-3">
                             <h3 className="text-lg font-semibold">Start Date</h3>
-                            <DatePicker className="w-32" selected={startPromotion} onChange={(startPromotion) => setStartP(startPromotion)} />                
+                            <DatePicker className="w-32" selected={startPromotion} value={startPromotion} onChange={(startPromotion) => setStartP(startPromotion)} />                
                             
                         </div>
 
                         <div className="card bg-base-100 w-48 flex p-3">
                             <h3 className="text-lg font-semibold">End Date</h3>
-                            <DatePicker className="w-32" selected={endPromotion} onChange={(endPromotion) => setEndP(endPromotion)} />                
+                            <DatePicker className="w-32" selected={endPromotion} value={endPromotion} onChange={(endPromotion) => setEndP(endPromotion)} />                
                         </div>
 
                         <button className="btn btn-primary" onClick={()=>updatePromotionDate()}>Update</button>
@@ -173,15 +236,15 @@ const ViewSnP= ()=>{
 
                         <div className="card bg-base-100 w-48 flex p-3">
                             <h3 className="text-lg font-semibold">Start Date</h3>
-                            <DatePicker className="w-32" selected={startRegistration} onChange={(startRegistration) => setStartR(startRegistration)} />                
+                            <DatePicker className="w-32" selected={startRegistration} value={startRegistration} onChange={(startRegistration) => setStartR(startRegistration)} />                
                         </div>
 
                         <div className="card bg-base-100 w-48 flex p-3">
                             <h3 className="text-lg font-semibold">End Date</h3>
-                            <DatePicker className="w-32" selected={endRegistration} onChange={(endRegistration) => setEndR(endRegistration)} />                
+                            <DatePicker className="w-32" selected={endRegistration} value={endRegistration} onChange={(endRegistration) => setEndR(endRegistration)} />                
                         </div>
 
-                        <button className="btn btn-primary">Update</button>
+                        <button className="btn btn-primary" onClick={()=>updateChoiceDate()}>Update</button>
                     </div>
                 </div>
 
