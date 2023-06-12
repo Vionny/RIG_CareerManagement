@@ -35,11 +35,6 @@ const Navbar = () => {
   },[loadSem])
 
   function setCurrSemester (semesterid){
-    // console.log(idid)
-    console.log(parent.window.navigation.currentEntry.url)
-    const url = parent.window.navigation.currentEntry.url
-    const pathname = url.substring(url.indexOf('3000')+4, url.length)
-    // console.log(url,pathname)
     setSelectedSem(semesters.find((semester) => semester.semesterid === semesterid))
 
     console.log(selectedSem)
