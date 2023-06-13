@@ -158,7 +158,7 @@ const ViewSnP= ()=>{
                 <h2>Semester and Period</h2>
             </article>
             {isModalOpen && (
-                    <div className="modal-backdrop bg-black" onClick={closeModal}>
+                    <div className="modal-backdrop bg-black" >
                         <EditSemesterModal semesterid={selectedSemesterId} closeModal={closeModal} />
                     </div>
             )}
