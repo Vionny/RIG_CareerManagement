@@ -35,7 +35,6 @@ const Navbar = () => {
   },[loadSem])
 
   function setCurrSemester (semesterid){
-    // console.log(idid)
     setSelectedSem(semesters.find((semester) => semester.semesterid === semesterid))
 
     console.log(selectedSem)
