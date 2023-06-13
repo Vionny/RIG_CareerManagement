@@ -38,6 +38,21 @@ const getSelectedSemester = (req, res, next) =>{
         } else {
             res.status(200).send(result.rows)
         }
+    }); 
+}
+
+const getSemesterDate = (req, res, next) =>{
+
+    const query = "SELECT TO_CHAR(semesterstartdate:: DATE, 'yyyy-mm-dd') semesterstartdate, TO_CHAR(semesterenddate:: DATE, 'yyyy-mm-dd')semesterenddate FROM semester WHERE semesterid = $1"
+    const semesterid = req.params.semesterid
+
+    pool.query(query,[semesterid], (error, result) => {
+        if (error) {
+            console.log(error)
+            res.status(500).send('Error fetching current semester');
+        } else {
+            res.status(200).send(result.rows)
+        }
     });
 }
 
@@ -109,7 +124,7 @@ const getPromotionEnd = (req, res, next) =>{
     pool.query(query,[semesterid], (error, result) => {
         if (error) {
             console.log(error)
-            res.status(500).send('Error fetching current semester');
+            res.status(500).send('Error fetching promotion semester');
         } else {
             res.status(200).send(result.rows)
         }
@@ -124,7 +139,7 @@ const getChoiceEnd = (req, res, next) =>{
     pool.query(query,[semesterid], (error, result) => {
         if (error) {
             console.log(error)
-            res.status(500).send('Error fetching current semester');
+            res.status(500).send('Error fetching choice semester');
         } else {
             res.status(200).send(result.rows)
         }
@@ -142,24 +157,24 @@ const insertSemester = (req, res, next) =>{
     pool.query(query,[semesterid, semestername, semesterstartdate, semesterenddate], (error, result) => {
         if (error) {
             console.log(error)
-            res.status(500).send('Error fetching current semester');
+            res.status(500).send('Error insert semester');
         } else {
-            res.status(200).send(result.rows)
+            res.status(200).send("Success")
         }
     });
 }
 
 const deleteSemester = (req, res, next) =>{
-    const semesterid = req.params.semesterid
+    const semesterid = req.body.semesterid
     
     const query = "DELETE FROM semester WHERE semesterid = $1"
 
     pool.query(query,[semesterid], (error, result) => {
         if (error) {
             console.log(error)
-            res.status(500).send('Error fetching current semester');
+            res.status(500).send('Error fetching delete semester');
         } else {
-            res.status(200).send(result.rows)
+            res.status(200).send("Success")
         }
     });
 }
@@ -174,9 +189,9 @@ const updateSemester = (req, res, next) =>{
     pool.query(query,[semesterid, semesterstartdate, semesterenddate], (error, result) => {
         if (error) {
             console.log(error)
-            res.status(500).send('Error fetching current semester');
+            res.status(500).send('Error update semester');
         } else {
-            res.status(200).send(result.rows)
+            res.status(200).send("Success")
         }
     });
 }
@@ -194,5 +209,6 @@ module.exports = {
     deleteSemester,
     updateSemester,
     updatePromotionDate,
-    updateChoiceDate
+    updateChoiceDate,
+    getSemesterDate
 };

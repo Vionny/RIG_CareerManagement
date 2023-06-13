@@ -13,6 +13,20 @@ const getUser = (req, res, next) =>{
     })
 }
 
+const getAllUser = (req, res, next) =>{
+    const query = "SELECT * FROM assistant"
+
+    pool.query(query,(error, result) => {
+        if (error) {
+            res.status(500).send('Error fetching user');
+        } else {
+           res.status(200).send(result.rows);
+        }
+    })
+}
+
+
+
 const insertCareerChoice = (req, res, next) =>{
     const initial = req.body.initial
     const careerchoice = req.body.careerchoice
@@ -66,5 +80,6 @@ module.exports = {
     getUser,
     insertCareerChoice,
     finalizeCareerChoice,
-    getTeamMember
+    getTeamMember,
+    getAllUser
 }

@@ -14,9 +14,9 @@ export const EditSemesterModal = ({semesterid, closeModal}) => {
   const [endDate, setEndDate] = useState();
 
   useEffect(()=>{
-    axios.get(process.env.NEXT_PUBLIC_BACKEND_URL+'/getSelectedSemester/' + semesterid).then((res) => {
-      console.log(res.data[0])
-      console.log(res.data[0].semesterenddate)
+    axios.get(process.env.NEXT_PUBLIC_BACKEND_URL+'/getSemesterDate/' + semesterid).then((res) => {
+      // console.log(res.data[0])
+      // console.log(res.data[0].semesterenddate)
       setStartDate(new Date(res.data[0].semesterstartdate)) 
       setEndDate(new Date(res.data[0].semesterenddate))
       // setLoadSem(true)
@@ -34,11 +34,14 @@ export const EditSemesterModal = ({semesterid, closeModal}) => {
     // console.log(endPromotion);
 
     var data = {
-        semesterid: currSemester
+        semesterid: semesterid,
+        semesterstartdate: startDate,
+        semesterenddate: endDate
+
     }
     console.log(data);
     axios
-    .post(process.env.NEXT_PUBLIC_BACKEND_URL + '/updatePromotionDate', data)
+    .post(process.env.NEXT_PUBLIC_BACKEND_URL + '/updateSemester', data)
     .then((res) =>{
         console.log(res)
         if(res.data== 'Success'){
@@ -62,12 +65,12 @@ export const EditSemesterModal = ({semesterid, closeModal}) => {
 
           <div className="card bg-base-100 w-48 flex p-3">
               <h3 className="text-lg font-semibold">Start Date</h3>
-              <DatePicker className="w-32" selected={startDate} value={startDate} onChange={(startDate) => setStartR(startDate)} />                
+              <DatePicker className="w-32" selected={startDate} value={startDate} onChange={(startDate) => setStartDate(startDate)} />                
           </div>
 
           <div className="card bg-base-100 w-48 flex p-3">
               <h3 className="text-lg font-semibold">End Date</h3>
-              <DatePicker className="w-32" selected={endDate} value={endDate} onChange={(endDate) => setEndR(endDate)} />                
+              <DatePicker className="w-32" selected={endDate} value={endDate} onChange={(endDate) => setEndDate(endDate)} />                
           </div>
 
           <button className="btn btn-primary" onClick={()=>updateSemesterDate()}>Update</button>

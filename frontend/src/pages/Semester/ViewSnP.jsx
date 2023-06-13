@@ -1,6 +1,7 @@
 "use client"
 import "@/app/globals.css"
 import { EditSemesterModal } from "@/components/Modals/Edit/EditSemesterModal"
+import { AddSemesterModal } from "@/components/Modals/Insert/AddSemesterModal"
 import {useEffect, useState} from 'react'
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
@@ -22,6 +23,7 @@ const ViewSnP= ()=>{
     const [endRegistration, setEndR] = useState();
 
     const [isModalOpen, setIsModalOpen] = useState(false)
+    const [isModalAddOpen, setIsModalAddOpen] = useState(false)
 
     const openModal = (semesterId) => {
         console.log("open")
@@ -31,6 +33,14 @@ const ViewSnP= ()=>{
 
     const closeModal = () => {
         setIsModalOpen(false)
+    }
+    const openAddModal = () => {
+        console.log("open")
+        setIsModalAddOpen(true)
+      }
+
+    const closeAddModal = () => {
+        setIsModalAddOpen(false)
     }
 
     useEffect(()=>{
@@ -105,7 +115,8 @@ const ViewSnP= ()=>{
             promotionenddate: endPromotion,
             semesterid: currSemester
         }
-       
+       console.log(data);
+    
         axios
         .post(process.env.NEXT_PUBLIC_BACKEND_URL + '/updatePromotionDate', data)
         .then((res) =>{
@@ -147,6 +158,28 @@ const ViewSnP= ()=>{
 
     }
 
+    const deleteSemester = (semesterid) =>{
+        
+        var data = {
+            semesterid: semesterid
+        }
+
+        console.log(data);
+        axios
+        .delete(process.env.NEXT_PUBLIC_BACKEND_URL + '/deleteSemester', data)
+        .then((res) =>{
+            console.log(res)
+            if(res.data== 'Success'){
+
+                window.location.reload();
+              }
+        })
+        .catch((error)=>{
+            console.error(error)
+        })
+
+    }
+
 
 
     if(!loadSem) return <div></div>
@@ -158,8 +191,14 @@ const ViewSnP= ()=>{
                 <h2>Semester and Period</h2>
             </article>
             {isModalOpen && (
-                    <div className="modal-backdrop bg-black" onClick={closeModal}>
+                    <div className="modal-backdrop bg-black">
                         <EditSemesterModal semesterid={selectedSemesterId} closeModal={closeModal} />
+                    </div>
+            )}
+
+            {isModalAddOpen && (
+                    <div className="modal-backdrop bg-black">
+                        <AddSemesterModal closeModal={closeAddModal}/>
                     </div>
             )}
             {/* table */}
@@ -167,7 +206,7 @@ const ViewSnP= ()=>{
                     <div className="card-body w-full">
                         <div className="card-title justify-between">
                             <p className="card-title mb-2">Semester List</p>
-                            <button className="btn text-xs btn-primary ">+ Add</button>
+                            <button className="btn text-xs btn-primary" onClick={() => openAddModal()}>+ Add</button>
                         </div>
                         <div className="">
                             <table className="table table-compact w-full">
@@ -190,7 +229,7 @@ const ViewSnP= ()=>{
                                         
                                         <td className="flex flex-col items-center">
                                             <button onClick={() => openModal(sem.semesterid)}>Edit</button>
-                                            <button>Delete</button>
+                                            <button onClick={() => deleteSemester(sem.semesterid)}>Delete</button>
                                         </td>
                                         
                                     </tr>

@@ -13,7 +13,7 @@ export default function Sidebar() {
                         <ul className="pt-2 pb-4 space-y-1 text-sm">
                             <li className="rounded-sm">
                                 <Link
-                                    href='#'
+                                    href='/users'
                                     className="flex items-center p-2 space-x-3 rounded-md"
                                 >
                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" className="w-4">
