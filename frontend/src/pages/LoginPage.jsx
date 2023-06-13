@@ -31,8 +31,13 @@ const LoginPage = () => {
                     sessionStorage.setItem('initial', initial.toUpperCase())
     
                     axios.get(process.env.NEXT_PUBLIC_BACKEND_URL+ '/getCurrSemester').then((res)=>{
-                        sessionStorage.setItem('selectedSemester',res.data[0].semesterid)
-                        router.push('/home')
+                        console.log(res);
+                        if(res.data[0] !== undefined){
+
+
+                            sessionStorage.setItem('selectedSemester',res.data[0].semesterid)
+                            router.push('/home')
+                        }
                     })
                     // setUsers(res.data.users)
                 })
