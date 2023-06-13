@@ -43,7 +43,7 @@ const DivisionPage = ()=>{
     async function getMembers(roleid){
         await axios.get(process.env.NEXT_PUBLIC_BACKEND_URL+'/getTeamMember/'+roleid).then((res) =>{
             console.log(res.data)
-            // setMembers(res.data)
+            setMembers(res.data)
         })
     }
 
@@ -135,14 +135,47 @@ const DivisionPage = ()=>{
                     </div>
                 </div>
 
-                <div className="card bg-base-100 w-1/2 p-5">
-                    <div className="card-body p-0">
+                {/* <div className="card bg-base-100 w-1/2 p-5">
+                    <div className="card-body p-0"> */}
                         {/* <h2 className="card-title">{(selectedRole !== undefined ? selectedRole.rolename : "")}</h2>
                         {(selectedRole !== undefined ? <p>{selectedRole.rolerequirements}</p> : <p></p>)} */}
-                        <h2 className="card-title">Team Member</h2>
+                        {/* <h2 className="card-title"></h2>
                         <p>Division Mmeber</p>
                     </div>
-                </div>
+                </div> */}
+
+                <div className="card w-full h-max bg-base-100 ">
+                    <div className="card-body w-full">
+                        <div className="card-title justify-between">
+                            <p className="card-title mb-2">Team Member</p>
+                            
+                        </div>
+                        <div className="">
+                            <table className="table table-compact w-full ">
+                                {/* head */}
+                                <thead>
+                                <tr>
+                                   
+                                    <th>Initial</th>
+                                    <th>Name</th>
+                                    <th>RoleID</th>
+                                    
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {members.map((mem, index) => (
+                                    <tr key={index}  >
+                                        <td>{mem.initial}</td>
+                                        <td>{mem.assistantname}</td>
+                                        <td>{mem.roleid}</td>
+                                       
+                                    </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                            </div>
+                    </div>
+            </div>
 
                 
 

@@ -72,7 +72,7 @@ const StaffPage= ()=>{
                             </table>
                             </div>
                     </div>
-                </div>
+            </div>
 
         </div>
     )
