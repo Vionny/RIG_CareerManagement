@@ -25,7 +25,7 @@ export default function Sidebar() {
 
                             <li className="rounded-sm">
                                 <Link
-                                    href="#"
+                                    href="/promotion/manage"
                                     className="flex items-center p-2 space-x-3 rounded-md"
                                 >
                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" className="w-4">
