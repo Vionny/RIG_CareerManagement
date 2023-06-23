@@ -14,7 +14,7 @@ const getUser = (req, res, next) =>{
 }
 
 const getAllUser = (req, res, next) =>{
-    const query = "SELECT * FROM assistant"
+    const query = "SELECT initial, assistantname, rolename, ast.careerchoice, ast.eligiblepromotionstatus, ast.eligibleforresign  FROM assistant ast JOIN role rl ON ast.roleid = rl.roleid"
 
     pool.query(query,(error, result) => {
         if (error) {

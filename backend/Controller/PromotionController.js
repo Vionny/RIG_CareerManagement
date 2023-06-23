@@ -63,7 +63,32 @@ const getLastPriorityInsert = (req,res,next) =>{
         }
     });
 }
+
+const getPromotionRegistrant = (req,res,next) =>{
+
+    const semesterid = req.params.semesterid
+    const query = "SELECT pr.initial, ast.assistantname, rolename, priority, prd.registrationreason, prd.period, ast.eligiblepromotionstatus FROM role r JOIN promotionregistrationdetail prd ON prd.roleid = r.roleid JOIN promotionregistration pr ON prd.promotionregistrationid = pr.promotionregistrationid JOIN assistant ast ON pr.initial = ast.initial WHERE pr.semesterid = $1"
+
+    pool.query(query,[semesterid], (error, result) => {
+        if (error) {
+            console.log(error)
+            res.send('Error fetching promotion registrant');
+        } else {
+            
+            // console.log(result.rows[0].priority)
+            if (result.rows.length === 0) {
+                res.status(200).send('0');
+              } 
+            else res.status(200).send(result.rows);
+        }
+    });
+}
+
+
+
+
 module.exports={
     insertPromotionRegistration,
-    getLastPriorityInsert
+    getLastPriorityInsert,
+    getPromotionRegistrant
 }
