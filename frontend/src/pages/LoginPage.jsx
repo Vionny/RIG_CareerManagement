@@ -31,6 +31,7 @@ const LoginPage = () => {
                     sessionStorage.setItem('initial', initial.toUpperCase())
     
                     axios.get(process.env.NEXT_PUBLIC_BACKEND_URL+ '/getCurrSemester').then((res)=>{
+                        console.log(res.data)
                         sessionStorage.setItem('selectedSemester',res.data[0].semesterid)
                         router.push('/home')
                     })

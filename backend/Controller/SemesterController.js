@@ -14,21 +14,32 @@ const  getAllSemester = (req, res, next) =>{
 }
 
 const getCurrentSemester = (req, res, next) =>{
-    const query = "SELECT semesterid, semestername, TO_CHAR(semesterstartdate:: DATE, 'yyyy-mm-dd') semesterstartdate, TO_CHAR(semesterstartdate:: DATE, 'yyyy-mm-dd') semesterenddate FROM semester WHERE NOW() BETWEEN semesterstartdate AND semesterenddate "
+    const query = "SELECT semesterid, semestername, TO_CHAR(semesterstartdate:: DATE, 'yyyy-mm-dd') semesterstartdate, TO_CHAR(semesterenddate:: DATE, 'yyyy-mm-dd') semesterenddate FROM semester WHERE NOW() BETWEEN semesterstartdate AND semesterenddate "
 
     pool.query(query, (error, result) => {
         if (error) {
             console.log(error)
             res.status(500).send('Error fetching current semester');
         } else {
-            res.status(200).send(result.rows)
+            if(result.rowCount>0){
+                res.status(200).send(result.rows)
+            }else{
+                const query = "SELECT semesterid, semestername, TO_CHAR(semesterstartdate:: DATE, 'yyyy-mm-dd') semesterstartdate, TO_CHAR(semesterenddate:: DATE, 'yyyy-mm-dd') semesterenddate FROM semester ORDER BY semesterstartdate LIMIT 1"
+                pool.query(query,(error,result)=>{
+                    if(error){
+                        console.log(Error)
+                    }else{
+                        res.status(200).send(result.rows)
+                    }
+                })
+            }
         }
     });
 }
 
 const getSelectedSemester = (req, res, next) =>{
 
-    const query = "SELECT * FROM semester WHERE semesterid = $1"
+    const query = "SELECT semesterid, semestername, TO_CHAR(semesterstartdate:: DATE, 'yyyy-mm-dd') semesterstartdate, TO_CHAR(semesterenddate:: DATE, 'yyyy-mm-dd') semesterenddate, TO_CHAR(promotionstartdate:: DATE, 'yyyy-mm-dd') promotionstartdate, TO_CHAR(promotionenddate:: DATE, 'yyyy-mm-dd') promotionenddate, TO_CHAR(choicestartdate:: DATE, 'yyyy-mm-dd') choicestartdate, TO_CHAR(choiceenddate:: DATE, 'yyyy-mm-dd') choiceenddate  FROM semester WHERE semesterid = $1"
     const semesterid = req.params.semesterid
 
     pool.query(query,[semesterid], (error, result) => {
