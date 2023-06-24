@@ -21,7 +21,6 @@ const RegisterPromotionPage = ()=>{
     const [errText, setErrText] = useState("")
     const [promotion,setPromotion] = useState({})
     const currentDate = new Date();
-    const currentFormattedDate = currentDate.toISOString().split('T')[0];
     const [message, setMessage] = useState('');
     const [title, setTitle] = useState('');
     const btnActive = false;
@@ -161,7 +160,7 @@ const RegisterPromotionPage = ()=>{
 
                 <div className="alert bg-red-200 shadow-lg mb-5">
                     <div>
-                        <span className="font-bold text-red-800">You can only choose 3, so think wisely. </span>
+                        <span className="font-bold text-red-800">You can only choose 3, so think wisely. You can only register for promotion until {promotionend.toLocaleDateString('en-GB', options)}</span>
                     </div>
                 </div>
                 <div className="flex flex-row gap-x-5 mb-5">
