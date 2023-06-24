@@ -21,7 +21,7 @@ const ManageCareerTable = ({ staff }) => {
     <table className="table table-compact w-full">
       <thead >
         <tr>
-          <th>Inisial</th>
+          <th>Initial</th>
           <th>Name</th>
           <th>Role</th>
           <th>Career Option</th>

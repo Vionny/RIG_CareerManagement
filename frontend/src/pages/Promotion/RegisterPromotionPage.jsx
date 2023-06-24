@@ -153,7 +153,7 @@ const RegisterPromotionPage = ()=>{
                     <h2>Promotion Registration for Even 2022/2023</h2>
                 </article>
                 {errText && (
-                    <div id="toast-danger" className="toast toast-danger z-50 flex flex-row items-center w-full max-w-xs p-4 mb-4 text-gray-500 bg-red-400 rounded-lg shadow dark:text-gray-400 dark:bg-gray-800" role="alert">
+                    <div id="toast-danger" className="toast toast-danger mr-5 z-50 flex flex-row items-center w-full max-w-xs p-4 mb-4 text-gray-500 bg-red-400 rounded-lg shadow dark:text-gray-400 dark:bg-gray-800" role="alert">
                         
                         <div className="ml-3 font-normal text-white text-lg">{errText}</div>
                         <button type="button" className="ml-auto -mx-1.5 -my-1.5 bg-red-200 text-black hover:text-gray-900 rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5 hover:bg-red-200 inline-flex h-8 w-8 dark:text-gray-500 dark:hover:text-white dark:bg-gray-800 dark:hover:bg-red-400" data-dismiss-target="#toast-danger" aria-label="Close" onClick={()=>{setErrText("")}}>
