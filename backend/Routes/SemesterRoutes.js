@@ -15,6 +15,6 @@ router.post('/updatePromotionDate', updatePromotionDate)
 router.post('/updateChoiceDate', updateChoiceDate)
 router.post('/updateSemester', updateSemester)
 router.post('/insertSemester', insertSemester)
-router.delete('/deleteSemester', deleteSemester)
+router.delete('/deleteSemester/:semesterid', deleteSemester)
 
 module.exports = router

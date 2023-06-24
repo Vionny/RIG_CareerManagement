@@ -78,7 +78,8 @@ const ViewSnP= ()=>{
           } else {
             setEndP(new Date()); // Set the current date as the default value
           }
-      }
+    }
+
     function handlePromotionStartDate(res) {
         // console.log(res)
         // console.log()
@@ -87,7 +88,8 @@ const ViewSnP= ()=>{
           } else {
             setStartP(new Date()); // Set the current date as the default value
           }
-      }
+    }
+
     function handleChoiceEndDate(res) {
         // console.log(res)
         // console.log()
@@ -96,7 +98,8 @@ const ViewSnP= ()=>{
           } else {
             setEndR(new Date()); // Set the current date as the default value
           }
-      }
+    }
+
     function handleChoiceStartDate(res) {
         // console.log(res)
         // console.log()
@@ -105,7 +108,7 @@ const ViewSnP= ()=>{
           } else {
             setStartR(new Date()); // Set the current date as the default value
           }
-      }
+    }
 
 
     const updatePromotionDate = () =>{
@@ -142,7 +145,7 @@ const ViewSnP= ()=>{
             semesterid: currSemester
         }
 
-        // console.log(data);
+        console.log(data);
         axios
         .post(process.env.NEXT_PUBLIC_BACKEND_URL + '/updateChoiceDate', data)
         .then((res) =>{
@@ -160,13 +163,13 @@ const ViewSnP= ()=>{
 
     const deleteSemester = (semesterid) =>{
         
-        var data = {
-            semesterid: semesterid
-        }
+        // var data = {
+        //     semesterid: semesterid
+        // }
 
-        console.log(data);
+        // console.log(data);
         axios
-        .delete(process.env.NEXT_PUBLIC_BACKEND_URL + '/deleteSemester', data)
+        .delete(`${process.env.NEXT_PUBLIC_BACKEND_URL}/deleteSemester/${semesterid}`)
         .then((res) =>{
             console.log(res)
             if(res.data== 'Success'){

@@ -24,8 +24,6 @@ export const EditSemesterModal = ({semesterid, closeModal}) => {
 
     // setCurrSemesters(sessionStorage.getItem('selectedSemester'))
     // console.log("curr smt" +currSemester);
-
-    
   },[semesterid])
 
 
@@ -34,9 +32,9 @@ export const EditSemesterModal = ({semesterid, closeModal}) => {
     // console.log(endPromotion);
 
     var data = {
-        semesterid: semesterid,
-        semesterstartdate: startDate,
-        semesterenddate: endDate
+      semesterstartdate: startDate,
+      semesterenddate: endDate,
+      semesterid: semesterid
 
     }
     console.log(data);
@@ -47,13 +45,14 @@ export const EditSemesterModal = ({semesterid, closeModal}) => {
         if(res.data== 'Success'){
 
             window.location.reload();
+           
           }
     })
     .catch((error)=>{
         console.error(error)
     })
 
-}
+  }
   
 
   return (
