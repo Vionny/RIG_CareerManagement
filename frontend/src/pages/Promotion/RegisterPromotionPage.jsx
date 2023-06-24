@@ -27,7 +27,7 @@ const RegisterPromotionPage = ()=>{
     const btnActive = false;
     const options = {
         weekday: 'long',
-        day: '2-digit',
+        day: 'numeric',
         month: 'long',
         year: 'numeric'
     };
@@ -38,10 +38,9 @@ const RegisterPromotionPage = ()=>{
         });
     }
     useEffect(() => {
-        axios.get(process.env.NEXT_PUBLIC_BACKEND_URL + '/getAstRegisteredRole/' + sessionStorage.getItem('initial') + '/' + sessionStorage.getItem('selectedSemester')).then(async (res) => {
+        axios.get(process.env.NEXT_PUBLIC_BACKEND_URL + '/getAstRegisteredRole/' + sessionStorage.getItem('initial') + '/' + sessionStorage.getItem('selectedSemester')).then((res) => {
             setRoles(res.data);
-            setLoadRole(true)
-            console.log(user)
+            console.log(res.data)
             if(user){
                 if(user.eligiblepromotionstatus){
 
@@ -55,28 +54,27 @@ const RegisterPromotionPage = ()=>{
                             if (promotionstart > currentDate) {
                                 // console.log("start")
                                 setTitle("Promotion Not Yet Started!");
-                                setMessage("Promotion will start on " + promotionstart.toLocaleDateString('en-US', options));
+                                setMessage("Promotion will start on " + promotionstart.toLocaleDateString('en-GB', options));
                             } else if (promotionend < currentDate) {
                                 setTitle("Promotion Ended!");
-                                setMessage("Promotion ended on " + promotionend.toLocaleDateString('en-US', options));
+                                setMessage("Promotion ended on " + promotionend.toLocaleDateString('en-GB', options));
                             }
-                            // console.log(message);
+                            console.log(message);
                         }
-                    });
-                    if(message == ""){
                         axios.get(process.env.NEXT_PUBLIC_BACKEND_URL + '/promotion/getLastPriorityInsert/' + sessionStorage.getItem('initial') + '/' + sessionStorage.getItem('selectedSemester')).then((res) => {
-                            if (res.data === 0) {
+                              if (res.data === 0) {
                                 setPriority(1);
-                            } else {
+                              } else {
                                 setPriority(res.data[0].priority + 1);
-                                if (priority > 3) {
-                                    console.log(priority)
-                                    setTitle("Limit Reached!");
-                                    setMessage("You have reached the limit of registration!");
+                                if (priority > 3 && message=="") {
+                                  console.log(priority)
+                                  setTitle("Limit Reached!");
+                                  setMessage("You have reached the limit of registration!");
                                 }
-                            }
+                              }
+                              setLoadRole(true)
                         });
-                    }
+                    });
                 }else{
                     setTitle('Not Eligible');
                     setMessage('You are not eligible for this promotion')
@@ -85,7 +83,7 @@ const RegisterPromotionPage = ()=>{
             }
         
         });
-    }, [loadRole,user]);
+    }, [loadRole, user]);
 
     const insertPromotion = () => {
         if(periodInput == null || periodInput.length == 0) setErrText("Please input period field")
@@ -121,7 +119,7 @@ const RegisterPromotionPage = ()=>{
       
 
 
-    if(!loadRole) return <div></div>
+    if(!loadRole,!user) return <div></div>
     else{
         if(message !== ""){
             return (
@@ -181,7 +179,7 @@ const RegisterPromotionPage = ()=>{
                         <label tabIndex={0} className="btn btn-ghost bg-base-100 flex justify-start  normal-case card-title ">{(selectedRole !== undefined ? selectedRole.rolename : "Choose Role")}</label>
                         <ul tabIndex={0} className="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-full h-max">
                             {
-                                roles.map((role,index)=>{
+                                roles && roles.map((role,index)=>{
                                     return(<li key={index} onClick={()=>{
                                         setSelectedRole(role)
                                         getDivision(role.divisionid)
