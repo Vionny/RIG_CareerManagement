@@ -64,7 +64,7 @@ const finalizeCareerChoice = (req, res, next) =>{
 
 const getTeamMember = (req, res, next) => {
     const roleid = req.params.roleid
-    const query = "SELECT * FROM assistant WHERE roleid = $1"
+    const query = "SELECT * FROM assistant a JOIN role r ON r.roleid = a.roleid WHERE a.roleid = $1"
     console.log(query);
 
     pool.query(query, [roleid], (error, result) => {

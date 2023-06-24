@@ -13,6 +13,8 @@ const InputCareerChoice = () => {
     const [loadUs, setLoadUs] = useState(false)
     const [finalized,setFinalized] = useState()
 
+    
+
     useEffect(()=>{
         axios.get(process.env.NEXT_PUBLIC_BACKEND_URL + '/getUser/' + sessionStorage.getItem('initial')).then((res) => {
                 setDecision(res.data[0].careerchoice)
