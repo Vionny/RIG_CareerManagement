@@ -21,6 +21,7 @@ const RegisterPromotionPage = ()=>{
     const [errText, setErrText] = useState("")
     const [promotion,setPromotion] = useState({})
     const currentDate = new Date();
+    const currentFormattedDate = currentDate.toISOString().split('T')[0];
     const [message, setMessage] = useState('');
     const [title, setTitle] = useState('');
     const btnActive = false;
@@ -48,8 +49,12 @@ const RegisterPromotionPage = ()=>{
                         if(res.data[0].promotionenddate !== null || res.data[0].promotionstartdate!== null){
                             const promotionstart = new Date(res.data[0].promotionstartdate);
                             const promotionend = new Date(res.data[0].promotionenddate);
-                
-                            // console.log({promotionstart,promotionend,currentDate});
+
+                            setPromotion({
+                                promotionstart: promotionstart,
+                                promotionend: promotionend
+                            })
+
                             if (promotionstart > currentDate) {
                                 // console.log("start")
                                 setTitle("Promotion Not Yet Started!");
@@ -160,7 +165,7 @@ const RegisterPromotionPage = ()=>{
 
                 <div className="alert bg-red-200 shadow-lg mb-5">
                     <div>
-                        <span className="font-bold text-red-800">You can only choose 3, so think wisely. You can only register for promotion until {promotionend.toLocaleDateString('en-GB', options)}</span>
+                        <span className="font-bold text-red-800">You can only choose 3, so think wisely. You can only register for promotion until {!promotion ? "": promotion.promotionend? promotion.promotionend.toLocaleDateString('en-GB', options):""}</span>
                     </div>
                 </div>
                 <div className="flex flex-row gap-x-5 mb-5">
