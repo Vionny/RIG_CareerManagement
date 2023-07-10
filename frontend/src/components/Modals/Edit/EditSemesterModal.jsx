@@ -59,7 +59,8 @@ export const EditSemesterModal = ({semesterid, closeModal}) => {
     <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-30 ">
       <div className="modal-box">
         <h3 className="font-bold text-lg">Edit Semester</h3>
-        <p className="py-4">Edit Semester2</p>
+        {/* <p className="py-4">Edit Semester2</p> */}
+        <button className="btn btn-sm  btn-error absolute right-2 top-2" onClick={closeModal}>✕</button>
         <div className="flex flex-row gap-5">
 
           <div className="card bg-base-100 w-48 flex p-3">
@@ -72,10 +73,10 @@ export const EditSemesterModal = ({semesterid, closeModal}) => {
               <DatePicker className="w-32" selected={endDate} value={endDate} onChange={(endDate) => setEndDate(endDate)} />                
           </div>
 
-          <button className="btn btn-primary" onClick={()=>updateSemesterDate()}>Update</button>
         </div>
+          <button className="btn btn-primary" onClick={()=>updateSemesterDate()}>Update</button>
 
-        <button className="btn" onClick={closeModal}>Close</button>
+        {/* <button className="btn" onClick={closeModal}>Close</button> */}
       </div>
     </div>
   );

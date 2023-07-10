@@ -1,9 +1,7 @@
 "use client"
 import "@/app/globals.css"
-
+import { EditAssistantModal } from "@/components/Modals/Edit/EditAssistantModal"
 import {useEffect, useState} from 'react'
-import DatePicker from 'react-datepicker'
-import 'react-datepicker/dist/react-datepicker.css'
 const axios = require("axios")
 axios.defaults.headers.post['Content-Type'] = 'application/json';
 
@@ -17,12 +15,28 @@ const StaffPage= ()=>{
     const [filteredData, setFilteredData] = useState([]);
     const [selectedOption, setSelectedOption] = useState('None');
     const [filtered, setFiltered] = useState(false);
+    
+    
+    const [ast, setAst] = useState('');
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
     const [generation, setGeneration] = useState(['None','23-1','22-1','21-1','20-1','19-1','18-1','22-2','21-2','20-2','19-2','18-2'])
 
     const handleSelectChange = (event) => {
         setSelectedOption(event.target.value);
     };
+
+
+    const openModal = (astId) => {
+        console.log("open");
+        console.log(astId);
+        setAst(astId);
+        setIsModalOpen(true);
+      }
+
+    const closeModal = () => {
+        setIsModalOpen(false)
+    }
 
     useEffect(()=>{
         axios.get(process.env.NEXT_PUBLIC_BACKEND_URL+'/getAllUser').then((res) => {
@@ -39,12 +53,12 @@ const StaffPage= ()=>{
 
             if(selectedOption === "None" && keyword === "") setFiltered(false);
             else if(selectedOption === "None" && keyword !== ""){
-                console.log("no selection optin");
+                // console.log("no selection optin");
                 setFilteredData( users.filter(user => user.initial.toLowerCase().includes(keyword.toLowerCase()) || user.assistantname.toLowerCase().includes(keyword.toLowerCase())) || user.rolename.toLowerCase().includes(keyword.toLowerCase()));
                 setFiltered(true);
             }
             else if(selectedOption !== "None" && keyword !== ""){
-                console.log("filter and search");
+                // console.log("filter and search");
                 setFiltered(true);
                 setFilteredData( 
                     users.filter( user => user.initial.toLowerCase().includes(keyword.toLowerCase()) || user.assistantname.toLowerCase().includes(keyword.toLowerCase()) || user.rolename.toLowerCase().includes(keyword.toLowerCase())
@@ -55,9 +69,9 @@ const StaffPage= ()=>{
             else{
                 
                 setFiltered(true);
-                console.log("filter");
-                console.log(selectedOption);
-                console.log(users.filter(user => user.initial.includes(selectedOption)));
+                // console.log("filter");
+                // console.log(selectedOption);
+                // console.log(users.filter(user => user.initial.includes(selectedOption)));
                 setFilteredData(users.filter(user => user.initial.includes(selectedOption)));
                 
                 // setFilteredData( users.filter(user => user.initial.includes(selectedOption) && (user.initial.toLowerCase().includes(keyword.toLowerCase()) || user.assistantname.toLowerCase().includes(keyword.toLowerCase())) || user.rolename.toLowerCase().includes(keyword.toLowerCase())));
@@ -69,8 +83,8 @@ const StaffPage= ()=>{
         
     },[keyword, selectedOption])
 
-    console.log(filteredData);
-    console.log(filtered);
+    // console.log(filteredData);
+    // console.log(filtered);
 
 
 
@@ -82,6 +96,13 @@ const StaffPage= ()=>{
             <article className="prose base mb-5">
                 <h2>Assistant Management</h2>
             </article>
+
+            {isModalOpen && (
+                    <div className="modal-backdrop bg-black" >
+                        <EditAssistantModal assistant={ast} closeModal={closeModal}/>
+                        {/* <EditSemesterModal semesterid={selectedSemesterId} closeModal={closeModal} /> */}
+                    </div>
+            )}
 
             <div>
                     <input type="text" placeholder="Search" className="input input-bordered w-full max-w-xs " onChange={e => setKeyword(e.target.value)}/>
@@ -150,7 +171,7 @@ const StaffPage= ()=>{
                                         <td>{us.eligiblepromotionstatus ? 'Eligible' : 'Not Eligible'}</td>
                                         <td>{us.eligibleforresign ? 'Eligible' : 'Not Eligible'}</td>
                                         <td>
-                                           <button >Edit</button> 
+                                            <button onClick={() => openModal(us.initial)}>Edit</button>
                                         </td>
                                         
                                          
@@ -169,7 +190,7 @@ const StaffPage= ()=>{
                                             <td>{us.eligiblepromotionstatus ? 'Eligible' : 'Not Eligible'}</td>
                                             <td>{us.eligibleforresign ? 'Eligible' : 'Not Eligible'}</td>
                                             <td>
-                                               <button >Edit</button> 
+                                                <button onClick={() => openModal(us.initial)}>Edit</button>
                                             </td>
                                             
                                              

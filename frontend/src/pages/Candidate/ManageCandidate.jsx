@@ -7,25 +7,22 @@ axios.defaults.headers.post['Content-Type'] = 'application/json';
 
 const ManageCandidate = ()=>{
 
-    const [currSemester,setCurrSemesters] = useState()
     const [loadRegist, setLoadRegist] = useState(false)
     const [regist,setRegist] = useState({})
+    const [currSemester, setCurrSmt] = useState({})
     
-
     useEffect(()=>{
-        setCurrSemesters(sessionStorage.getItem('selectedSemester'))
-        console.log(currSemester);
-    
-    },[currSemester])
+        console.log("h");
+        setCurrSmt(sessionStorage.getItem('selectedSemester'));
+        
+                
+        if(sessionStorage.getItem('selectedSemester')){
+            console.log(currSemester);
 
-
-    useEffect(()=>{
-        if(currSemester){
-
-            axios.get(process.env.NEXT_PUBLIC_BACKEND_URL+'/getCandidateList/'+currSemester).then((res) => {
+            axios.get(process.env.NEXT_PUBLIC_BACKEND_URL+'/getCandidateList/'+sessionStorage.getItem('selectedSemester')).then((res) => {
                 console.log(res.data)
-                // setRegist(res.data)  
-                // setLoadRegist(true)
+                setRegist(res.data)  
+                setLoadRegist(true)
             })
         }
 
@@ -75,19 +72,20 @@ const ManageCandidate = ()=>{
                                 </thead>
                                 <tbody>
 
-                                {/* {semesters.map((sem, index) => (
+                                {regist.map((reg, index) => (
                                     <tr key={index}  >
-                                        <td>{sem.semestername}</td>
-                                        <td>{sem.semesterstartdate}</td>
-                                        <td>{sem.semesterenddate}</td>
+                                        <td>{reg.initial}</td>
+                                        <td>{reg.priorityone}</td>
+                                        <td>{reg.prioritytwo == null ? '-' : reg.prioritytwo}</td>
+                                        <td>{reg.prioritythree ==null ? '-' : reg.prioritythree}</td>
                                         
-                                        <td className="flex flex-col items-center">
+                                        {/* <td className="flex flex-col items-center">
                                         <button onClick={() => openModal(sem.semesterid)}>Edit</button>
                                         <button onClick={() => deleteSemester(sem.semesterid)}>Delete</button>
-                                        </td>
+                                        </td> */}
                                         
                                         </tr>
-                                    ))} */}
+                                    ))}
 
                                 </tbody>
                             </table>

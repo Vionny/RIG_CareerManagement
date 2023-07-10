@@ -69,12 +69,13 @@ export const AddSemesterModal = ({closeModal}) => {
     }
 
     return(
-        <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-30 ">
-      <div className="modal-box">
+      <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-30 ">
+      <div className="modal-box h-96">
         <h3 className="font-bold text-lg">Add Semester</h3>
+        <button className="btn btn-sm  btn-error absolute right-2 top-2" onClick={closeModal}>✕</button>
         
 
-          <div className="flex">
+          <div className="flex flex-row gap-2">
 
           <input onChange={(e)=>{setSemesterId(e.target.value)}} type="text" placeholder="Semester ID" className="input input-bordered w-full max-w-xs" />
           <input onChange={(e)=>{setSemesterName(e.target.value)}} type="text" placeholder="Semester Name" className="input input-bordered w-full max-w-xs" />
@@ -82,20 +83,20 @@ export const AddSemesterModal = ({closeModal}) => {
           
         <div className="flex flex-row gap-5">
 
-          <div className="card bg-base-100 w-48 flex p-3">
+          <div className="card bg-base-100 w-full flex p-3">
               <h3 className="text-lg font-semibold">Start Date</h3>
               <DatePicker className="w-32" selected={startDate} value={startDate} onChange={(startDate) => setStartDate(startDate)} />                
           </div>
 
-          <div className="card bg-base-100 w-48 flex p-3">
+          <div className="card bg-base-100 w-full flex p-3">
               <h3 className="text-lg font-semibold">End Date</h3>
               <DatePicker className="w-32" selected={endDate} value={endDate} onChange={(endDate) => setEndDate(endDate)} />                
           </div>
 
-          <button className="btn btn-primary" onClick={()=>insertSemester()}>Add</button>
         </div>
+          <button className="btn btn-primary" onClick={()=>insertSemester()}>Add</button>
 
-        <button className="btn" onClick={closeModal}>Close</button>
+        
       </div>
     </div>
     )
