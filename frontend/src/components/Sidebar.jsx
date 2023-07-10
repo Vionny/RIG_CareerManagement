@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export default function Sidebar() {
     return (
-        <div className="flex justify-center p-3 bg-primary-content w-1/5">
+        <div className="flex justify-center p-3 bg-gradient-to-br from-sky-600 to-sky-200 text-white w-1/5">
             <div className="flex flex-col w-full">
                 <div className="space-y-3">
                     <div className="flex items-center">
