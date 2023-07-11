@@ -1,5 +1,6 @@
 "use client"
 import "@/app/globals.css"
+import SimpleInformationModal from "@/components/Modals/Information/SimpleInformationModal"
 import { UserContext } from "@/components/UserContext"
 import { useRouter } from "next/navigation"
 import {useContext, useEffect, useState} from 'react'
@@ -24,6 +25,8 @@ const RegisterPromotionPage = ()=>{
     const currentFormattedDate = currentDate.toISOString().split('T')[0];
     const [message, setMessage] = useState('');
     const [title, setTitle] = useState('');
+    const [showModal, setShowModal] = useState(false);
+    const [semester , setSemester] = useState({});
     const btnActive = false;
     const options = {
         weekday: 'long',
@@ -46,7 +49,16 @@ const RegisterPromotionPage = ()=>{
 
                     axios.get(process.env.NEXT_PUBLIC_BACKEND_URL + '/getSelectedSemester/' + sessionStorage.getItem('selectedSemester')).then((res) => {
                         console.log(res.data[0])
-                        if(res.data[0].promotionenddate !== null || res.data[0].promotionstartdate!== null){
+                        setSemester({
+                            startdate : new Date(res.data[0].semesterstartdate),
+                            enddate : new Date(res.data[0].semesterenddate)
+                        })
+                        if(currentDate > semester.enddate){
+                            setMessage("Semester has already finished on "+ semester.enddate.toLocaleDateString('en-GB', options));
+                        }else if(res.data[0].promotionenddate == null || res.data[0].promotionstartdate== null){
+                            setMessage("Promotion date has not been set yet !")
+                        }
+                        else if(res.data[0].promotionenddate !== null && res.data[0].promotionstartdate!== null){
                             const promotionstart = new Date(res.data[0].promotionstartdate);
                             const promotionend = new Date(res.data[0].promotionenddate);
 
@@ -111,7 +123,8 @@ const RegisterPromotionPage = ()=>{
                 .then((res) => {
                   console.log(res);
                   if(res.data== 'Success'){
-                    window.location.reload();
+                    
+                    setShowModal(true)
                   }
                 })
                 .catch((error) => {
@@ -121,33 +134,15 @@ const RegisterPromotionPage = ()=>{
        
       };
       
-
+    const closeModal = ()=>{
+        setShowModal(false)
+        window.location.reload();
+    }
 
     if(!loadRole,!user) return <div></div>
     else{
-        if(message !== ""){
-            return (
-                <div className="hero min-h-screen bg-slate-200">
-                    <div className="hero-content text-center">
-                        <div className="max-w-md">
-                        <div className="card w-100 bg-red-100 text-primary-content border border-red-500 shadow-xl shadow-slate-500">
-                            <div className="card-body  ">
-                                <h2 className="card-title mb-5 font-bold text-red-500">{title}</h2>
-                                <p className="text-black mb-5 text-lg">{message}</p>
-                                <div className="card-actions justify-end mt-3">
-                                    <button className="btn bg-red-50 btn-error" onClick={()=>{
-                                        router.push('/home')
-                                    }}>Go back to home</button>
-                                </div>
-                            </div>
-                        </div>
-                        </div>
-                    </div>
-                </div>
-            )
-        }else
         return(
-            <div className=" pl-10 pr-10 py-5 bg-base-200 min-h-full w-full ">
+            <div className=" pl-10 pr-10 py-5 bg-base-200 min-h-screen w-full ">
     
                 <article className="prose base mb-5">
                     <h2>Promotion Registration for Even 2022/2023</h2>
@@ -165,10 +160,11 @@ const RegisterPromotionPage = ()=>{
 
                 <div className="alert bg-red-200 shadow-lg mb-5">
                     <div>
-                        <span className="font-bold text-red-800">You can only choose 3, so think wisely. You can only register for promotion until {!promotion ? "": promotion.promotionend? promotion.promotionend.toLocaleDateString('en-GB', options):""}</span>
+                        <span className="font-bold text-red-800">{message ? message : "You can only choose 3, so think wisely. You can only register for promotion until "+(!promotion ? "": promotion.promotionend? promotion.promotionend.toLocaleDateString('en-GB', options):"")}</span>
                     </div>
                 </div>
-                <div className="flex flex-row gap-x-5 mb-5">
+                
+                {!message && (<div className="flex flex-row gap-x-5 mb-5">
                     <div className="rounded-md flex items-center p-3 bg-slate-300 w-1/4 h-12">
                         <h2 className="card-title ">Priority {
                            (priority == undefined ? "0" : priority)
@@ -192,25 +188,30 @@ const RegisterPromotionPage = ()=>{
                             }
                         </ul>
                     </div>
-                </div>
-    
-                <div className="card bg-base-100  flex-auto h-96 ">
+                </div>)}
+                        
+                {!message &&(<div className="card bg-base-100  flex-auto h-96 ">
                     <div className="card-body flex flex-col">
                         <h2 className="card-title ">Reason :</h2>
                         <textarea onChange={(e)=>{setReasonInput(e.target.value)}} className="textarea-md w-full h-64 resize-none bg-base-200" placeholder="My reason is..."></textarea>
                     </div>
-                </div>   
+                </div> )}  
                 
                 
-    
+                {!message &&(
                 <div className="flex justify-end my-5">
-                    <button onClick={()=>insertPromotion()} className="btn btn-primary w-32 mr-3" >Submit</button>
-                </div>
-    
-                <div className="flex flex-row gap-x-5">
+                    <button onClick={()=>{insertPromotion()}} className="btn btn-primary w-32 mr-3" >Submit</button>
+                </div>)}
+                {showModal && (<SimpleInformationModal
+                    title = "Promotion Choice Successfully Registered !"
+                    message = {"You have registered as "+(selectedRole !== undefined ? selectedRole.rolename : "")}
+                    onConfirm= {closeModal}
+                />)}
+                    
+                {!message &&(<div className="flex flex-row gap-x-5">
                     <div className="card bg-base-100 w-3/5">
                         <div className="card-body ">
-                            <h2 className="card-title">{(selectedRole !== undefined ? selectedRole.rolename : "")}</h2>
+                            <h2 className="card-title">{(selectedRole !== undefined ?`${selectedRole.rolename}` : "")}</h2>
                             {(selectedRole !== undefined ? <p>{selectedRole.rolerequirements}</p> : <p></p>)}
                         </div>
                     </div>
@@ -228,7 +229,7 @@ const RegisterPromotionPage = ()=>{
                     </div>
     
     
-                </div>
+                </div>)}
                 
                 
     

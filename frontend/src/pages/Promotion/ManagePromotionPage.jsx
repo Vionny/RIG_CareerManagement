@@ -20,11 +20,13 @@ const ManagePromotionPage = ()=>{
         if(currSemester){
             
             axios.get(process.env.NEXT_PUBLIC_BACKEND_URL+'/promotion/getPromotionRegistrant/'+currSemester).then((res) => {
-                console.log(res.data[0].initial)
+                if(res.data!== undefined){
+                    console.log(res.data[0])
                 
-                setRegist(res.data)  
-                setLoadRegist(true)
-                console.log(registers);
+                    setRegist(res.data)  
+                    setLoadRegist(true)
+                    console.log(registers);
+                }
             })
         }
 
