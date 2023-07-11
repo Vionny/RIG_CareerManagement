@@ -14,7 +14,7 @@ const ViewSnP= ()=>{
     const [currSemester,setCurrSemesters] = useState()
     const [loadSem, setLoadSem] = useState(false)
     const [selectedSemesterId, setSelectedSemesterId] = useState(null)
-
+    const [selectedSemester, setSelectedSemester] = useState()
     //date
     const [startPromotion, setStartP] = useState();
     const [endPromotion, setEndP] = useState();
@@ -47,6 +47,9 @@ const ViewSnP= ()=>{
         axios.get(process.env.NEXT_PUBLIC_BACKEND_URL+'/getAllSemester').then((res) => {
             console.log(res.data)
             setSemesters(res.data)  
+            setSelectedSemester(res.data.filter((semester) => semester.semesterid.includes(sessionStorage.getItem('selectedSemester'))))
+
+            console.log(selectedSemester)
             setLoadSem(true)
         })
 
@@ -246,7 +249,7 @@ const ViewSnP= ()=>{
                 {/* bawah */}
                 <article className="prose base my-5">
                     <h2>
-                        <span className="text-primary">Even 2022/2023</span>
+                        <span className="text-primary">{selectedSemester ? selectedSemester[0].semestername : ''}</span>
                         <span> Period</span>
                     </h2>
                 </article>

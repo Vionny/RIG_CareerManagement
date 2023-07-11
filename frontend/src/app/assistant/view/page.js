@@ -2,30 +2,30 @@
 import Navbar from "@/components/Navbar"
 import Sidebar from "@/components/Sidebar"
 import "@/app/globals.css"
-import ViewSnP from "@/pages/Staff/StaffPage"
 import { UserProvider } from "@/components/UserContext"
-import StaffPage from "@/pages/Staff/StaffPage"
 import { useRouter } from "next/navigation"
 import { isAuth } from "@/Middleware"
+import AssistantPage from "@/pages/Assistant/AssistantPage"
 
-function allUser(){
+function viewAllAssistant(){
 
     const router = useRouter();
 
     if(!isAuth()){
         router.push('/')
-    }else
+    }else{
     return(
         <UserProvider>
             <div >
                 <Navbar/>
                 <div className="flex flex-row">
                     <Sidebar/>
-                    <StaffPage/>
+                    <AssistantPage/>
                 </div>
             </div>
         </UserProvider>
-    )    
+    )
+}
 }
 
-export default allUser
+export default viewAllAssistant

@@ -6,6 +6,7 @@ import "@/app/globals.css"
 import { UserProvider } from "@/components/UserContext"
 import { isAuth } from "@/Middleware"
 import { useRouter } from "next/navigation"
+
 function RegisterPromotion(){
 
     const router = useRouter();

@@ -2,39 +2,41 @@
 import "../app/globals.css"
 import React from 'react';
 
-const RoleStatisticTable = ({ role }) => {
+const RoleStatisticTable = ({ roleStatistics }) => {
 
+  console.log(roleStatistics)
   return (
-    <table className="table table-compact w-full">
-      <thead >
-        <tr>
-          <th>Role</th>
-          <th>Slot</th>
-          <th>Filled</th>
-          <th>Willing</th>
-          <th>Not Willing</th>
-          <th>Tentative</th>
-          <th>Action</th>
-          
-        </tr>
-      </thead>
-      <tbody >
-        {role.map((roleItem, index) => (
-          <tr key={index}  >
-            <td>{roleItem.role}</td>
-            <td>{roleItem.slot}</td>
-            <td>{roleItem.willing}</td>
-            <td>{roleItem.notwilling}</td>
-            <td>{roleItem.tentative}</td>
-            <td>{roleItem.unknown}</td>
-            <td>
-                <button>Edit</button>
-            </td>
-            
-          </tr>
-        ))}
-      </tbody>
-    </table>
+    <div className="max-h-80 mt-5 overflow-auto">
+        <table className="table table-compact w-full " >
+          <thead >
+            <tr>
+              <th className="sticky top-0 py-4 text-center">Role</th>
+              <th className="sticky top-0 py-4 text-center">Available Slot</th>
+              <th className="sticky top-0 py-4 text-center">Maximum Slot</th>
+              <th className="sticky top-0 py-4 text-center">Filled</th>
+              <th className="sticky top-0 py-4 text-center">Willing</th>
+              <th className="sticky top-0 py-4 text-center">Not Willing</th>
+              <th className="sticky top-0 py-4 text-center">Tentative</th>
+              
+            </tr>
+          </thead>
+          <tbody >
+            {roleStatistics.map((roleStat, index) => (
+              <tr key={index}  >
+                <td>{roleStat.rolename}</td>
+                <td>{roleStat.maximumslot - roleStat.assistant_count}</td>
+                <td>{roleStat.maximumslot}</td>
+                <td>{roleStat.assistant_count}</td>
+                <td>{roleStat.willing_count}</td>
+                <td>{roleStat.not_willing_count}</td>
+                <td>{roleStat.tentative_count}</td>
+                
+              </tr>
+            ))}
+          </tbody>
+        </table>
+    </div>
+    
   );
 };
 

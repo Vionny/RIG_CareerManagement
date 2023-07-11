@@ -43,9 +43,24 @@ const getRoleByDivision = (req, res, next) =>{
     });
 }
 
+const getRoleStatistics = (req, res) => {
+
+    const query = "SELECT divisionid,r.roleid, r.rolename, r.maximumslot, COUNT(a.roleid) AS assistant_count, SUM(CASE WHEN a.careerchoice = 'tentative' THEN 1 ELSE 0 END) AS tentative_count, SUM(CASE WHEN a.careerchoice = 'willing' THEN 1 ELSE 0 END) AS willing_count, SUM(CASE WHEN a.careerchoice = 'not willing' THEN 1 ELSE 0 END) AS not_willing_count FROM role AS r LEFT JOIN assistant AS a ON r.roleid = a.roleid GROUP BY r.roleid, r.rolename, r.maximumslot"
+
+    pool.query(query, (error, result) => {
+        if (error) {
+            console.log(error)
+            res.status(500).send('Error fetching role');
+        } else {
+            res.status(200).send(result.rows);
+        }
+    });
+
+}
 
 module.exports = {
     getAllRole,
     getAstRegisteredRole,
-    getRoleByDivision
+    getRoleByDivision,
+    getRoleStatistics
 };

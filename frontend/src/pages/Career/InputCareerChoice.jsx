@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation';
 import { useContext, useEffect, useState } from 'react';
 import axios from 'axios';
 import { UserContext } from '@/components/UserContext';
+import ConfirmationModal from "@/components/Modals/Confirmation/ConfirmationModal";
 
 const InputCareerChoice = () => {
   const [errText, setErrText] = useState('');
@@ -18,6 +19,8 @@ const InputCareerChoice = () => {
   const [choice, setChoice] = useState(null);
   const currentDate = new Date();
   const router = useRouter();
+  const [semester , setSemester] = useState({});
+  const [showModal, setShowModal] = useState(false);
 
   const options = {
     weekday: 'long',
@@ -33,33 +36,45 @@ const InputCareerChoice = () => {
         setFinalized(user.fpfinalize)
       if (user.eligibleforresign) {
         axios.get(process.env.NEXT_PUBLIC_BACKEND_URL + '/getSelectedSemester/' + sessionStorage.getItem('selectedSemester')).then((res) => {
-            console.log(res.data[0]);
-            if (res.data[0].choiceenddate !== null && res.data[0].choicestartdate !== null) {
-              const choicestart = new Date(res.data[0].choicestartdate);
-              const choiceend = new Date(res.data[0].choiceenddate);
+            setSemester({
+              startdate : new Date(res.data[0].semesterstartdate),
+              enddate : new Date(res.data[0].semesterenddate)
+            })
+            if(currentDate > semester.enddate){
+              setMessage('Semester has already finished on '+ semester.enddate.toLocaleDateString('en-GB', options));
+            }else if(finalized){
+              setMessage('You have already finalized your answer ! ')
+            }else{
+              console.log(res.data[0]);
+              if (res.data[0].choiceenddate == null || res.data[0].choicestartdate == null) {
+                  setMessage("Career Choice Date has not been set yet !")
+              }else if (res.data[0].choiceenddate !== null && res.data[0].choicestartdate !== null) {
+                const choicestart = new Date(res.data[0].choicestartdate);
+                const choiceend = new Date(res.data[0].choiceenddate);
+                
+                setChoice({
+                  choicestart: choicestart,
+                  choiceend: choiceend,
+                });
+                if (choicestart > currentDate) {
+                  setTitle('Career Choice Update Phase has not yet started !');
+                  setMessage('Career Choice Update Phase will start on ' + choicestart.toLocaleDateString('en-GB', options));
+                } else if (choiceend < currentDate) {
+                  setTitle('Career Choice Update Phase has Ended !');
+                  setMessage('Career Choice Update Phase ended on ' + choiceend.toLocaleDateString('en-GB', options));
+                }
 
-              setChoice({
-                choicestart: choicestart,
-                choiceend: choiceend,
-              });
-
-              if (choicestart > currentDate) {
-                setTitle('Career Choice Update Phase has not yet started !');
-                setMessage('Career Choice Update Phase will start on ' + choicestart.toLocaleDateString('en-GB', options));
-              } else if (choiceend < currentDate) {
-                setTitle('Career Choice Update Phase has Ended !');
-                setMessage('Career Choice Update Phase ended on ' + choiceend.toLocaleDateString('en-GB', options));
+                console.log(choice);
               }
-
-              console.log(choice);
-            }
-
+            } 
             setLoadUs(true);
           });
+          
       } else {
         setTitle('Not Eligible');
         setMessage('You are not eligible for updating your career choice yet !');
       }
+      console.log(message)
     }
   }, [loadUs, user]);
 
@@ -90,11 +105,10 @@ const InputCareerChoice = () => {
     }
   };
 
-  const handleFinalize = () => {
+  const handleConfirm = () => {
     var data = {
       initial: sessionStorage.getItem('initial'),
     };
-
     console.log(data);
     axios
       .post(process.env.NEXT_PUBLIC_BACKEND_URL + '/finalizeCareerChoice', data)
@@ -108,30 +122,11 @@ const InputCareerChoice = () => {
         console.error(error);
       });
   };
-
+  const handleCancel =()=>{
+    setShowModal(false)
+  }
   if (!loadUs, !user) return <div></div>;
   else {
-    if (message !== '') {
-      return (
-        <div className="hero min-h-screen bg-slate-200">
-          <div className="hero-content text-center">
-            <div className="max-w-md">
-              <div className="card w-100 bg-red-100 text-primary-content border border-red-500 shadow-xl shadow-slate-500">
-                <div className="card-body  ">
-                  <h2 className="card-title mb-5 font-bold text-red-500">{title}</h2>
-                  <p className="text-black mb-5 text-lg">{message}</p>
-                  <div className="card-actions justify-end mt-3">
-                    <button className="btn bg-red-50 btn-error" onClick={() => router.push('/home')}>
-                      Go back to home
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      );
-    } else {
       return (
         <div className="pl-10 pr-10 pt-5 bg-base-200 min-h-screen w-full">
           <article className="prose base mb-5">
@@ -156,7 +151,7 @@ const InputCareerChoice = () => {
                   d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
                 />
               </svg>
-              <span className="font-bold text-red-800">Career choice update phase will end at {!choice ? '' : choice.choiceend.toLocaleDateString('en-GB', options)}</span>
+              <span className="font-bold text-red-800">{message ? message : "Career choice update phase will end at " + (!choice ? "" : choice.choiceend.toLocaleDateString('en-GB',options))}</span>
             </div>
           </div>
 
@@ -186,7 +181,7 @@ const InputCareerChoice = () => {
                 }}
                 disabled={finalized}
               ></textarea>
-              {enableErr && (
+              {(enableErr && !message) && (
                 <div className="flex p-4 mt-3 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400" role="alert">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -209,20 +204,29 @@ const InputCareerChoice = () => {
               )}
             </div>
           </div>
-          {!finalized && (
+          {(!finalized && !message) && (
             <div className="flex justify-end mt-5">
               <button className="btn btn-info bg-blue-500 hover:bg-blue-500 text-white w-32 mr-3" onClick={handleSubmit}>
                 Submit
               </button>
-              <button className="btn btn-error text-white hover:bg-red-500 bg-red-500 w-32" onClick={handleFinalize}>
+              <button className="btn btn-error text-white hover:bg-red-500 bg-red-500 w-32" onClick={() => setShowModal(true)}>
                 Finalize
               </button>
+              {showModal && (
+                <ConfirmationModal
+                  show = {showModal}
+                  title="Confirmation"
+                  message="Are you sure you want to finalize your choice ?"
+                  onConfirm={handleConfirm}
+                  onCancel={handleCancel}
+                />
+              )}
             </div>
           )}
         </div>
       );
     }
-  }
+  
 };
 
 export default InputCareerChoice;

@@ -14,7 +14,7 @@ const getUser = (req, res, next) =>{
 }
 
 const getAllUser = (req, res, next) =>{
-    const query = "SELECT initial, assistantname, rolename, ast.careerchoice, ast.eligiblepromotionstatus, ast.eligibleforresign  FROM assistant ast JOIN role rl ON ast.roleid = rl.roleid"
+    const query = "SELECT initial, assistantname, rolename, ast.careerchoice, ast.eligiblepromotionstatus, ast.eligibleforresign  FROM assistant ast JOIN role rl ON ast.roleid = rl.roleid ORDER BY initial ASC"
 
     pool.query(query,(error, result) => {
         if (error) {
@@ -77,6 +77,25 @@ const getTeamMember = (req, res, next) => {
     })
 }
 
+const updateAstCareerChoice = (req,res)=>{
+    const initial = req.body.initial
+    const careerchoice = req.body.careerchoice
+    const query = "UPDATE assistant SET careerchoice = $1 WHERE initial = $2"
+
+    console.log(initial)
+    console.log(careerchoice)
+
+    pool.query(query, [careerchoice,initial], (error, result) => {
+        if (error) {
+            res.status(500).send('Error fetching user');
+        } else {
+           res.status(200).send('Success');
+        }
+    
+    })
+
+}
+
 
 const updateAssistant = (req, res, next) =>{
     const eligiblepromotionstatus = req.body.eligiblepromotionstatus
@@ -101,6 +120,7 @@ module.exports = {
     insertCareerChoice,
     finalizeCareerChoice,
     getTeamMember,
-    getAllUser, 
+    getAllUser,
+    updateAstCareerChoice,
     updateAssistant
 }
