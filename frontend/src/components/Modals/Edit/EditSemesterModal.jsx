@@ -76,7 +76,6 @@ export const EditSemesterModal = ({semesterid, closeModal}) => {
         </div>
           <button className="btn btn-primary" onClick={()=>updateSemesterDate()}>Update</button>
 
-        {/* <button className="btn" onClick={closeModal}>Close</button> */}
       </div>
     </div>
   );

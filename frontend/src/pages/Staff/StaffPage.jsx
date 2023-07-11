@@ -104,31 +104,24 @@ const StaffPage= ()=>{
                     </div>
             )}
 
-            <div>
-                    <input type="text" placeholder="Search" className="input input-bordered w-full max-w-xs " onChange={e => setKeyword(e.target.value)}/>
-                    {/* <select value={selectedOption} onChange={handleSelectChange}>
-                    {generation.map((gen) => (
-                            <option value={gen}>{gen}</option>            
-                        ))}
-                       
-                    </select> */}
+            <div className="flex flex-row gap-5 mb-5">
+                <input type="text" placeholder="Search" className="input  w-64 max-w-xs " onChange={e => setKeyword(e.target.value)}/>
+                
+                <div className="dropdown justify-start w-64">
+                        <label tabIndex={0} className="btn btn-ghost bg-base-100 flex justify-start  normal-case card-title ">{(selectedOption !== "None" ? selectedOption : "Generation")}</label>
+                        <ul tabIndex={0} className="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-full h-max">
+                            {
+                                generation.map((gen,index)=>{
+                                    return(<li key={index} onClick={()=>{
+                                        setSelectedOption(gen)
+                                        console.log(gen);
+                                        
+                                    }}><a className="h-8">{gen}</a></li>)
+                                })
+                            }
+                        </ul>
+                </div>
             </div>
-
-            <div className="dropdown justify-start w-2/4">
-                    <label tabIndex={0} className="btn btn-ghost bg-base-100 flex justify-start  normal-case card-title ">{(selectedOption !== "None" ? selectedOption : "Generation")}</label>
-                    <ul tabIndex={0} className="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-full h-max">
-                        {
-                            generation.map((gen,index)=>{
-                                return(<li key={index} onClick={()=>{
-                                    setSelectedOption(gen)
-                                    console.log(gen);
-                                    
-                                }}><a className="h-8">{gen}</a></li>)
-                            })
-                        }
-                    </ul>
-            </div>
-
 
             <div className="card w-full bg-base-100 ">
                     <div className="card-body w-full">

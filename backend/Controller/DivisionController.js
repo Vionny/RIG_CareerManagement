@@ -30,6 +30,9 @@ const getDivisionByRole = (req, res, next) =>{
 
 }
 
+
+
+
 module.exports = {
     getAllDivision,
     getDivisionByRole

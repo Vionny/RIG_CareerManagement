@@ -59,90 +59,83 @@ export const EditAssistantModal = ({assistant, closeModal}) => {
     }
 
 
-    const updateEligiblePromotion = (value) => {
-
-    }
-
   
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-30 w-full ">
-        <div className=" bg-base-100 h-96   py-5 rounded-xl">
+    <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-30">
+        <div className="modal-box">
           {/* <div className="flex flex-col"> */}
+            <h3 className="font-bold text-lg mb-3">Edit Assistant</h3>
 
-            <button className="btn btn-sm  btn-error absolute " onClick={closeModal}>✕</button>
-            <h3 className="font-bold text-lg">Edit Assistant</h3>
+            <button className="btn btn-sm  btn-error absolute right-2 top-2" onClick={closeModal}>✕</button>
+            <div>   
           {/* </div> */}
             <div className="flex flex-col gap-5">
-              <div className="flex flex-row gap-5">
-                <h3 className="text-lg font-semibold">Initial</h3>
-                <p>{initial}</p>
-              </div>
-
-              <div className="flex flex-row gap-5">
-                <h3 className="text-lg font-semibold">Name</h3>
-                <p>{name}</p>
-              </div>
-
-            <div className="flex flex-row gap-5">
               
-              <div className="card bg-slate-300 w-28 flex ">
-                  <h3 className="text-lg font-semibold">Leader</h3>
-                  <input type="text" className="input input-bordered w-full max-w-xs " placeholder={leader==null ? "-" : leader} onChange={e => setLeader(e.target.value)}/>
+              <div className="flex flex-col gap-1">
+                <h3 className="text-lg font-semibold">{initial}</h3>
+                <h3 className="text-lg font-semibold">{name}</h3>
               </div>
-              <div className="card bg-base-100 w-48 flex">
-                <h3 className="text-lg font-semibold">Career Choice</h3>
-               
-                  <select className="select w-full max-w-xs bg-base-200" value={careerChoice} onChange={(e)=>{setCareerChoice(e.target.value)}} >
-                      <option value="willing">Willing to Continue</option>
-                      <option value="not willing">Not Willing to Continue</option>
-                      <option value="tentative">Tentative</option>
-                  </select>
-                    
-              </div>
-
-            </div>
-
-            <div className="flex flex-row gap-5">
-            
-              <div className="card bg-base-100 w-52 flex ">
-                  <h3 className="text-lg font-semibold">Eligible For Promotion</h3>
-                  <select
-                    className="select w-full max-w-xs bg-base-200" 
-                    value={eligiblePromotion}
-                    onChange={(e) => {
-                      setEligiblePromotion(e.target.value);
-                    }}
-                    
-                  >
-                    <option value = {true} >Eligible</option>
-                    <option value = {false}>Not Eligible</option>
-                  </select>
-                  
-              </div>
-              <div className="card bg-base-100 w-52 flex">
-                  <h3 className="text-lg font-semibold">Eligible For Resign</h3>
-                  <select
-                    className="select w-full max-w-xs bg-base-200" 
-                    value={eligibleResign}
-                    onChange={(e) => {
-                      e.target.value == "true" ? setEligibleResign(true) : setEligibleResign(false);
+                
+              <div className="flex flex-row gap-5">
+                
+                <div className="card  w-52 flex ">
+                    <h3 className="text-lg font-semibold">Leader</h3>
+                    <input type="text" className="input input-bordered w-full max-w-xs " placeholder={leader==null ? "-" : leader} onChange={e => setLeader(e.target.value)}/>
+                </div>
+                <div className="card bg-base-100 w-52 flex">
+                  <h3 className="text-lg font-semibold">Career Choice</h3>
+                
+                    <select className="select w-full max-w-xs bg-base-200" value={careerChoice} onChange={(e)=>{setCareerChoice(e.target.value)}} >
+                        <option value="willing">Willing to Continue</option>
+                        <option value="not willing">Not Willing to Continue</option>
+                        <option value="tentative">Tentative</option>
+                    </select>
                       
-                    }}
-                    
-                  >
-                    <option value={true}>Eligible</option>
-                    <option value={false}>Not Eligible</option>
-                  </select>
+                </div>
+
               </div>
 
+              <div className="flex flex-row gap-5">
+              
+                <div className="card bg-base-100 w-52 flex ">
+                    <h3 className="text-lg font-semibold">Eligible For Promotion</h3>
+                    <select
+                      className="select w-full max-w-xs bg-base-200" 
+                      value={eligiblePromotion}
+                      onChange={(e) => {
+                        setEligiblePromotion(e.target.value);
+                      }}
+                      
+                    >
+                      <option value = {true} >Eligible</option>
+                      <option value = {false}>Not Eligible</option>
+                    </select>
+                    
+                </div>
+                <div className="card bg-base-100 w-52 flex">
+                    <h3 className="text-lg font-semibold">Eligible For Resign</h3>
+                    <select
+                      className="select w-full max-w-xs bg-base-200" 
+                      value={eligibleResign}
+                      onChange={(e) => {
+                        e.target.value == "true" ? setEligibleResign(true) : setEligibleResign(false);
+                        
+                      }}
+                      
+                    >
+                      <option value={true}>Eligible</option>
+                      <option value={false}>Not Eligible</option>
+                    </select>
+                </div>
+
+
+              </div>
 
             </div>
+            <button className="btn btn-primary mt-5 " onClick={()=>updateAssistant()}>Update</button>
 
-            </div>
-            <button className="btn btn-primary" onClick={()=>updateAssistant()}>Update</button>
-
-            {/* <button className="btn" onClick={closeModal}>Close</button> */}
+        </div>
         </div>
 
     </div>
