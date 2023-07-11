@@ -96,11 +96,31 @@ const updateAstCareerChoice = (req,res)=>{
 
 }
 
+
+const updateAssistant = (req, res, next) =>{
+    const eligiblepromotionstatus = req.body.eligiblepromotionstatus
+    const eligibleforresign = req.body.eligibleforresign
+    const initial = req.body.initial
+    
+    const query = "UPDATE assistant SET eligiblepromotionstatus = $1, eligibleforresign = $2 WHERE initial = $3 "
+
+    pool.query(query,[eligiblepromotionstatus, eligibleforresign, initial], (error, result) => {
+        if (error) {
+            console.log(error);
+            res.status(500).send('Error update semester');
+        } else {
+            res.status(200).send("Success");
+        }
+    });
+}
+
+
 module.exports = {
     getUser,
     insertCareerChoice,
     finalizeCareerChoice,
     getTeamMember,
     getAllUser,
-    updateAstCareerChoice
+    updateAstCareerChoice,
+    updateAssistant
 }

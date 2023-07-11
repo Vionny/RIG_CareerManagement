@@ -5,12 +5,12 @@ import { useEffect, useState } from "react";
 const axios = require("axios")
 axios.defaults.headers.post['Content-Type'] = 'application/json';
 
-
 export const EditAssistantModal = ({assistant, closeModal}) => {
 
     
     const [name, setName] = useState();
     const [role, setRole] = useState();
+    const [initial, setInitial] = useState();
     const [leader, setLeader] = useState(null);
     const [careerChoice, setCareerChoice] = useState();
     const [eligibleResign, setEligibleResign] = useState();
@@ -20,6 +20,7 @@ export const EditAssistantModal = ({assistant, closeModal}) => {
     useEffect(()=>{
         axios.get(process.env.NEXT_PUBLIC_BACKEND_URL+'/getUser/' + assistant).then((res) => {
           console.log(res.data[0]);
+          setInitial(res.data[0].initial)
           setLeader(res.data[0].assistantleader);
           setName(res.data[0].assistantname);
           setCareerChoice(res.data[0].careerchoice);
@@ -29,6 +30,39 @@ export const EditAssistantModal = ({assistant, closeModal}) => {
         })
     
       },[assistant])
+
+    const updateAssistant = () =>{
+      // console.log(startPromotion);
+      // console.log(endPromotion);
+  
+      var data = {
+        eligiblepromotionstatus: eligiblePromotion,
+        eligibleforresign: eligibleResign,
+        initial: assistant
+  
+      }
+      console.log(data);
+      axios
+      .post(process.env.NEXT_PUBLIC_BACKEND_URL + '/updateAssistant', data)
+      .then((res) =>{
+          console.log(res)
+          if(res.data== 'Success'){
+  
+              window.location.reload();
+              
+            }
+      })
+      .catch((error)=>{
+          console.error(error)
+      })
+  
+    }
+
+
+    const updateEligiblePromotion = (value) => {
+
+    }
+
   
 
   return (
@@ -40,8 +74,17 @@ export const EditAssistantModal = ({assistant, closeModal}) => {
             <h3 className="font-bold text-lg">Edit Assistant</h3>
           {/* </div> */}
             <div className="flex flex-col gap-5">
+              <div className="flex flex-row gap-5">
+                <h3 className="text-lg font-semibold">Initial</h3>
+                <p>{initial}</p>
+              </div>
 
-            <div className="flex flex-row">
+              <div className="flex flex-row gap-5">
+                <h3 className="text-lg font-semibold">Name</h3>
+                <p>{name}</p>
+              </div>
+
+            <div className="flex flex-row gap-5">
               
               <div className="card bg-slate-300 w-28 flex ">
                   <h3 className="text-lg font-semibold">Leader</h3>
@@ -50,11 +93,11 @@ export const EditAssistantModal = ({assistant, closeModal}) => {
               <div className="card bg-base-100 w-48 flex">
                 <h3 className="text-lg font-semibold">Career Choice</h3>
                
-                            <select className="select w-full max-w-xs bg-base-200" value={careerChoice} onChange={(e)=>{setCareerChoice(e.target.value)}} >
-                                <option value="willing">Willing to Continue</option>
-                                <option value="not willing">Not Willing to Continue</option>
-                                <option value="tentative">Tentative</option>
-                            </select>
+                  <select className="select w-full max-w-xs bg-base-200" value={careerChoice} onChange={(e)=>{setCareerChoice(e.target.value)}} >
+                      <option value="willing">Willing to Continue</option>
+                      <option value="not willing">Not Willing to Continue</option>
+                      <option value="tentative">Tentative</option>
+                  </select>
                     
               </div>
 
@@ -64,16 +107,40 @@ export const EditAssistantModal = ({assistant, closeModal}) => {
             
               <div className="card bg-base-100 w-52 flex ">
                   <h3 className="text-lg font-semibold">Eligible For Promotion</h3>
+                  <select
+                    className="select w-full max-w-xs bg-base-200" 
+                    value={eligiblePromotion}
+                    onChange={(e) => {
+                      setEligiblePromotion(e.target.value);
+                    }}
+                    
+                  >
+                    <option value = {true} >Eligible</option>
+                    <option value = {false}>Not Eligible</option>
+                  </select>
                   
               </div>
               <div className="card bg-base-100 w-52 flex">
                   <h3 className="text-lg font-semibold">Eligible For Resign</h3>
-                  
+                  <select
+                    className="select w-full max-w-xs bg-base-200" 
+                    value={eligibleResign}
+                    onChange={(e) => {
+                      e.target.value == "true" ? setEligibleResign(true) : setEligibleResign(false);
+                      
+                    }}
+                    
+                  >
+                    <option value={true}>Eligible</option>
+                    <option value={false}>Not Eligible</option>
+                  </select>
               </div>
+
+
             </div>
 
             </div>
-            {/* <button className="btn btn-primary" onClick={()=>updateSemesterDate()}>Update</button> */}
+            <button className="btn btn-primary" onClick={()=>updateAssistant()}>Update</button>
 
             {/* <button className="btn" onClick={closeModal}>Close</button> */}
         </div>
