@@ -32,9 +32,7 @@ export const EditAssistantModal = ({assistant, closeModal}) => {
       },[assistant])
 
     const updateAssistant = () =>{
-      // console.log(startPromotion);
-      // console.log(endPromotion);
-  
+     
       var data = {
         eligiblepromotionstatus: eligiblePromotion,
         eligibleforresign: eligibleResign,
