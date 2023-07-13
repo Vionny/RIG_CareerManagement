@@ -58,9 +58,31 @@ const getRoleStatistics = (req, res) => {
 
 }
 
+
+const updateRole = (req, res, next) =>{
+    const rolename = req.body.rolename
+    const maximumslot = req.body.maximumslot
+    const rolerequirements = req.body.rolerequirements
+    const roleid = req.body.roleid
+    
+    const query = "UPDATE role SET rolename = $1, maximumslot = $2, rolerequirements = $3 WHERE roleid = $4"
+
+    pool.query(query,[rolename, maximumslot, rolerequirements, roleid], (error, result) => {
+        if (error) {
+            console.log(error);
+            res.status(500).send('Error update role');
+        } else {
+            res.status(200).send("Success");
+        }
+    });
+}
+
+
+
 module.exports = {
     getAllRole,
     getAstRegisteredRole,
     getRoleByDivision,
-    getRoleStatistics
+    getRoleStatistics,
+    updateRole
 };

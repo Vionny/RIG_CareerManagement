@@ -1,7 +1,7 @@
 "use client"
 import { createAssistantInsertTemplate, createInputAssistantLeaderTemplate } from "@/CSVRelated/TemplateCreate"
 import "@/app/globals.css"
-
+import { EditAssistantModal } from "@/components/Modals/Edit/EditAssistantModal"
 import {useEffect, useState} from 'react'
 import 'react-datepicker/dist/react-datepicker.css'
 const axios = require("axios")
@@ -24,6 +24,9 @@ const AssistantPage= ()=>{
     const [filtered, setFiltered] = useState(false);
     const [title,setTitle] = useState('');
     const [message, setMessage] = useState('');
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [ast, setAst] = useState('');
+
     const [generation, setGeneration] = useState(['None','23-1','22-1','21-1','20-1','19-1','18-1','22-2','21-2','20-2','19-2','18-2'])
 
     const [showInfoModal,setShowInfoModal] = useState(false);
@@ -141,6 +144,19 @@ const AssistantPage= ()=>{
         
         setShowInfoModal(false)
         window.location.reload()
+    console.log(filteredData);
+    console.log(filtered);
+
+
+    const openModal = (astId) => {
+        console.log("open");
+        console.log(astId);
+        setAst(astId);
+        setIsModalOpen(true);
+      }
+
+    const closeModal = () => {
+        setIsModalOpen(false)
     }
 
     if(!loadUser) return <div></div>
@@ -156,6 +172,15 @@ const AssistantPage= ()=>{
                 message= {message}
                 onConfirm={ refreshPage}
             />)}
+
+            {isModalOpen && (
+                    <div className="modal-backdrop bg-black" >
+                        <EditAssistantModal assistant={ast} closeModal={closeModal}/>
+                        {/* <EditSemesterModal semesterid={selectedSemesterId} closeModal={closeModal} /> */}
+                    </div>
+            )}
+
+
             <div>
                     <input type="text" placeholder="Search" className="input input-bordered w-full max-w-xs " onChange={e => setKeyword(e.target.value)}/>
                     {/* <select value={selectedOption} onChange={handleSelectChange}>
@@ -239,7 +264,7 @@ const AssistantPage= ()=>{
                                         <td>{us.eligiblepromotionstatus ? 'Eligible' : 'Not Eligible'}</td>
                                         <td>{us.eligibleforresign ? 'Eligible' : 'Not Eligible'}</td>
                                         <td>
-                                           <button >Edit</button> 
+                                           <button onClick={() => openModal(us.initial)}>Edit</button> 
                                         </td>
                                         
                                          
@@ -258,7 +283,7 @@ const AssistantPage= ()=>{
                                             <td>{us.eligiblepromotionstatus ? 'Eligible' : 'Not Eligible'}</td>
                                             <td>{us.eligibleforresign ? 'Eligible' : 'Not Eligible'}</td>
                                             <td>
-                                               <button >Edit</button> 
+                                               <button onClick={() => openModal(us.initial)}>Edit</button> 
                                             </td>
                                             
                                              
@@ -278,6 +303,6 @@ const AssistantPage= ()=>{
 
         </div>
     )
+    }
 }
-
 export default AssistantPage;
