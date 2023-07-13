@@ -1,6 +1,6 @@
 "use client"
 import "@/app/globals.css"
-
+import { EditAssistantModal } from "@/components/Modals/Edit/EditAssistantModal"
 import {useEffect, useState} from 'react'
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
@@ -17,6 +17,8 @@ const AssistantPage= ()=>{
     const [filteredData, setFilteredData] = useState([]);
     const [selectedOption, setSelectedOption] = useState('None');
     const [filtered, setFiltered] = useState(false);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [ast, setAst] = useState('');
 
     const [generation, setGeneration] = useState(['None','23-1','22-1','21-1','20-1','19-1','18-1','22-2','21-2','20-2','19-2','18-2'])
 
@@ -73,6 +75,16 @@ const AssistantPage= ()=>{
     console.log(filtered);
 
 
+    const openModal = (astId) => {
+        console.log("open");
+        console.log(astId);
+        setAst(astId);
+        setIsModalOpen(true);
+      }
+
+    const closeModal = () => {
+        setIsModalOpen(false)
+    }
 
     if(!loadUser) return <div></div>
     else
@@ -82,6 +94,14 @@ const AssistantPage= ()=>{
             <article className="prose base mb-5">
                 <h2>Assistant Management</h2>
             </article>
+
+            {isModalOpen && (
+                    <div className="modal-backdrop bg-black" >
+                        <EditAssistantModal assistant={ast} closeModal={closeModal}/>
+                        {/* <EditSemesterModal semesterid={selectedSemesterId} closeModal={closeModal} /> */}
+                    </div>
+            )}
+
 
             <div>
                     <input type="text" placeholder="Search" className="input input-bordered w-full max-w-xs " onChange={e => setKeyword(e.target.value)}/>
@@ -150,7 +170,7 @@ const AssistantPage= ()=>{
                                         <td>{us.eligiblepromotionstatus ? 'Eligible' : 'Not Eligible'}</td>
                                         <td>{us.eligibleforresign ? 'Eligible' : 'Not Eligible'}</td>
                                         <td>
-                                           <button >Edit</button> 
+                                           <button onClick={() => openModal(us.initial)}>Edit</button> 
                                         </td>
                                         
                                          
@@ -169,7 +189,7 @@ const AssistantPage= ()=>{
                                             <td>{us.eligiblepromotionstatus ? 'Eligible' : 'Not Eligible'}</td>
                                             <td>{us.eligibleforresign ? 'Eligible' : 'Not Eligible'}</td>
                                             <td>
-                                               <button >Edit</button> 
+                                               <button onClick={() => openModal(us.initial)}>Edit</button> 
                                             </td>
                                             
                                              

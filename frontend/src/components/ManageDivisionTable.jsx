@@ -6,7 +6,7 @@ import React, { useEffect, useState } from 'react';
 import EditDivisionModal from "@/components/Modals/Edit/EditDivisionModal.jsx";
 import SimpleInformationModal from "./Modals/Information/SimpleInformationModal";
 
-const ManageDivisionTable = ({division}) => {
+const ManageDivisionTable = ({division, selectId}) => {
     const [selectedDiv,setSelectedDiv]= useState()
     const [showEditModal,setShowEditModal] = useState(false)
     
@@ -15,6 +15,7 @@ const ManageDivisionTable = ({division}) => {
         setShowEditModal(false)
     }
     
+    // console.log(selectedDivision);
     
 
     return(
@@ -40,7 +41,7 @@ const ManageDivisionTable = ({division}) => {
                 </thead>
                 <tbody>
                     {division.map((divItem, index) => (
-                    <tr key={index}>
+                    <tr className="clickable" onClick={()=>{selectId(divItem.divisionid)}} key={index}>
                         <td className="text-center w-64">
                             <div className="whitespace-normal">{divItem.divisionname}</div>
                         </td>
@@ -51,7 +52,7 @@ const ManageDivisionTable = ({division}) => {
                         <td className="text-center w-32">
                             <button className="btn btn-info btn-sm btn-outline font-bold  border-blue-400"
                             onClick={()=>{
-                                setSelectedDiv(divItem);
+                                selectedDiv(divItem);
                                 setShowEditModal(true);
                               }}
                             >Edit</button>
