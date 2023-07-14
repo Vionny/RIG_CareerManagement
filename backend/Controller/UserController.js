@@ -14,7 +14,7 @@ const getUser = (req, res, next) =>{
 }
 
 const getAllUser = (req, res, next) =>{
-    const query = "SELECT initial, assistantname, rolename, ast.careerchoice, ast.eligiblepromotionstatus, ast.eligibleforresign,assistantleader FROM assistant ast JOIN role rl ON ast.roleid = rl.roleid ORDER BY initial ASC"
+    const query = "SELECT initial, assistantname, rolename, ast.careerchoice, ast.eligiblepromotionstatus, ast.eligibleforresign  FROM assistant ast JOIN role rl ON ast.roleid = rl.roleid ORDER BY initial ASC"
 
     pool.query(query,(error, result) => {
         if (error) {
@@ -100,12 +100,11 @@ const updateAstCareerChoice = (req,res)=>{
 const updateAssistant = (req, res, next) =>{
     const eligiblepromotionstatus = req.body.eligiblepromotionstatus
     const eligibleforresign = req.body.eligibleforresign
-    const assistantleader = req.body.assistantleader
     const initial = req.body.initial
     
-    const query = "UPDATE assistant SET eligiblepromotionstatus = $1, eligibleforresign = $2,  assistantleader= $3 WHERE initial = $4"
+    const query = "UPDATE assistant SET eligiblepromotionstatus = $1, eligibleforresign = $2 WHERE initial = $3 "
 
-    pool.query(query,[eligiblepromotionstatus, eligibleforresign,assistantleader, initial], (error, result) => {
+    pool.query(query,[eligiblepromotionstatus, eligibleforresign, initial], (error, result) => {
         if (error) {
             console.log(error);
             res.status(500).send('Error update semester');
@@ -115,6 +114,53 @@ const updateAssistant = (req, res, next) =>{
     });
 }
 
+const inputManyAssistant = (assistants) =>{
+    const data = assistants;
+    let success = true;
+  
+    data.forEach((item) => {
+      const { initial, name } = item;
+  
+      const query = `INSERT INTO public.assistant(
+        initial, roleid, assistantname, eligiblepromotionstatus, eligibleforresign, careerchoice, futureplan, fpfinalize, assistantphotourl, assistantleader)
+        VALUES ($1, 'RL011', $2, false, false,  'tentative', null, false, '','')`;
+  
+      pool.query(query, [initial, name], (error, results) => {
+        if (error) {
+          success = false;
+          console.error(error);
+        } else {
+          console.log('Success');
+        }
+      });
+    });
+  
+    if (success) {
+      return 'Success';
+    } else {
+      return 'False';
+    }
+
+}
+
+const insertAssistantLeader = (data)=>{
+
+    
+    data.forEach((item) => {
+        const { initial, leader } = item;
+    
+        const query = "UPDATE assistant SET assistantleader = $1 WHERE initial = $2";
+    
+        pool.query(query, [initial, leader], (error, results) => {
+          if (error) {
+            success = false;
+            console.error(error);
+          } else {
+            console.log('Success');
+          }
+        });
+      });
+}
 
 module.exports = {
     getUser,
@@ -124,7 +170,6 @@ module.exports = {
     getAllUser,
     updateAstCareerChoice,
     updateAssistant,
-    deleteAssistant,
     inputManyAssistant,
     insertAssistantLeader
 }
