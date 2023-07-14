@@ -100,14 +100,31 @@ const updateAstCareerChoice = (req,res)=>{
 const updateAssistant = (req, res, next) =>{
     const eligiblepromotionstatus = req.body.eligiblepromotionstatus
     const eligibleforresign = req.body.eligibleforresign
+    const assistantleader = req.body.assistantleader
     const initial = req.body.initial
     
-    const query = "UPDATE assistant SET eligiblepromotionstatus = $1, eligibleforresign = $2 WHERE initial = $3 "
+    const query = "UPDATE assistant SET eligiblepromotionstatus = $1, eligibleforresign = $2,  assistantleader= $3 WHERE initial = $4"
 
-    pool.query(query,[eligiblepromotionstatus, eligibleforresign, initial], (error, result) => {
+    pool.query(query,[eligiblepromotionstatus, eligibleforresign,assistantleader, initial], (error, result) => {
         if (error) {
             console.log(error);
-            res.status(500).send('Error update semester');
+            res.status(500).send('Error update ast');
+        } else {
+            res.status(200).send("Success");
+        }
+    });
+}
+
+
+const deleteAssistant = (req, res, next) =>{
+    const initial = req.params.initial
+    
+    const query = "DELETE FROM assistant WHERE initial = $1"
+
+    pool.query(query,[initial], (error, result) => {
+        if (error) {
+            console.log(error)
+            res.status(500).send('Error fetching delete assistant');
         } else {
             res.status(200).send("Success");
         }
@@ -122,5 +139,6 @@ module.exports = {
     getTeamMember,
     getAllUser,
     updateAstCareerChoice,
-    updateAssistant
+    updateAssistant,
+    deleteAssistant
 }

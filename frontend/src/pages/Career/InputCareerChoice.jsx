@@ -125,6 +125,7 @@ const InputCareerChoice = () => {
   const handleCancel =()=>{
     setShowModal(false)
   }
+  
   if (!loadUs, !user) return <div></div>;
   else {
       return (

@@ -1,6 +1,6 @@
 
 const express = require('express');
-const { getUser, insertCareerChoice, finalizeCareerChoice, getTeamMember, getAllUser, updateAstCareerChoice,updateAssistant } = require('../Controller/UserController');
+const { getUser, insertCareerChoice, finalizeCareerChoice, getTeamMember, getAllUser, updateAstCareerChoice,updateAssistant, deleteAssistant } = require('../Controller/UserController');
 const router = express.Router()
 
 
@@ -15,5 +15,6 @@ router.post('/insertCareerChoice',insertCareerChoice)
 router.post('/finalizeCareerChoice',finalizeCareerChoice)
 
 router.patch('/updateAstCareerChoice',updateAstCareerChoice)
+router.delete('/deleteAssistant/:initial', deleteAssistant)
 
 module.exports = router

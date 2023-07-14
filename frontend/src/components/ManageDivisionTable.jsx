@@ -34,7 +34,7 @@ const ManageDivisionTable = ({division, selectId}) => {
                 <thead>
                     <tr>
                     <th className="sticky w-30 top-0 text-center">Division Name</th>
-                    <th className="sticky top-0 w-30   text-center">Division Description</th>
+                    <th className="sticky w-30 top-0 text-center">Division Description</th>
                     <th className="sticky top-0 text-center">Action</th>
                     
                     </tr>

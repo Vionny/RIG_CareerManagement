@@ -10,6 +10,7 @@ const ManageCandidate = ()=>{
     const [loadRegist, setLoadRegist] = useState(false)
     const [regist,setRegist] = useState({})
     const [currSemester, setCurrSmt] = useState({})
+    const [selectedCan,setSelectedCan]= useState()
     
     useEffect(()=>{
         console.log("h");
@@ -28,6 +29,7 @@ const ManageCandidate = ()=>{
 
     },[loadRegist])
 
+    console.log(selectedCan);
 
 
     if(!loadRegist){
@@ -39,59 +41,56 @@ const ManageCandidate = ()=>{
     else{
 
         return(
-            <div className="bg-base-200 flex flex-col pl-10 pr-10 pt-5 w-full min-h-screen">
-            <article className="prose base mb-5">
+            <div className="bg-base-200 flex flex-col gap-2 pl-10 pr-10 py-3 w-full min-h-screen">
+            <article className="prose base">
                 <h2>Candidate Management</h2>
             </article>
 
             {/* table */}
             <div className="card w-full bg-base-100 ">
-                    <div className="card-body w-full">
+                    <div className="card-body p-3 w-full">
                         <div className="card-title justify-between">
-                            <p className="card-title mb-2">Promotion Registrant</p>
-                            {/* <button className="btn text-xs btn-primary" onClick={() => openAddModal()}>+ Add</button> */}
+                            <p className="card-title mb-1">Promotion Registrant</p>
                         </div>
 
                         
-                        <div className="">
-                            <table className="table table-compact w-full">
+                        <div className="max-h-80 overflow-auto">
+                            <table className="table table-compact w-full border ">
                                 {/* head */}
                                 <thead>
                                 <tr>                                 
-                                    <th>Initial</th>
-                                    <th>Priority 1</th>
-                                    <th>Priority 2</th>
-                                    <th>Priority 3</th>
-                                    <th>Quantitative Problem</th>
+                                    <th className="sticky w-30 top-0 text-center">Initial</th>
+                                    <th className="sticky w-48 top-0 text-center">Priority 1</th>
+                                    <th className="sticky w-48 top-0 text-center">Priority 2</th>
+                                    <th className="sticky w-48 top-0 text-center">Priority 3</th>
+                                    <th className="whitespace-normal">Problem</th>
                                     <th>Comments</th>
-                                    <th>OP Rank</th>
-                                    <th>AstDev Rank</th>
-                                    <th>Subco Rank</th>
-                                    <th>NA Staff Rank</th>
+                                    <th className="whitespace-normal sticky  top-0 text-center">OP Rank</th>
+                                    <th className="whitespace-normal sticky top-0 text-center">AstDev Rank</th>
+                                    <th className="whitespace-normal sticky  top-0 text-center">Subco Rank</th>
+                                    <th className="whitespace-normal sticky  top-0 text-center">NA Staff Rank</th>
                                 </tr>
                                 </thead>
                                 <tbody>
 
                                 {regist.map((reg, index) => (
-                                    <tr key={index}  >
-                                        <td>{reg.initial}</td>
-                                        <td>{reg.priorityone}</td>
-                                        <td>{reg.prioritytwo == null ? '-' : reg.prioritytwo}</td>
-                                        <td>{reg.prioritythree ==null ? '-' : reg.prioritythree}</td>
-                                        
-                                        {/* <td className="flex flex-col items-center">
-                                        <button onClick={() => openModal(sem.semesterid)}>Edit</button>
-                                        <button onClick={() => deleteSemester(sem.semesterid)}>Delete</button>
-                                        </td> */}
-                                        
-                                        </tr>
-                                    ))}
+                                    <tr key={index}  className="clickable hover border-1" onClick={()=>{setSelectedCan(reg.initial)}}>
+                        
+                                        <td className="border">{reg.initial}</td>
+                                        <td className="whitespace-normal w-48 border">{reg.priorityone}</td>
+                                        <td className="whitespace-normal w-48 border">{reg.prioritytwo == null ? '-' : reg.prioritytwo}</td>
+                                        <td className="whitespace-normal w-48 border">{reg.prioritythree == null ? '-' : reg.prioritythree}</td>
+                              
+                                    </tr>
+                                ))}
 
                                 </tbody>
                             </table>
                             </div>
                     </div>
                 </div>
+
+                
 
 
         </div>
