@@ -115,6 +115,21 @@ const updateAssistant = (req, res, next) =>{
     });
 }
 
+const deleteAssistant = (req, res, next) =>{
+    const initial = req.params.initial
+    
+    const query = "DELETE FROM assistant WHERE initial = $1"
+
+    pool.query(query,[initial], (error, result) => {
+        if (error) {
+            console.log(error)
+            res.status(500).send('Error fetching delete ast');
+        } else {
+            res.status(200).send("Success");
+        }
+    });
+}
+
 
 module.exports = {
     getUser,
@@ -125,6 +140,5 @@ module.exports = {
     updateAstCareerChoice,
     updateAssistant,
     deleteAssistant,
-    inputManyAssistant,
-    insertAssistantLeader
+    
 }
