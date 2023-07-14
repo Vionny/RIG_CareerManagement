@@ -84,11 +84,68 @@ const getPromotionRegistrant = (req,res,next) =>{
     });
 }
 
+const getRegistrees = (req, res) => {
+  const query = "SELECT DISTINCT initial FROM promotionregistration p JOIN promotionregistrationdetail pd ON p.promotionregistrationid = pd.promotionregistrationid WHERE semesterid = $1 ORDER BY initial ASC"
+  const semesterid = req.params.semesterid
+  pool.query(query,[semesterid], (error, result) => {
+    if (error) {
+        console.log(error)
+        res.send('Error fetching promotion registrant');
+    } else {
+        
+        // console.log(result.rows[0].priority)
+        if (result.rows.length === 0) {
+            res.status(200).send('0');
+          } 
+        else res.status(200).send(result.rows);
+    }
+});
 
+}
+function generateRandomId(length) {
+  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  let id = '';
+
+  for (let i = 0; i < length; i++) {
+    const randomIndex = Math.floor(Math.random() * characters.length);
+    id += characters.charAt(randomIndex);
+  }
+
+  return id;
+}
+const insertPromotionRanking = (data,semesterid)=>{
+  let success = false;
+  console.log(data)
+  console.log(semesterid)
+  data.forEach((item) => {
+      const { initial, opofficer, resmanoff, astdev, subco, subdev, dbstaff, naofficer, nastaff, rndofficer, rndstaff} = item;
+      console.log(item)
+
+      const query = "INSERT INTO promotionranking (promotionrankingid, initial, semesterid, opofficer, resmanoff, astdev, subco, subdev, dbstaff, naofficer, nastaff, rndofficer, rndstaff) VALUES (TRIM($1), TRIM($2), TRIM($3), $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)";
+      let promotionrankingid = generateRandomId(10)
+      console.log(promotionrankingid)
+      pool.query(query, [promotionrankingid.trim(), initial.trim(),semesterid.trim(), opofficer, resmanoff, astdev, subco, subdev, dbstaff, naofficer, nastaff, rndofficer, rndstaff], (error, results) => {
+        if (error) {
+          success = false;
+          // console.error(error);
+          console.log(error)
+        } else {
+          console.log('Success');
+        }
+      });
+    });
+    if (success) {
+      return 'Success';
+    } else {
+      return 'False';
+    }
+}
 
 
 module.exports={
     insertPromotionRegistration,
     getLastPriorityInsert,
-    getPromotionRegistrant
+    getPromotionRegistrant,
+    getRegistrees,
+    insertPromotionRanking
 }

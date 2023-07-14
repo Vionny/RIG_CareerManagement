@@ -1,5 +1,6 @@
 "use client"
 import "@/app/globals.css"
+import ManageCandidateDropdown from "@/components/Dropdown/ManageCandidateDropdown";
 import {useEffect, useState} from 'react'
 
 const axios = require("axios")
@@ -43,7 +44,8 @@ const ManageCandidate = ()=>{
             <article className="prose base mb-5">
                 <h2>Candidate Management</h2>
             </article>
-
+            
+            <ManageCandidateDropdown/>
             {/* table */}
             <div className="card w-full bg-base-100 ">
                     <div className="card-body w-full">
@@ -51,7 +53,6 @@ const ManageCandidate = ()=>{
                             <p className="card-title mb-2">Promotion Registrant</p>
                             {/* <button className="btn text-xs btn-primary" onClick={() => openAddModal()}>+ Add</button> */}
                         </div>
-
                         
                         <div className="">
                             <table className="table table-compact w-full">

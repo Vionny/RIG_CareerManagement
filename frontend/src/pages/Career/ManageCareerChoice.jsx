@@ -3,9 +3,9 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import "@/app/globals.css";
-import ManageCareerTable from '@/components/ManageCareerTable';
+import ManageCareerTable from '@/components/Table/ManageCareerTable';
 import PieChart from '@/components/PieChart';
-import RoleStatisticTable from '@/components/RoleStatisticTable';
+import RoleStatisticTable from '@/components/Table/RoleStatisticTable';
 
 function ManageCareerChoice() {
     const [assistant, setAssistant] = useState([]);
