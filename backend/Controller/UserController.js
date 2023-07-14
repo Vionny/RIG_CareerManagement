@@ -100,11 +100,12 @@ const updateAstCareerChoice = (req,res)=>{
 const updateAssistant = (req, res, next) =>{
     const eligiblepromotionstatus = req.body.eligiblepromotionstatus
     const eligibleforresign = req.body.eligibleforresign
+    const assistantleader = req.body.assistantleader
     const initial = req.body.initial
     
-    const query = "UPDATE assistant SET eligiblepromotionstatus = $1, eligibleforresign = $2 WHERE initial = $3 "
+    const query = "UPDATE assistant SET eligiblepromotionstatus = $1, eligibleforresign = $2,  assistantleader= $3 WHERE initial = $4"
 
-    pool.query(query,[eligiblepromotionstatus, eligibleforresign, initial], (error, result) => {
+    pool.query(query,[eligiblepromotionstatus, eligibleforresign,assistantleader, initial], (error, result) => {
         if (error) {
             console.log(error);
             res.status(500).send('Error update semester');
@@ -114,58 +115,6 @@ const updateAssistant = (req, res, next) =>{
     });
 }
 
-const inputManyAssistant = (assistants) =>{
-    const data = assistants;
-    let success = true;
-  
-    data.forEach((item) => {
-      const { initial, name } = item;
-  
-      const query = `INSERT INTO public.assistant(
-        initial, roleid, assistantname, eligiblepromotionstatus, eligibleforresign, careerchoice, futureplan, fpfinalize, assistantphotourl, assistantleader)
-        VALUES ($1, 'RL011', $2, false, false,  'tentative', null, false, '','')`;
-  
-      pool.query(query, [initial, name], (error, results) => {
-        if (error) {
-          success = false;
-          console.error(error);
-        } else {
-          console.log('Success');
-        }
-      });
-    });
-  
-    if (success) {
-      return 'Success';
-    } else {
-      return 'False';
-    }
-
-}
-
-const insertAssistantLeader = (data)=>{
-    let success = true;
-    
-    data.forEach((item) => {
-        const { initial, leader } = item;
-    
-        const query = "UPDATE assistant SET assistantleader = $1 WHERE initial = $2";
-    
-        pool.query(query, [leader, initial], (error, results) => {
-          if (error) {
-            success = false;
-            console.error(error);
-          } else {
-            console.log('Success');
-          }
-        });
-      });
-      if (success) {
-        return 'Success';
-      } else {
-        return 'False';
-      }
-}
 
 module.exports = {
     getUser,
@@ -175,6 +124,7 @@ module.exports = {
     getAllUser,
     updateAstCareerChoice,
     updateAssistant,
+    deleteAssistant,
     inputManyAssistant,
     insertAssistantLeader
 }

@@ -36,6 +36,7 @@ export const EditAssistantModal = ({assistant, closeModal}) => {
       var data = {
         eligiblepromotionstatus: eligiblePromotion,
         eligibleforresign: eligibleResign,
+        assistantleader: leader,
         initial: assistant
   
       }
@@ -81,14 +82,10 @@ export const EditAssistantModal = ({assistant, closeModal}) => {
                     <h3 className="text-lg font-semibold">Leader</h3>
                     <input type="text" className="input input-bordered w-full max-w-xs " placeholder={leader==null ? "-" : leader} onChange={e => setLeader(e.target.value)}/>
                 </div>
-                <div className="card bg-base-100 w-52 flex">
+                <div className="card bg-base-100 w-52">
                   <h3 className="text-lg font-semibold">Career Choice</h3>
-                
-                    <select className="select w-full max-w-xs bg-base-200" value={careerChoice} onChange={(e)=>{setCareerChoice(e.target.value)}} >
-                        <option value="willing">Willing to Continue</option>
-                        <option value="not willing">Not Willing to Continue</option>
-                        <option value="tentative">Tentative</option>
-                    </select>
+                  <h3 className="mt-3">{!careerChoice ? 'Unknown' : careerChoice}</h3>
+                    
                       
                 </div>
 

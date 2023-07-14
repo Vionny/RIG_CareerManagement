@@ -166,11 +166,6 @@ const ViewSnP= ()=>{
 
     const deleteSemester = (semesterid) =>{
         
-        // var data = {
-        //     semesterid: semesterid
-        // }
-
-        // console.log(data);
         axios
         .delete(`${process.env.NEXT_PUBLIC_BACKEND_URL}/deleteSemester/${semesterid}`)
         .then((res) =>{

@@ -3,7 +3,8 @@ import { createAssistantInsertTemplate, createInputAssistantLeaderTemplate } fro
 import "@/app/globals.css"
 import { EditAssistantModal } from "@/components/Modals/Edit/EditAssistantModal"
 import {useEffect, useState} from 'react'
-import 'react-datepicker/dist/react-datepicker.css'
+import ConfirmationModal from "@/components/Modals/Confirmation/ConfirmationModal";
+
 const axios = require("axios")
 axios.defaults.headers.post['Content-Type'] = 'application/json';
 import csvParser from 'csv-parser';
@@ -16,8 +17,7 @@ const AssistantPage= ()=>{
     const [LeaderInputFile, setLeaderInputFile] = useState(null);
     const [users, setUsers] = useState();
     const [loadUser, setLoadUser] = useState(false);
-
-    const [searchQuery, setSearchQuery] = useState('');
+    const [selectedAst, setSelectedAst] = useState();
     const [keyword, setKeyword] = useState('');
     const [filteredData, setFilteredData] = useState([]);
     const [selectedOption, setSelectedOption] = useState('None');
@@ -25,7 +25,9 @@ const AssistantPage= ()=>{
     const [title,setTitle] = useState('');
     const [message, setMessage] = useState('');
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [showEditModal, setShowEditModal] = useState(false);
     const [ast, setAst] = useState('');
+    
 
     const [generation, setGeneration] = useState(['None','23-1','22-1','21-1','20-1','19-1','18-1','22-2','21-2','20-2','19-2','18-2'])
 
@@ -37,7 +39,7 @@ const AssistantPage= ()=>{
 
     useEffect(()=>{
         axios.get(process.env.NEXT_PUBLIC_BACKEND_URL+'/getAllUser').then((res) => {
-            console.log(res.data)
+            // console.log(res.data)
             setUsers(res.data)  
             setLoadUser(true)
         })
@@ -70,12 +72,9 @@ const AssistantPage= ()=>{
                 // console.log(selectedOption);
                 // console.log(users.filter(user => user.initial.includes(selectedOption)));
                 setFilteredData(users.filter(user => user.initial.includes(selectedOption)));
-                
-                // setFilteredData( users.filter(user => user.initial.includes(selectedOption) && (user.initial.toLowerCase().includes(keyword.toLowerCase()) || user.assistantname.toLowerCase().includes(keyword.toLowerCase())) || user.rolename.toLowerCase().includes(keyword.toLowerCase())));
+       
             }
 
-        //    console.log(filteredData);
-        //    setFilteredData( users.filter(user => user.initial.includes(keyword)));
         }
         
     },[keyword, selectedOption])
@@ -158,6 +157,32 @@ const AssistantPage= ()=>{
         setIsModalOpen(false)
     }
 
+    const handleCancel =()=>{
+        setShowEditModal(false)
+    }
+
+    const showConfirmModal = (initial) => {
+        setShowEditModal(true)
+        setSelectedAst(initial)
+    }
+
+    const deleteAssistant = (astid) =>{
+        
+        axios
+        .delete(`${process.env.NEXT_PUBLIC_BACKEND_URL}/deleteAssistant/${astid}`)
+        .then((res) =>{
+            console.log(res)
+            if(res.data== 'Success'){
+
+                window.location.reload();
+              }
+        })
+        .catch((error)=>{
+            console.error(error)
+        })
+
+    }
+
     if(!loadUser) return <div></div>
     else
     return(
@@ -175,19 +200,24 @@ const AssistantPage= ()=>{
             {isModalOpen && (
                     <div className="modal-backdrop bg-black" >
                         <EditAssistantModal assistant={ast} closeModal={closeModal}/>
-                        {/* <EditSemesterModal semesterid={selectedSemesterId} closeModal={closeModal} /> */}
+                        
                     </div>
             )}
 
+            {showEditModal && (
+                <ConfirmationModal
+                  show = {showEditModal}
+                  title="Confirmation"
+                  message="Are you sure you want to delete this assistant?"
+                  onConfirm={()=>{deleteAssistant(selectedAst)}}
+                  onCancel={handleCancel}
+                />
+              )}    
 
-            <div>
-                    <input type="text" placeholder="Search" className="input input-bordered w-full max-w-xs " onChange={e => setKeyword(e.target.value)}/>
-                    {/* <select value={selectedOption} onChange={handleSelectChange}>
-                    {generation.map((gen) => (
-                            <option value={gen}>{gen}</option>            
-                        ))}
-                       
-                    </select> */}
+            <div className="flex gap-5 mb-5">
+
+                <div className="w-52">
+                        <input type="text" placeholder="Search" className="input" onChange={e => setKeyword(e.target.value)}/>                        
                     
                     <button className="btn btn-outline btn-info bg-blue-600" onClick={()=>{createInputAssistantLeaderTemplate()}}>Download Input Leader Template</button>
                     <form onSubmit={handleLeaderInsert}  method="post" encType="multipart/form-data">
@@ -195,9 +225,9 @@ const AssistantPage= ()=>{
 
                         <button type="submit">Upload</button>
                     </form>
-            </div>
+                </div>
 
-            <div className="dropdown justify-start w-2/4">
+                <div className="dropdown justify-start w-52">
                     {/* <CSVReader onFileLoaded={readInputAstCSV}
                     inputId="csv-input"/> */}
                     <button className="btn btn-outline btn-info bg-blue-600" onClick={()=>{createAssistantInsertTemplate()}}>Download Template</button>
@@ -207,18 +237,20 @@ const AssistantPage= ()=>{
                         <button type="submit">Upload</button>
                     </form>
 
-                    <label tabIndex={0} className="btn btn-ghost bg-base-100 flex justify-start  normal-case card-title ">{(selectedOption !== "None" ? selectedOption : "Generation")}</label>
-                    <ul tabIndex={0} className="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-full h-max">
-                        {
-                            generation.map((gen,index)=>{
-                                return(<li key={index} onClick={()=>{
-                                    setSelectedOption(gen)
-                                    console.log(gen);
-                                    
-                                }}><a className="h-8">{gen}</a></li>)
-                            })
-                        }
-                    </ul>
+                        <label tabIndex={0} className="btn btn-ghost bg-base-100 flex justify-start normal-case text-base ">{(selectedOption !== "None" ? selectedOption : "Generation")}</label>
+                        <ul tabIndex={0} className="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-full h-max">
+                            {
+                                generation.map((gen,index)=>{
+                                    return(<li key={index} onClick={()=>{
+                                        setSelectedOption(gen)
+                                        console.log(gen);
+                                        
+                                    }}><a className="h-8">{gen}</a></li>)
+                                })
+                            }
+                        </ul>
+                </div>
+
             </div>
 
 
@@ -233,20 +265,20 @@ const AssistantPage= ()=>{
 
                         </div>
 
-                        <div className="">
+                        <div className="max-h-80 overflow-auto">
                             <table className="table table-compact w-full">
                                 {/* head */}
-                                <thead>
+                                <thead className="sticky top-0 text-center">
                                 <tr>
                                    
                                     <th>Initial</th>
-                                    <th>Name</th>
-                                    <th>Role</th>
+                                    <th className="whitespace-normal w-24">Name</th>
+                                    <th className="whitespace-normal w-30">Role</th>
                                     <th>Leader</th>
-                                    <th>CareerChoice</th>
-                                    <th>EligibleForResign</th>
-                                    <th>EligibleForPromotion</th>
-                                    <th>Action</th>
+                                    <th className="whitespace-normal">CareerChoice</th>
+                                    <th className="whitespace-normal">EligibleForResign</th>
+                                    <th className="whitespace-normal">EligibleForPromotion</th>
+                                    <th className="text-center">Action</th>
                                     
                                 </tr>
                                 </thead>
@@ -255,6 +287,7 @@ const AssistantPage= ()=>{
                                 ?
                                 users.map((us, index) => (
                                     <tr key={index}  >
+                                        
                                         <td>{us.initial}</td>
                                         <td>{us.assistantname}</td>
                                         <td>{us.rolename}</td>
@@ -262,8 +295,9 @@ const AssistantPage= ()=>{
                                         <td>{us.careerchoice=="" ? 'Unknown' : us.careerchoice}</td>
                                         <td>{us.eligiblepromotionstatus ? 'Eligible' : 'Not Eligible'}</td>
                                         <td>{us.eligibleforresign ? 'Eligible' : 'Not Eligible'}</td>
-                                        <td>
-                                           <button onClick={() => openModal(us.initial)}>Edit</button> 
+                                        <td className="flex gap-1">
+                                           <button className="btn btn-info btn-sm btn-outline font-bold  border-blue-400" onClick={() => openModal(us.initial)}>Edit</button> 
+                                           <button className="btn btn-info btn-sm btn-outline font-bold  border-blue-400" onClick={()=>{showConfirmModal(us.initial)}}>Delete</button>
                                         </td>
                                         
                                          
@@ -281,11 +315,10 @@ const AssistantPage= ()=>{
                                             <td>{us.careerchoice=="" ? 'Unknown' : us.careerchoice}</td>
                                             <td>{us.eligiblepromotionstatus ? 'Eligible' : 'Not Eligible'}</td>
                                             <td>{us.eligibleforresign ? 'Eligible' : 'Not Eligible'}</td>
-                                            <td>
-                                               <button onClick={() => openModal(us.initial)}>Edit</button> 
-                                            </td>
-                                            
-                                             
+                                            <td className="flex gap-1">
+                                                <button className="btn btn-info btn-sm btn-outline font-bold  border-blue-400" onClick={() => openModal(us.initial)}>Edit</button> 
+                                                <button className="btn btn-info btn-sm btn-outline font-bold  border-blue-400" onClick={()=>{showConfirmModal(us.initial)}}>Delete</button>
+                                            </td>                                            
                                         </tr>
                                         
                                         
