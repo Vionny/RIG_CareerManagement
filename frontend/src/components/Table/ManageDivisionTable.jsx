@@ -4,7 +4,7 @@ import axios from 'axios';
 import "@/components/Modals/Edit/EditCareerModal.jsx"
 import React, { useEffect, useState } from 'react';
 import EditDivisionModal from "@/components/Modals/Edit/EditDivisionModal.jsx";
-import SimpleInformationModal from "./Modals/Information/SimpleInformationModal";
+import SimpleInformationModal from "../Modals/Information/SimpleInformationModal";
 
 const ManageDivisionTable = ({division, selectId}) => {
     const [selectedDiv,setSelectedDiv]= useState()

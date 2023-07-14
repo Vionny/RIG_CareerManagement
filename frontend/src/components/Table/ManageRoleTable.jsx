@@ -4,7 +4,7 @@ import axios from 'axios';
 import "@/components/Modals/Edit/EditCareerModal.jsx"
 import React, { useEffect, useState } from 'react';
 import EditRoleModal from "@/components/Modals/Edit/EditRoleModal.jsx";
-import SimpleInformationModal from "./Modals/Information/SimpleInformationModal";
+import SimpleInformationModal from "../Modals/Information/SimpleInformationModal";
 
 const ManageRoleTable = ({selectedDiv}) => {
 

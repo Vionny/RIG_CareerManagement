@@ -4,7 +4,7 @@ import axios from 'axios';
 import "@/components/Modals/Edit/EditCareerModal.jsx"
 import EditCareerModal from "@/components/Modals/Edit/EditCareerModal.jsx";
 import React, { useState } from 'react';
-import SimpleInformationModal from "./Modals/Information/SimpleInformationModal";
+import SimpleInformationModal from "../Modals/Information/SimpleInformationModal";
 
 const ManageCareerTable = ({ assistant , filtered }) => {
   const [selectedAst,setSelectedAst]= useState()

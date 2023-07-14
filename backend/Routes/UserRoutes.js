@@ -15,6 +15,5 @@ router.post('/insertCareerChoice',insertCareerChoice)
 router.post('/finalizeCareerChoice',finalizeCareerChoice)
 
 router.patch('/updateAstCareerChoice',updateAstCareerChoice)
-router.delete('/deleteAssistant/:initial', deleteAssistant)
 
 module.exports = router

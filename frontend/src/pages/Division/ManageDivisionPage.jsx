@@ -5,8 +5,8 @@ import axios from "axios";
 import { UserContext } from "@/components/UserContext";
 import "@/app/globals.css";
 axios.defaults.headers.post["Content-Type"] = "application/json";
-import ManageDivisionTable from '@/components/ManageDivisionTable'
-import ManageRoleTable from '@/components/ManageRoleTable'
+import ManageDivisionTable from '@/components/Table/ManageDivisionTable'
+import ManageRoleTable from '@/components/Table/ManageRoleTable'
 
 const ManageDivisionPage = () => {
   const [divisions, setDivisions] = useState([]);
