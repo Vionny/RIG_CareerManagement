@@ -13,7 +13,7 @@ router.get('/getAllUser', getAllUser)
 
 router.post('/insertCareerChoice',insertCareerChoice)
 router.post('/finalizeCareerChoice',finalizeCareerChoice)
-
+router.delete('/deleteAssistant/:initial', deleteAssistant)
 router.patch('/updateAstCareerChoice',updateAstCareerChoice)
 
 module.exports = router

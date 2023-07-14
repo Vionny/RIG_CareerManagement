@@ -186,7 +186,6 @@ module.exports = {
     updateAstCareerChoice,
     updateAssistant,
     deleteAssistant,
-    
     inputManyAssistant,
     insertAssistantLeader
 }
