@@ -85,7 +85,11 @@ export const EditAssistantModal = ({assistant, closeModal}) => {
                 <div className="card bg-base-100 w-52">
                   <h3 className="text-lg font-semibold">Career Choice</h3>
                   <h3 className="mt-3">{!careerChoice ? 'Unknown' : careerChoice}</h3>
-                    
+                  <select className="select w-full max-w-xs bg-base-200" value={careerChoice} onChange={(e)=>{setCareerChoice(e.target.value)}} >
+                        <option value="willing">Willing to Continue</option>
+                        <option value="not willing">Not Willing to Continue</option>
+                        <option value="tentative">Tentative</option>
+                    </select>
                       
                 </div>
 
