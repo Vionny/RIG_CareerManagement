@@ -14,7 +14,7 @@ const getUser = (req, res, next) =>{
 }
 
 const getAllUser = (req, res, next) =>{
-    const query = "SELECT initial, assistantname, rolename, ast.careerchoice, ast.eligiblepromotionstatus, ast.eligibleforresign  FROM assistant ast JOIN role rl ON ast.roleid = rl.roleid ORDER BY initial ASC"
+    const query = "SELECT initial, assistantname, rolename, ast.careerchoice, ast.eligiblepromotionstatus, ast.eligibleforresign,assistantleader FROM assistant ast JOIN role rl ON ast.roleid = rl.roleid ORDER BY initial ASC"
 
     pool.query(query,(error, result) => {
         if (error) {
@@ -108,23 +108,7 @@ const updateAssistant = (req, res, next) =>{
     pool.query(query,[eligiblepromotionstatus, eligibleforresign,assistantleader, initial], (error, result) => {
         if (error) {
             console.log(error);
-            res.status(500).send('Error update ast');
-        } else {
-            res.status(200).send("Success");
-        }
-    });
-}
-
-
-const deleteAssistant = (req, res, next) =>{
-    const initial = req.params.initial
-    
-    const query = "DELETE FROM assistant WHERE initial = $1"
-
-    pool.query(query,[initial], (error, result) => {
-        if (error) {
-            console.log(error)
-            res.status(500).send('Error fetching delete assistant');
+            res.status(500).send('Error update semester');
         } else {
             res.status(200).send("Success");
         }
@@ -140,5 +124,7 @@ module.exports = {
     getAllUser,
     updateAstCareerChoice,
     updateAssistant,
-    deleteAssistant
+    deleteAssistant,
+    inputManyAssistant,
+    insertAssistantLeader
 }

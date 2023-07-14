@@ -35,7 +35,7 @@ const updateDivision = (req, res, next) =>{
     const divisionname = req.body.divisionname
     const divisiondescription = req.body.divisiondescription
     const divisionid = req.body.divisionid
-    
+    console.log({divisionname,divisiondescription,divisionid})
     const query = "UPDATE division SET divisionname = $1, divisiondescription = $2 WHERE divisionid = $3"
 
     pool.query(query,[divisionname, divisiondescription, divisionid], (error, result) => {

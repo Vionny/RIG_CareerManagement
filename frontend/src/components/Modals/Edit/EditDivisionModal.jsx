@@ -8,7 +8,7 @@ const EditDivisionModal = ({divId, divName, divDesc, closeModal}) => {
 
     const [divisionName, setDivName] = useState()
     const [divisionDesc, setDivDesc] = useState()
-    
+    console.log(divId)
     useEffect(() => {
         setDivDesc(divDesc)
         setDivName(divName)

@@ -52,7 +52,8 @@ const ManageDivisionTable = ({division, selectId}) => {
                         <td className="text-center w-32">
                             <button className="btn btn-info btn-sm btn-outline font-bold  border-blue-400"
                             onClick={()=>{
-                                selectedDiv(divItem);
+                                console.log(divItem)
+                                setSelectedDiv(divItem);
                                 setShowEditModal(true);
                               }}
                             >Edit</button>
