@@ -143,7 +143,8 @@ const AssistantPage= ()=>{
         
         setShowInfoModal(false)
         window.location.reload()
-    }
+    console.log(filteredData);
+    console.log(filtered);
 
 
     const openModal = (astId) => {
@@ -335,6 +336,6 @@ const AssistantPage= ()=>{
 
         </div>
     )
+    }
 }
-
 export default AssistantPage;
