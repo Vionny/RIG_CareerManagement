@@ -1,21 +1,26 @@
 "use client"
 import { createAssistantInsertTemplate, createInputAssistantLeaderTemplate } from "@/CSVRelated/TemplateCreate"
 import "@/app/globals.css"
+// import {useRouter} from 'next/router'
 import { EditAssistantModal } from "@/components/Modals/Edit/EditAssistantModal"
 import {useEffect, useState} from 'react'
 import 'react-datepicker/dist/react-datepicker.css'
+import SimpleInformationModal from "@/components/Modals/Information/SimpleInformationModal"
+import ConfirmationModal from "@/components/Modals/Confirmation/ConfirmationModal";
+import Link from "next/link";
+
 const axios = require("axios")
 axios.defaults.headers.post['Content-Type'] = 'application/json';
-import csvParser from 'csv-parser';
-import { readAssistantInsertTemplate, readAstInputFile } from "@/CSVRelated/ReadCSVTemplate"
-import CSVReader from "react-csv-reader"
-import SimpleInformationModal from "@/components/Modals/Information/SimpleInformationModal"
 
 const AssistantPage= ()=>{
+    // const router = useRouter()
+
     const [AssistantInputFile, setAssistantInputFile] = useState(null);
     const [LeaderInputFile, setLeaderInputFile] = useState(null);
     const [users, setUsers] = useState();
     const [loadUser, setLoadUser] = useState(false);
+    const [selectedAst, setSelectedAst] = useState();
+    const [showConfirmModal, setShowConfirmModal] = useState(false);
 
     const [searchQuery, setSearchQuery] = useState('');
     const [keyword, setKeyword] = useState('');
@@ -26,14 +31,14 @@ const AssistantPage= ()=>{
     const [message, setMessage] = useState('');
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [ast, setAst] = useState('');
+    const [selectedId, setSelectedId] = useState();
+    
 
     const [generation, setGeneration] = useState(['None','23-1','22-1','21-1','20-1','19-1','18-1','22-2','21-2','20-2','19-2','18-2'])
 
     const [showInfoModal,setShowInfoModal] = useState(false);
     const [inputAstFilePath, setInputAstFilePath] = useState()
-    const handleSelectChange = (event) => {
-        setSelectedOption(event.target.value);
-    };
+
 
     useEffect(()=>{
         axios.get(process.env.NEXT_PUBLIC_BACKEND_URL+'/getAllUser').then((res) => {
@@ -46,7 +51,6 @@ const AssistantPage= ()=>{
 
     useEffect(()=>{
         if(users){
-            // console.log(users.filter(user => user.initial.includes(keyword) || user.assistantname.includes(keyword)) || user.rolename.includes(keyword));
 
             if(selectedOption === "None" && keyword === "") setFiltered(false);
             else if(selectedOption === "None" && keyword !== ""){
@@ -63,19 +67,11 @@ const AssistantPage= ()=>{
                 );
                 
             }
-            else{
-                
+            else{              
                 setFiltered(true);
-                // console.log("filter");
-                // console.log(selectedOption);
-                // console.log(users.filter(user => user.initial.includes(selectedOption)));
                 setFilteredData(users.filter(user => user.initial.includes(selectedOption)));
-                
-                // setFilteredData( users.filter(user => user.initial.includes(selectedOption) && (user.initial.toLowerCase().includes(keyword.toLowerCase()) || user.assistantname.toLowerCase().includes(keyword.toLowerCase())) || user.rolename.toLowerCase().includes(keyword.toLowerCase())));
-            }
 
-        //    console.log(filteredData);
-        //    setFilteredData( users.filter(user => user.initial.includes(keyword)));
+            }
         }
         
     },[keyword, selectedOption])
@@ -95,7 +91,7 @@ const AssistantPage= ()=>{
           try {
             await axios.post(process.env.NEXT_PUBLIC_BACKEND_URL + '/readAstLeaderInput', formData, {
               headers: {
-                'Content-Type': 'multipart/form-data' // Set the correct content type
+                'Content-Type': 'multipart/form-data'
               }
             }).then((res)=>{
                 if(res.data.message == 'Success'){
@@ -126,7 +122,7 @@ const AssistantPage= ()=>{
           try {
             await axios.post(process.env.NEXT_PUBLIC_BACKEND_URL + '/readAstLeaderInput', formData, {
               headers: {
-                'Content-Type': 'multipart/form-data' // Set the correct content type
+                'Content-Type': 'multipart/form-data'
               }
             }).then((res)=>{
                 if(res.data.message == 'Success'){
@@ -158,18 +154,50 @@ const AssistantPage= ()=>{
         setIsModalOpen(false)
     }
 
+    const clickDelete = (astId) =>{
+        setShowConfirmModal(true)
+        setSelectedAst(astId)
+    }
+
+    const handleCancel =()=>{
+        setShowModal(false)
+    }
+
+    const deleteAssistant = (astId) =>{
+        axios
+        .delete(`${process.env.NEXT_PUBLIC_BACKEND_URL}/deleteAssistant/${astId}`)
+        .then((res) =>{
+            console.log(res)
+            if(res.data== 'Success'){
+
+                window.location.reload();
+              }
+        })
+        .catch((error)=>{
+            console.error(error)
+        })
+    }
+
+    console.log(selectedId);
+
+    const selectAst = (astId) =>{
+
+        setSelectedId(astId)
+        
+    }
+
     if(!loadUser) return <div></div>
     else
     return(
 
-        <div className="bg-base-200 flex flex-col pl-10 pr-10 pt-5 w-full min-h-screen">
+        <div className="bg-base-200 flex flex-col pl-10 pr-10 py-5 w-full min-h-screen">
             <article className="prose base mb-5">
                 <h2>Assistant Management</h2>
             </article>
             {showInfoModal &&(<SimpleInformationModal
                 title = {title}
                 message= {message}
-                onConfirm={ refreshPage}
+                onConfirm={refreshPage}
             />)}
 
             {isModalOpen && (
@@ -179,33 +207,19 @@ const AssistantPage= ()=>{
                     </div>
             )}
 
+            {showConfirmModal && (
+                <ConfirmationModal
+                  show = {showConfirmModal}
+                  title="Confirmation"
+                  message="Are you sure you want to finalize your choice ?"
+                  onConfirm={() =>{deleteAssistant(selectedAst)}}
+                  onCancel={handleCancel}
+                />
+              )}
+            <div className="flex gap-5">
+                <input type="text" placeholder="Search" className="input w-52 max-w-xs " onChange={e => setKeyword(e.target.value)}/>
 
-            <div>
-                    <input type="text" placeholder="Search" className="input input-bordered w-full max-w-xs " onChange={e => setKeyword(e.target.value)}/>
-                    {/* <select value={selectedOption} onChange={handleSelectChange}>
-                    {generation.map((gen) => (
-                            <option value={gen}>{gen}</option>            
-                        ))}
-                       
-                    </select> */}
-                    
-                    <button className="btn btn-outline btn-info bg-blue-600" onClick={()=>{createInputAssistantLeaderTemplate()}}>Download Input Leader Template</button>
-                    <form onSubmit={handleLeaderInsert}  method="post" encType="multipart/form-data">
-                    <input type="file" name="file" accept=".csv" onChange={handleLeaderFileChange} />
-
-                        <button type="submit">Upload</button>
-                    </form>
-            </div>
-
-            <div className="dropdown justify-start w-2/4">
-                    {/* <CSVReader onFileLoaded={readInputAstCSV}
-                    inputId="csv-input"/> */}
-                    <button className="btn btn-outline btn-info bg-blue-600" onClick={()=>{createAssistantInsertTemplate()}}>Download Template</button>
-                    <form onSubmit={handleAssistantInsert}  method="post" encType="multipart/form-data">
-                    <input type="file" name="file" accept=".csv" onChange={handleAssistantFileChange} />
-
-                        <button type="submit">Upload</button>
-                    </form>
+                <div className="dropdown justify-start w-52">
 
                     <label tabIndex={0} className="btn btn-ghost bg-base-100 flex justify-start  normal-case card-title ">{(selectedOption !== "None" ? selectedOption : "Generation")}</label>
                     <ul tabIndex={0} className="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-full h-max">
@@ -214,12 +228,34 @@ const AssistantPage= ()=>{
                                 return(<li key={index} onClick={()=>{
                                     setSelectedOption(gen)
                                     console.log(gen);
+
                                     
                                 }}><a className="h-8">{gen}</a></li>)
                             })
                         }
                     </ul>
+                </div>
             </div>
+
+            <div className="flex flex-col gap-5 my-2">         
+                <div>
+                    <button className="btn btn-outline btn-info bg-blue-600 btn-sm" onClick={()=>{createInputAssistantLeaderTemplate()}}>Download Input Leader Template</button>
+                    <form onSubmit={handleLeaderInsert}  method="post" encType="multipart/form-data">
+                        <input type="file" name="file" accept=".csv" onChange={handleLeaderFileChange} />
+                        <button className="btn btn-outline btn-info bg-blue-600 btn-sm" type="submit">Upload</button>
+                    </form>
+                </div>                      
+
+                <div>
+                    <button className="btn btn-outline btn-info bg-blue-600 btn-sm" onClick={()=>{createAssistantInsertTemplate()}}>Download Template</button>
+                    <form onSubmit={handleAssistantInsert}  method="post" encType="multipart/form-data">
+                        <input type="file" name="file" accept=".csv" onChange={handleAssistantFileChange} />
+                        <button className="btn btn-outline btn-info bg-blue-600 btn-sm" type="submit">Upload</button>
+                    </form>
+                </div>
+            </div>
+
+            
 
 
             <div className="card w-full bg-base-100 ">
@@ -233,12 +269,12 @@ const AssistantPage= ()=>{
 
                         </div>
 
-                        <div className="">
+                        <div className="max-h-96 overflow-auto">
+
                             <table className="table table-compact w-full">
                                 {/* head */}
-                                <thead>
-                                <tr>
-                                   
+                                <thead className="sticky top-0 text-center">
+                                <tr>                                 
                                     <th>Initial</th>
                                     <th>Name</th>
                                     <th>Role</th>
@@ -246,24 +282,29 @@ const AssistantPage= ()=>{
                                     <th>CareerChoice</th>
                                     <th>EligibleForResign</th>
                                     <th>EligibleForPromotion</th>
-                                    <th>Action</th>
-                                    
+                                    <th>Action</th>                                   
                                 </tr>
                                 </thead>
                                 <tbody>
                                 {!filtered
                                 ?
                                 users.map((us, index) => (
-                                    <tr key={index}  >
-                                        <td>{us.initial}</td>
+                                    <tr className="clickable hover"
+                                    key={index}>
+                                        <td>
+                                            <Link  href={`assistant/detail/${us.initial}`}>
+                                            {us.initial}
+                                            </Link>
+                                        </td>
                                         <td>{us.assistantname}</td>
                                         <td>{us.rolename}</td>
                                         <td>{us.assistantleader ? us.assistantleader : 'None'}</td>
                                         <td>{us.careerchoice=="" ? 'Unknown' : us.careerchoice}</td>
                                         <td>{us.eligiblepromotionstatus ? 'Eligible' : 'Not Eligible'}</td>
                                         <td>{us.eligibleforresign ? 'Eligible' : 'Not Eligible'}</td>
-                                        <td>
+                                        <td className="flex gap-2">
                                            <button onClick={() => openModal(us.initial)}>Edit</button> 
+                                           <button onClick={() => clickDelete(us.initial)}>Delete</button> 
                                         </td>
                                         
                                          
@@ -273,7 +314,7 @@ const AssistantPage= ()=>{
                                     ))
                                     :
                                     filteredData.map((us, index) => (
-                                        <tr key={index}  >
+                                        <tr className="clickable hover" onClick={()=>{setSelectedId(us.initial)}} key={index}  >
                                             <td>{us.initial}</td>
                                             <td>{us.assistantname}</td>
                                             <td>{us.rolename}</td>
@@ -281,8 +322,9 @@ const AssistantPage= ()=>{
                                             <td>{us.careerchoice=="" ? 'Unknown' : us.careerchoice}</td>
                                             <td>{us.eligiblepromotionstatus ? 'Eligible' : 'Not Eligible'}</td>
                                             <td>{us.eligibleforresign ? 'Eligible' : 'Not Eligible'}</td>
-                                            <td>
+                                            <td className="flex gap-2">
                                                <button onClick={() => openModal(us.initial)}>Edit</button> 
+                                               <button onClick={() => clickDelete(us.initial)}>Delete</button> 
                                             </td>
                                             
                                              

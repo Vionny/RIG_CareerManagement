@@ -176,7 +176,6 @@ const insertAssistantLeader = (data)=>{
         });
       });
 }
-
 module.exports = {
     getUser,
     insertCareerChoice,

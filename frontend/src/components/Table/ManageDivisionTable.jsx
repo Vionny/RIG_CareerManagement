@@ -41,7 +41,7 @@ const ManageDivisionTable = ({division, selectId}) => {
                 </thead>
                 <tbody>
                     {division.map((divItem, index) => (
-                    <tr className="clickable" onClick={()=>{selectId(divItem.divisionid)}} key={index}>
+                    <tr className="clickable hover" onClick={()=>{selectId(divItem.divisionid)}} key={index}>
                         <td className="text-center w-64">
                             <div className="whitespace-normal">{divItem.divisionname}</div>
                         </td>
