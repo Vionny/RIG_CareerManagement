@@ -1,5 +1,5 @@
 const express = require('express');
-const { insertPromotionRegistration, getLastPriorityInsert, getPromotionRegistrant, getRegistrees } = require('../Controller/PromotionController');
+const { insertPromotionRegistration, getLastPriorityInsert, getPromotionRegistrant, getRegistrees, getAllCurrentSemesterPromotionRanking } = require('../Controller/PromotionController');
 const router = express.Router()
 
 router.post('/promotion/registerPromotion',insertPromotionRegistration)

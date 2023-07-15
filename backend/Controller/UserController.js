@@ -136,7 +136,7 @@ const inputManyAssistant = (assistants) =>{
     data.forEach((item) => {
       const { initial, name } = item;
   
-      const query = `INSERT INTO public.assistant(
+      const query = `INSERT INTO assistant(
         initial, roleid, assistantname, eligiblepromotionstatus, eligibleforresign, careerchoice, futureplan, fpfinalize, assistantphotourl, assistantleader)
         VALUES ($1, 'RL011', $2, false, false,  'tentative', null, false, '','')`;
   

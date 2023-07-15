@@ -55,8 +55,8 @@ const ManageCandidate = ()=>{
                             <p className="card-title mb-1">Promotion Registrant</p>
                         </div>
                         
-                        <div className="max-h-80 overflow-auto">
-                            <table className="table table-compact w-full border ">
+                        <div className="max-h-96 h-96 overflow-auto p-5 ">
+                            <table className="table table-compact w-full border text-center">
                                 {/* head */}
                                 <thead>
                                 <tr>                                 
@@ -64,24 +64,39 @@ const ManageCandidate = ()=>{
                                     <th className="sticky w-48 top-0 text-center">Priority 1</th>
                                     <th className="sticky w-48 top-0 text-center">Priority 2</th>
                                     <th className="sticky w-48 top-0 text-center">Priority 3</th>
-                                    <th className="whitespace-normal">Problem</th>
-                                    <th>Comments</th>
-                                    <th className="whitespace-normal sticky  top-0 text-center">OP Rank</th>
-                                    <th className="whitespace-normal sticky top-0 text-center">AstDev Rank</th>
-                                    <th className="whitespace-normal sticky  top-0 text-center">Subco Rank</th>
-                                    <th className="whitespace-normal sticky  top-0 text-center">NA Staff Rank</th>
+                                    <th className="sticky w-48 top-0 text-center">Comments</th>
+                                    <th className="whitespace-normal sticky  top-0 text-center">OP</th>
+                                    <th className="whitespace-normal sticky  top-0 text-center">Resman</th>
+                                    <th className="whitespace-normal sticky  top-0 text-center">DB Staff</th>
+                                    <th className="whitespace-normal sticky  top-0 text-center">NA Staff</th>
+                                    <th className="whitespace-normal sticky  top-0 text-center">NA Officer</th>
+                                    <th className="whitespace-normal sticky  top-0 text-center">RnD Staff</th>
+                                    <th className="whitespace-normal sticky  top-0 text-center">RnD Officer</th>
+                                    <th className="whitespace-normal sticky  top-0 text-center">Subco</th>
+                                    <th className="whitespace-normal sticky  top-0 text-center">SubDev</th>
+                                    <th className="whitespace-normal sticky  top-0 text-center">AstDev</th>
+                                    <th className="whitespace-normal sticky  top-0 text-center">Edit</th>
                                 </tr>
                                 </thead>
                                 <tbody>
 
                                 {regist.map((reg, index) => (
                                     <tr key={index}  className="clickable hover border-1" onClick={()=>{setSelectedCan(reg.initial)}}>
-                        
-                                        <td className="border">{reg.initial}</td>
-                                        <td className="whitespace-normal w-48 border">{reg.priorityone}</td>
+                                        <td className="whitespace-normal w-48 border">{reg.initial}</td>
+                                        <td className="whitespace-normal w-48 border">{reg.priorityone ?reg.priorityone : '-'}</td>
                                         <td className="whitespace-normal w-48 border">{reg.prioritytwo == null ? '-' : reg.prioritytwo}</td>
                                         <td className="whitespace-normal w-48 border">{reg.prioritythree == null ? '-' : reg.prioritythree}</td>
-                              
+                                        <td className="whitespace-normal w-48 border">{reg.commentamount ? reg.commentamount : 0}</td>
+                                        <td className="whitespace-normal w-48 border"><input type="text" value = {reg.opofficer ? reg.opofficer : 0} className="input input-bordered w-full max-w-xs" /></td>
+                                        <td className="whitespace-normal w-48 border"><input type="text" value = {reg.resmanoff ? reg.resmanoff : 0} className="input input-bordered w-full max-w-xs" /></td>
+                                        <td className="whitespace-normal w-48 border"><input type="text" value = {reg.dbstaff ? reg.dbstaff : 0} className="input input-bordered w-full max-w-xs" /></td>
+                                        <td className="whitespace-normal w-48 border"><input type="text" value = {reg.nastaff ? reg.nastaff : 0} className="input input-bordered w-full max-w-xs" /></td>
+                                        <td className="whitespace-normal w-48 border"><input type="text" value = {reg.naofficer ? reg.naofficer : 0} className="input input-bordered w-full max-w-xs" /></td>
+                                        <td className="whitespace-normal w-48 border"><input type="text" value = {reg.rndstaff ? reg.rndstaff : 0} className="input input-bordered w-full max-w-xs" /></td>
+                                        <td className="whitespace-normal w-48 border"><input type="text" value = {reg.rndofficer ? reg.rndofficer :0} className="input input-bordered w-full max-w-xs" /></td>
+                                        <td className="whitespace-normal w-48 border"><input type="text" value = {reg.subco ? reg.subco : 0} className="input input-bordered w-full max-w-xs" /></td>
+                                        <td className="whitespace-normal w-48 border"><input type="text" value = {reg.subdev ? reg.subdev : 0} className="input input-bordered w-full max-w-xs" /></td>
+                                        <td className="whitespace-normal w-48 border"><input type="text" value = {reg.astdev ? reg.astdev : 0} className="input input-bordered w-full max-w-xs" /></td>
                                     </tr>
                                 ))}
 
