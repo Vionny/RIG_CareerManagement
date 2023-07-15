@@ -121,10 +121,10 @@ const insertPromotionRanking = (data,semesterid)=>{
       const { initial, opofficer, resmanoff, astdev, subco, subdev, dbstaff, naofficer, nastaff, rndofficer, rndstaff} = item;
       console.log(item)
 
-      const query = "INSERT INTO promotionranking (promotionrankingid, initial, semesterid, opofficer, resmanoff, astdev, subco, subdev, dbstaff, naofficer, nastaff, rndofficer, rndstaff) VALUES (TRIM($1), TRIM($2), TRIM($3), $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)";
+      const query = "INSERT INTO promotionranking (promotionrankingid, initial, semesterid, opofficer, resmanoff, astdev, subco, subdev, dbstaff, naofficer, nastaff, rndofficer, rndstaff) SELECT $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13 WHERE NOT EXISTS (  SELECT * FROM promotionranking WHERE initial = $2 AND semesterid = $3 )";
       let promotionrankingid = generateRandomId(10)
       console.log(promotionrankingid)
-      pool.query(query, [promotionrankingid.trim(), initial.trim(),semesterid.trim(), opofficer, resmanoff, astdev, subco, subdev, dbstaff, naofficer, nastaff, rndofficer, rndstaff], (error, results) => {
+      pool.query(query, [promotionrankingid, initial,semesterid, opofficer, resmanoff, astdev, subco, subdev, dbstaff, naofficer, nastaff, rndofficer, rndstaff], (error, results) => {
         if (error) {
           success = false;
           // console.error(error);
@@ -140,7 +140,6 @@ const insertPromotionRanking = (data,semesterid)=>{
       return 'False';
     }
 }
-
 
 module.exports={
     insertPromotionRegistration,
