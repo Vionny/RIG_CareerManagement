@@ -23,13 +23,25 @@ const AssistantDetail= ({id})=>{
 
 
 
-
-    useEffect(()=>{
-        setSemester(sessionStorage.getItem('selectedSemester'))
+    useEffect(() => {
+        setSemester(sessionStorage.getItem('selectedSemester'));
         setCurrAst(sessionStorage.getItem('initial'))
 
+        
+      }, []);
+
+    
+    useEffect(() =>{
+        if(!comments) setHaveCmt(false)
+        else setHaveCmt(true)
+    }, [comments])
+    
+
+    useEffect(()=>{
+       
+
         axios.get(process.env.NEXT_PUBLIC_BACKEND_URL+'/getComment/'+ id +'/' + semester).then((res) => {
-            // console.log(res.data)
+            console.log(res.data)
             setComments(res.data)  
             // setLoadCmt(true)
         })
@@ -40,7 +52,8 @@ const AssistantDetail= ({id})=>{
         })
 
         axios.get(process.env.NEXT_PUBLIC_BACKEND_URL+'/getProblem/'+ id).then((res) => {
-            console.log(res.data[0])
+            // console.log(res.data[0])
+
             setRecords(res.data)            
         })
 
@@ -50,12 +63,11 @@ const AssistantDetail= ({id})=>{
             
         })
 
-        if(!comments) setHaveCmt(false)
-        else setHaveCmt(true)
+        
 
 
         
-    },[])
+    },[semester])
 
 
 
