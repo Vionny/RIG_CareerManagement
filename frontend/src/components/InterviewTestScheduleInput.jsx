@@ -128,7 +128,7 @@ const InterviewTestScheduleInput = () => {
       <form onSubmit={handleSubmit}>
       <div className="card w-full bg-base-100 shadow-xl mt-7">
         <div className="card-body">
-            <h2 className="">Interview Test Schedule</h2>
+            <h1 className="card-title">Interview Test Schedule</h1>
             <div className="flex flex-row mt-3 min-w-full">
                 <div className="dropdown justify-start w-fit">
                     <select className="btn btn-ghost bg-base-100 w-32 flex justify-start normal-case  text-base  "  value={(selectedRegistrees ? selectedRegistrees : "Choose Registrees")} onChange={(event) => {

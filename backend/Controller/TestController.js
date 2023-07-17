@@ -99,10 +99,24 @@ const InterviewTestInputHandler = (req, res) => {
     
   });
 };
+
+const getInterviewSchedule = (req, res) => {
+  const initial = req.params.initial
+  const query = `SELECT * FROM interviewallocation WHERE initial = $1`
+
+  pool.query(query, [initial],(err,result)=>{
+    if(!err){
+      res.status(200).send(result.rows)
+    }
+  })
+
+}
+
 module.exports = {
   BATestHandler,
   getBATestSchedule,
   getRoleNotInserted,
   InterviewTestInputHandler,
-  getInterviewer
+  getInterviewer,
+  getInterviewSchedule
 };
