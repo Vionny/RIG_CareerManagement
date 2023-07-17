@@ -92,8 +92,26 @@ const getRegistrees = (req, res) => {
         console.log(error)
         res.send('Error fetching promotion registrant');
     } else {
-        
-        // console.log(result.rows[0].priority)
+
+        if (result.rows.length === 0) {
+            res.status(200).send('0');
+          } 
+        else res.status(200).send(result.rows);
+    }
+});
+
+}
+
+
+const getRegistrantChoices = (req, res) => {
+  const query = "SELECT pr.initial, rolename, priority, prd.registrationreason, prd.period FROM role r JOIN promotionregistrationdetail prd ON prd.roleid = r.roleid  JOIN promotionregistration pr ON prd.promotionregistrationid = pr.promotionregistrationid JOIN assistant ast ON pr.initial = ast.initial WHERE pr.initial = $1 AND pr.semesterid = $2"
+  const initial = req.params.initial
+  const semesterid = req.params.semesterid
+  pool.query(query,[initial, semesterid], (error, result) => {
+    if (error) {
+        console.log(error)
+        res.send('Error fetching registrant choices');
+    } else {
         if (result.rows.length === 0) {
             res.status(200).send('0');
           } 
@@ -143,11 +161,14 @@ const insertPromotionRanking = (data,semesterid)=>{
     }
 }
 
+
+
 module.exports={
     insertPromotionRegistration,
     getLastPriorityInsert,
     getPromotionRegistrant,
     getRegistrees,
     insertPromotionRanking,
-    generateRandomId
+    generateRandomId,
+    getRegistrantChoices
 }

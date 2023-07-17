@@ -11,23 +11,28 @@ const AssistantDetail= ({id})=>{
 
     const [comments, setComments] = useState();
     const [inputCmt, setInputCmt] = useState();
-    const [cmtType, setCmtType] = useState();
+    const [cmtType, setCmtType] = useState('positive');
     
     const [loadCmt, setLoadCmt] = useState(false);
     const [ast, setAst] = useState();
     const [semester, setSemester] = useState();
     const [currAst, setCurrAst] = useState();
+    const [choices, setChoices] = useState();
+    
 
     const [haveCmt, setHaveCmt] = useState();
-  
-    // console.log(ast.assistantname);
+
+  if(choices != undefined){
+
+      console.log(choices);
+    }
     // console.log(comments);
     useEffect(()=>{
         setSemester(sessionStorage.getItem('selectedSemester'))
         setCurrAst(sessionStorage.getItem('initial'))
 
         axios.get(process.env.NEXT_PUBLIC_BACKEND_URL+'/getComment/'+ id +'/' + semester).then((res) => {
-            console.log(res.data)
+            // console.log(res.data)
             setComments(res.data)  
             setLoadCmt(true)
         })
@@ -35,8 +40,18 @@ const AssistantDetail= ({id})=>{
         axios.get(process.env.NEXT_PUBLIC_BACKEND_URL+'/getUser/'+ id).then((res) => {
             // console.log(res.data[0])
             setAst(res.data[0])   
-            setLoadCmt(true)
+            
         })
+
+        axios.get(process.env.NEXT_PUBLIC_BACKEND_URL+'/promotion/getRegistrantChoices/'+ id + '/' + semester).then((res) => {
+            console.log(res.data)
+            setChoices(res.data)   
+            
+        })
+
+        if(!comments) setHaveCmt(false)
+        else setHaveCmt(true)
+
 
         
     },[loadCmt])
@@ -46,14 +61,14 @@ const AssistantDetail= ({id})=>{
 
     const insertComment = () =>{
      
-        if(!comments) setHaveCmt(false)
-        else setHaveCmt(true)
+        
         var data = {
             initial: id,
             semesterid: semester,
             commentinitial: currAst,
             commenttype: cmtType,
-            commenttext:inputCmt,   
+            commenttext:inputCmt, 
+            havecomment: haveCmt  
         }
         console.log(data);
         axios.post(process.env.NEXT_PUBLIC_BACKEND_URL + '/insertComment', data)
@@ -104,6 +119,10 @@ const AssistantDetail= ({id})=>{
                             </div>
                         </div>  
                         
+
+                        {
+
+                        }
                         <div className="flex flex-col gap-5">
 
                             <div className="card bg-base-200 p-2 h-fit max-h-96 overflow-y-auto">
@@ -157,7 +176,7 @@ const AssistantDetail= ({id})=>{
                                             }
 
                                             return (
-                                            <div className={`flex flex-row gap-2 p-2 items-center rounded ${bgColor}`}>
+                                            <div className={`flex flex-row gap-2 p-2 items-center rounded ${bgColor}`} key={com.assistantcommentid}>
                                                 <p className="w-10 h-fit ">{sign}</p>
                                                 <div className="flex flex-col w-full">
 

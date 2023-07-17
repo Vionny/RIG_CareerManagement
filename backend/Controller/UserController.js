@@ -239,12 +239,15 @@ const insertComment = (req, res, next) =>{
     let assistantcommentid = generateRandomId(10)
     let commentcollectionid = initial.substring(0,2) + semesterid
     const havecomment = req.body.havecomment
+    console.log(havecomment);
    
     const insertCommentQuery = "INSERT INTO commentcollection VALUES ($1, $2, $3)"
     const insertAssistantCommentQuery = "INSERT INTO assistantcomment VALUES ($1, $2, $3, $4, $5)"
 
 
     if(!havecomment){
+      console.log("masuk have comment");
+
         pool.query(insertCommentQuery,[commentcollectionid,initial,semesterid], (error, result) => {
           if (error) {
               console.log(error)
