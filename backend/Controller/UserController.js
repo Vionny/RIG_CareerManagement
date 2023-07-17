@@ -90,6 +90,7 @@ const getComment = (req, res, next) => {
         if (error) {
             res.status(500).send('Error fetching comment');
         } else {
+          console.log("get comment");
            res.status(200).send(result.rows);
         }
     
@@ -259,8 +260,10 @@ const insertComment = (req, res, next) =>{
         });
     }else{
         insertTableDetail()
-    }
+    } 
 
+
+    
   function insertTableDetail() {
     pool.query(insertAssistantCommentQuery, [assistantcommentid, commentcollectionid, commentinitial, commenttype, commenttext], (error, result) => {
       if (error) {
