@@ -38,15 +38,13 @@ const InterviewTestScheduleInput = () => {
         axios.get(process.env.NEXT_PUBLIC_BACKEND_URL+'/promotion/getRegistrees/'+sessionStorage.getItem('selectedSemester')).then((res)=>{
             console.log(res.data)
             setRegistrees(res.data)
-            axios.get(process.env.NEXT_PUBLIC_BACKEND_URL+'/getInterviewer').then((res)=>{
-                setInterviewers(res.data)
-                setLoadRegistrees(true)
-            })
+            setLoadRegistrees(true)
         })
     }
   }, [currSemester,loadRegistrees]);
   
   useEffect(() => {
+    console.log(selectedRegistrees)
     if(selectedRegistrees){
         axios.get(
             process.env.NEXT_PUBLIC_BACKEND_URL +
@@ -85,7 +83,6 @@ const InterviewTestScheduleInput = () => {
 
     var data = {
         initial : sessionStorage.getItem('initial'),
-        interviewer : selectedInterviewer,
         semesterid : sessionStorage.getItem('selectedSemester').trim(),
         interviewdate : stamp.toString(),
         roleid : selectedRole,
@@ -143,7 +140,7 @@ const InterviewTestScheduleInput = () => {
                         }
                     </select>
                 </div>
-                {interviewers&& (<select className="btn btn-ghost bg-base-100 w-72 ml-20 flex justify-start normal-case  text-base" placeholder='Choose Role'  value={selectedInterviewer ? selectedInterviewer.interviewersname : "Choose Interviewers"} onChange={(event) => {
+                {/* {interviewers&& (<select className="btn btn-ghost bg-base-100 w-72 ml-20 flex justify-start normal-case  text-base" placeholder='Choose Role'  value={selectedInterviewer ? selectedInterviewer.interviewersname : "Choose Interviewers"} onChange={(event) => {
                         setSelectedInterviewer(event.currentTarget.value)
                         }}>
                         {
@@ -151,7 +148,7 @@ const InterviewTestScheduleInput = () => {
                             return <option className="dropdown-content menu p-2 text-center shadow bg-base-100 rounded-box w-full h-max" key={index} value={r.initial}>{r.assistantname}</option>
                         })
                         }
-                </select>)}
+                </select>)} */}
                 {(<select className="btn btn-ghost bg-base-100 w-72 ml-5  justify-start normal-case  text-base"  value={selectedRole ? selectedRole.rolename : "Choose Role"} placeholder='Choose Role' onChange={(event) => {
                         // console.log(event.target.value)
                         setSelectedRole(event.currentTarget.value)

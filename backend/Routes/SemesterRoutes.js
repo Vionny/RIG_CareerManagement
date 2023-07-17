@@ -1,6 +1,6 @@
 
 const express = require('express');
-const { getAllSemester, getCurrentSemester, getSelectedSemester, updatePromotionDate, updateChoiceDate, getPhases, getChoiceEnd, getPromotionEnd, insertSemester, deleteSemester, updateSemester, getSemesterDate} = require('../Controller/SemesterController');
+const { getAllSemester, getCurrentSemester, getSelectedSemester, updatePromotionDate, updateChoiceDate, getPhases, getChoiceEnd, getPromotionEnd, insertSemester, deleteSemester, updateSemester, getSemesterDate, insertAnnouncement} = require('../Controller/SemesterController');
 const router = express.Router()
 
 router.get('/getAllSemester',getAllSemester)
@@ -15,6 +15,7 @@ router.post('/updatePromotionDate', updatePromotionDate)
 router.post('/updateChoiceDate', updateChoiceDate)
 router.post('/updateSemester', updateSemester)
 router.post('/insertSemester', insertSemester)
+router.post('/insertAnnouncement',insertAnnouncement)
 router.delete('/deleteSemester/:semesterid', deleteSemester)
 
 module.exports = router

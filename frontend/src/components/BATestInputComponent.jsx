@@ -9,7 +9,8 @@ const BATestInputComponent = () => {
   const [date, setDate] = useState(new Date());
   const [time, setTime] = useState('');
   const [message, setMessage] = useState('');
-
+  const [date2, setDate2] = useState(new Date());
+  const [time2, setTime2] = useState('');
   const [showInfoModal, setShowInfoModal] = useState()
   const [title,setTitle] = useState('');
   const [modalMessage, setModalMessage] = useState('');
@@ -33,19 +34,27 @@ const BATestInputComponent = () => {
           if (res.data[0]) {
             const batestDateTimeString = res.data[0].batestdate;
             const batestDateTime = new Date(batestDateTimeString);
+            const batestDateTimeString2 = res.data[0].batestenddate;
+            const batestDateTime2 = new Date(batestDateTimeString2);
 
             if (!isNaN(batestDateTime)) {
               setDate(batestDateTime);
-
+              setDate2(batestDateTime2)
               const hours = batestDateTime.getHours() ;
               const minutes = batestDateTime.getMinutes();
               const formattedTime = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
 
               setTime(formattedTime);
+              const hours2 = batestDateTime2.getHours() ;
+              const minutes2 = batestDateTime2.getMinutes();
+              const formattedTime2 = `${hours2.toString().padStart(2, '0')}:${minutes2.toString().padStart(2, '0')}`;
 
+              setTime2(formattedTime);
               setBATest({
                 date : batestDateTime,
-                time: formattedTime
+                time: formattedTime,
+                enddate : batestDateTime2,
+                endTime : formattedTime2
               })
             } else {
               console.error('Invalid batestdate:', batestDateTimeString);
@@ -72,7 +81,14 @@ const BATestInputComponent = () => {
     setTime(e.target.value);
     console.log(e.target.value)
   };
+  const handleDateChange2 = (selectedDate) => {
+    setDate2(selectedDate);
+  };
 
+  const handleTimeChange2 = (e) => {
+    setTime2(e.target.value);
+    console.log(e.target.value)
+  };
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -85,9 +101,18 @@ const BATestInputComponent = () => {
     const toInsert = new Date(timestamp);
     const stamp = toInsert.toISOString().slice(0, 19).replace('T', ' ');    
     console.log(stamp)
+
+    const timestamp2 = new Date(date2);
+    const timeParts2 = time.split(':');
+    timestamp2.setHours(parseInt(timeParts2[0], 10)+7);
+    timestamp2.setMinutes(parseInt(timeParts2[1], 10));
+    timestamp2.setSeconds(0);
+    const toInsert2 = new Date(timestamp2);
+    const stamp2 = toInsert2.toISOString().slice(0, 19).replace('T', ' ');   
     var data = {
         semesterid : sessionStorage.getItem('selectedSemester').trim(),
-        batestdate : stamp.toString()
+        batestdate : stamp.toString(),
+        batestenddate : stamp2.toString()
       };
 
       console.log(data);
@@ -127,10 +152,10 @@ const BATestInputComponent = () => {
       <div className="card w-full bg-base-100 shadow-xl mt-7">
         <div className="card-body">
             <h2 className="card-title">BA Test Schedule</h2>
-            <label className="card-title text-lg font-normal mt-5">Current Date : {BATest ? BATest.date.toLocaleDateString('en-GB', options) : ''}  {BATest ? 'at' +BATest.time : ''}</label>
+            <label className="card-title text-lg font-normal mt-5">Current Date : {BATest ? BATest.date.toLocaleDateString('en-GB', options) : ''}  {BATest ? 'at ' +BATest.time : ''} {BATest ? ' - ' +BATest.enddate.toLocaleDateString('en-GB', options) : ''}  {BATest ? 'at ' +BATest.endTime : ''}</label>
             <div className="flex flex-row mt-3">
                 <div>
-                    <label className='text-lg mr-10'>Date</label>
+                    <label className='text-lg mr-10'>Start Date</label>
                     <DatePicker className="border-gray-400 input w-full max-w-xs"
                     value={date}
                         selected={date}
@@ -140,6 +165,21 @@ const BATestInputComponent = () => {
                 <div className="flex flex-row ml-20">
                     <label className='text-lg self-center mr-10'>Time:</label>
                     <input type="time" className="border-gray-400 input w-full max-w-xs" value={time} onChange={handleTimeChange} />
+                </div>
+            </div>
+
+            <div className="flex flex-row mt-3">
+                <div>
+                    <label className='text-lg mr-10'>End Date</label>
+                    <DatePicker className="border-gray-400 input w-full max-w-xs"
+                    value={date2}
+                        selected={date2}
+                        onChange={handleDateChange2}
+                    />
+                </div>
+                <div className="flex flex-row ml-20">
+                    <label className='text-lg self-center mr-10'>Time:</label>
+                    <input type="time" className="border-gray-400 input w-full max-w-xs" value={time2} onChange={handleTimeChange2} />
                 </div>
             </div>
             

@@ -1,4 +1,5 @@
 const { pool } = require("../Database/DatabaseConfig");
+const { generateRandomId } = require("./UserController");
 
 const  getAllSemester = (req, res, next) =>{
     const query = "SELECT semesterid, semestername, TO_CHAR(semesterstartdate:: DATE, 'yyyy-mm-dd') semesterstartdate, TO_CHAR(semesterenddate:: DATE, 'yyyy-mm-dd') semesterenddate FROM semester ORDER BY semesterstartdate DESC"
@@ -210,7 +211,42 @@ const updateSemester = (req, res, next) =>{
     });
 }
 
+const insertAnnouncement = (req, res, next) =>{
 
+    const announcementid = generateRandomId(10)
+    const initial = req.body.initial
+    const semesterid = req.body.semesterid
+    const announcementcontent = req.body.announcementcontent
+
+    const query = `INSERT INTO announcements( announcementsid, initial, semesterid, announcementcontent) VALUES ($1, $2, $3, $4);`
+
+    pool.query(query,[announcementid, initial, semesterid, announcementcontent], (error, result) => {
+        if (error) {
+            console.log(error);
+            res.status(500).send('Error update semester');
+        } else {
+            res.status(200).send("Success");
+        }
+    });
+
+}
+
+const getAnnouncement = (req, res, next) =>{
+    
+    const semesterid = req.params.semesterid
+
+    const query = `SELECT * FROM announcements WHERE semesterid = $1`
+
+    pool.query(query,[semesterid], (error, result) => {
+        if (error) {
+            console.log(error);
+            res.status(500).send('Error update semester');
+        } else {
+            res.status(200).send(result.rows);
+        }
+    });
+
+}
 
 module.exports = {
     getAllSemester,
@@ -224,5 +260,7 @@ module.exports = {
     updateSemester,
     updatePromotionDate,
     updateChoiceDate,
-    getSemesterDate
+    getSemesterDate,
+    insertAnnouncement,
+    getAnnouncement
 };

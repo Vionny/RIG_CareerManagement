@@ -1,6 +1,7 @@
 
 const express = require('express');
 const { getUser, insertCareerChoice, finalizeCareerChoice, getTeamMember, getAllUser, updateAstCareerChoice,updateAssistant, deleteAssistant, insertComment, getComment, getProblem, resetFinalize } = require('../Controller/UserController');
+const { getAnnouncement } = require('../Controller/SemesterController');
 const router = express.Router()
 
 
@@ -12,6 +13,7 @@ router.get('/getTeamMember/:roleid', getTeamMember)
 router.get('/getAllUser', getAllUser)
 router.get('/getComment/:initial/:semesterid', getComment)
 router.get('/getProblem/:initial', getProblem)
+router.get('/getAnnouncement/:semesterid',getAnnouncement)
 
 router.post('/insertCareerChoice',insertCareerChoice)
 router.post('/insertComment',insertComment)
