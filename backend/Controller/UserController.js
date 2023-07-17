@@ -274,6 +274,11 @@ const insertComment = (req, res, next) =>{
 }
 
 
+
+
+
+
+
 module.exports = {
     getUser,
     insertCareerChoice,

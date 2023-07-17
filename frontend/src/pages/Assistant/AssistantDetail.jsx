@@ -13,20 +13,17 @@ const AssistantDetail= ({id})=>{
     const [inputCmt, setInputCmt] = useState();
     const [cmtType, setCmtType] = useState('positive');
     
-    const [loadCmt, setLoadCmt] = useState(false);
+    // const [loadCmt, setLoadCmt] = useState(false);
     const [ast, setAst] = useState();
     const [semester, setSemester] = useState();
     const [currAst, setCurrAst] = useState();
     const [choices, setChoices] = useState();
-    
-
+    const [records, setRecords] = useState();
     const [haveCmt, setHaveCmt] = useState();
 
-  if(choices != undefined){
 
-      console.log(choices);
-    }
-    // console.log(comments);
+
+
     useEffect(()=>{
         setSemester(sessionStorage.getItem('selectedSemester'))
         setCurrAst(sessionStorage.getItem('initial'))
@@ -34,13 +31,17 @@ const AssistantDetail= ({id})=>{
         axios.get(process.env.NEXT_PUBLIC_BACKEND_URL+'/getComment/'+ id +'/' + semester).then((res) => {
             // console.log(res.data)
             setComments(res.data)  
-            setLoadCmt(true)
+            // setLoadCmt(true)
         })
 
         axios.get(process.env.NEXT_PUBLIC_BACKEND_URL+'/getUser/'+ id).then((res) => {
-            // console.log(res.data[0])
-            setAst(res.data[0])   
-            
+            console.log(res.data[0])
+            setAst(res.data[0])            
+        })
+
+        axios.get(process.env.NEXT_PUBLIC_BACKEND_URL+'/getProblem/'+ id).then((res) => {
+            console.log(res.data[0])
+            setRecords(res.data)            
         })
 
         axios.get(process.env.NEXT_PUBLIC_BACKEND_URL+'/promotion/getRegistrantChoices/'+ id + '/' + semester).then((res) => {
@@ -54,14 +55,13 @@ const AssistantDetail= ({id})=>{
 
 
         
-    },[loadCmt])
+    },[])
 
 
 
 
     const insertComment = () =>{
-     
-        
+            
         var data = {
             initial: id,
             semesterid: semester,
@@ -120,35 +120,53 @@ const AssistantDetail= ({id})=>{
                         </div>  
                         
 
-                        {
-
-                        }
+                        
                         <div className="flex flex-col gap-5">
 
-                            <div className="card bg-base-200 p-2 h-fit max-h-96 overflow-y-auto">
-                                <div className=" text-lg font-semibold">Choices</div>
-
-                                <div className="my-2">
-                                    <div className="font-semibold">Priority 1</div>
-                                    <p>Choice 1</p>
-                                    <p>Reason Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aperiam quisquam dolorem sint quod maiores eaque fugiat eveniet distinctio rem cupiditate pariatur, consectetur hic rerum ea placeat, iure temporibus, magnam quam?</p>
-                                </div>
-
-                                <div className="my-2">
-
-                                    <div className="font-semibold">Priority 2</div>
-                                    <p>Choice 1</p>
-                                    <p>Reason Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aperiam quisquam dolorem sint quod maiores eaque fugiat eveniet distinctio rem cupiditate pariatur, consectetur hic rerum ea placeat, iure temporibus, magnam quam?</p>
-
-                                </div>
+                        {
+                           
+                            choices != undefined && choices.length > 0 ? (
+                              <div className="card bg-base-200 p-2 h-fit max-h-96 overflow-y-auto">
+                                <div className="text-lg font-semibold">Choices</div>
+                          
+                                {
                                 
-                                <div className="my-2">
-
-                                    <div className=" font-semibold">Priority 3</div>
-                                    <p>Choice 1</p>
-                                    <p>Reason Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aperiam quisquam dolorem sint quod maiores eaque fugiat eveniet distinctio rem cupiditate pariatur, consectetur hic rerum ea placeat, iure temporibus, magnam quam?</p>
-                                </div>
-                            </div>   
+                                choices
+                                .sort((a, b) => a.priority - b.priority)
+                                .map((choice) => {
+                                  if (choice.priority === 1) {
+                                    return (
+                                      <div className="my-2" key={choice.initial}>
+                                        <div className="font-semibold">Priority 1</div>
+                                        <p>{choice.rolename}</p>
+                                        <p>{choice.registrationreason}</p>
+                                      </div>
+                                    );
+                                  } else if (choice.priority === 2) {
+                                    return (
+                                      <div className="my-2" key={choice.initial}>
+                                        <div className="font-semibold">Priority 2</div>
+                                        <p>{choice.rolename}</p>
+                                        <p>{choice.registrationreason}</p>
+                                      </div>
+                                    );
+                                  } else if (choice.priority === 3) {
+                                    return (
+                                      <div className="my-2" key={choice.initial}>
+                                        <div className="font-semibold">Priority 3</div>
+                                        <p>{choice.rolename}</p>
+                                        <p>{choice.registrationreason}</p>
+                                      </div>
+                                    );
+                                  } else {
+                                    return null; 
+                                  }
+                                })}
+                              </div>
+                            ) : (
+                              <div></div>
+                            )                         
+                        } 
 
                             {
                                 comments!=undefined ? 
@@ -217,10 +235,10 @@ const AssistantDetail= ({id})=>{
                             }
                         </div>
 
-                        <div className="flex flex-col">
+                        <div className="flex flex-col w-full">
 
-                            <div className="overflow-x-auto">
-                                <table className="table border rounded-lg">
+                            <div className="w-full">
+                                <table className="table w-full">
                                     <thead >
                                         <tr>
                                             <th className="whitespace-normal text-center w-32">HC Letter</th>
@@ -234,10 +252,10 @@ const AssistantDetail= ({id})=>{
                                         </tr>
                                     </thead>
                                     {/* <tbody>
-                                        {division.map((divItem, index) => (
+                                        {records.map((rec, index) => (
                                         <tr className="clickable" onClick={()=>{selectId(divItem.divisionid)}} key={index}>
                                             <td className="text-center w-64">
-                                                <div className="whitespace-normal">{divItem.divisionname}</div>
+                                                <input type="text" />
                                             </td>
                                             <td className="text-center">
                                                 <div className="whitespace-normal">{divItem.divisiondescription} </div>        
@@ -257,8 +275,8 @@ const AssistantDetail= ({id})=>{
                                 </table>
                             </div>
 
-                            <div className="overflow-x-auto">
-                                <table className="table border rounded-lg">
+                            <div className="">
+                                <table className="table w-full">
                                     <thead className="p-0">
                                         <tr className="p-0">   
                                             <th className="whitespace-normal text-center w-32">Sick</th>
@@ -295,7 +313,7 @@ const AssistantDetail= ({id})=>{
                             </div>
 
 
-                            </div>
+                        </div>
                         
                     </div>
                 </div>
