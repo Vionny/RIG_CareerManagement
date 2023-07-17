@@ -146,5 +146,6 @@ module.exports={
     getLastPriorityInsert,
     getPromotionRegistrant,
     getRegistrees,
-    insertPromotionRanking
+    insertPromotionRanking,
+    generateRandomId
 }
