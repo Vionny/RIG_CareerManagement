@@ -1,7 +1,17 @@
+"use client"
 import Link from "next/link";
+import { UserContext } from "./UserContext";
+import { useContext } from "react";
 
 export default function Sidebar() {
-    return (
+
+    const { user } = useContext(UserContext);
+
+    if(!user) return <div></div>
+    else 
+    {
+      if(!(user.roleid.includes("RL006") || user.roleid.includes("RL005"))) return <div></div>  
+       else return (
         <div className="flex justify-center p-3 bg-gradient-to-br from-sky-600 to-sky-200 text-white w-1/5">
             <div className="flex flex-col w-full">
                 <div className="space-y-3">
@@ -9,7 +19,7 @@ export default function Sidebar() {
                         <h2 className="text-xl font-bold">Dashboard</h2>
                     </div>
 
-                    <div className="flex-1">
+                    { (<div className="flex-1">
                         <ul className="pt-2 pb-4 space-y-1 text-sm">
                             <li className="rounded-sm">
                                 <Link
@@ -120,10 +130,10 @@ export default function Sidebar() {
                                 </Link>
                             </li>
                         </ul>
-                    </div>
+                    </div>)}
                 </div>
             </div>
             
         </div>
-    );
+    )};
 }

@@ -1,7 +1,7 @@
 const { pool } = require("../Database/DatabaseConfig");
 
 const  getAllSemester = (req, res, next) =>{
-    const query = "SELECT semesterid, semestername, TO_CHAR(semesterstartdate:: DATE, 'yyyy-mm-dd') semesterstartdate, TO_CHAR(semesterenddate:: DATE, 'yyyy-mm-dd') semesterenddate FROM semester"
+    const query = "SELECT semesterid, semestername, TO_CHAR(semesterstartdate:: DATE, 'yyyy-mm-dd') semesterstartdate, TO_CHAR(semesterenddate:: DATE, 'yyyy-mm-dd') semesterenddate FROM semester ORDER BY semesterstartdate DESC"
 
     pool.query(query, (error, result) => {
         if (error) {

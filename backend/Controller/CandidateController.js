@@ -3,26 +3,26 @@ const { pool } = require("../Database/DatabaseConfig");
 const getCandidateList = (req,res,next) =>{
 
     const semesterid = req.params.semesterid
-    const query = "SELECT " +
-        "promotionrankingid, ast.initial, " +
+    const query = "SELECT DISTINCT " +
+        "promotionrankingid,pra.initial, " +
         "MAX(CASE WHEN prd.priority = 1 THEN rolename END) AS priorityOne, " +
         "MAX(CASE WHEN prd.priority = 2 THEN rolename END) AS priorityTwo, " +
         "MAX(CASE WHEN prd.priority = 3 THEN rolename END) AS priorityThree, " +
-        "commentCount.commentAmount, opofficer, resmanoff, astdev, subco, subdev, dbstaff, naofficer, nastaff, rndofficer, rndstaff, period, iscandidate " +
+        "commentCount.commentAmount, opofficer, resmanoff, astdev, subco, subdev, dbstaff, naofficer, nastaff, rndofficer, rndstaff, iscandidate " +
     "FROM assistant ast " +
-    "JOIN promotionregistration pr ON pr.initial = ast.initial " +
+    " JOIN promotionregistration pr ON pr.initial = ast.initial " +
     "JOIN promotionregistrationdetail prd ON pr.promotionregistrationid = prd.promotionregistrationid " +
-    "JOIN role rl ON rl.roleid = prd.roleid " +
+    "LEFT JOIN role rl ON rl.roleid = prd.roleid " +
     "LEFT JOIN ( " +
         "SELECT initial, COUNT(a.commentcollectionid) AS commentAmount FROM commentcollection c " +
         "JOIN assistantcomment a ON a.commentcollectionid = c.commentcollectionid " +
         "WHERE c.semesterid = $1 " +
         "GROUP BY initial " +
     ") commentCount ON ast.initial = commentCount.initial " +
-    "JOIN promotionranking pra ON pra.initial = ast.initial " +
-    "WHERE pr.semesterid = $1 " +
-    "GROUP BY ast.initial, period, iscandidate, commentCount.commentAmount, opofficer, resmanoff, astdev, subco, subdev, dbstaff, naofficer, nastaff, rndofficer, rndstaff,promotionrankingid";
-
+    "RIGHT JOIN promotionranking pra ON pra.initial = ast.initial " +
+    "WHERE pra.semesterid = $1 " +
+    "GROUP BY ast.initial,  iscandidate, commentCount.commentAmount, opofficer, resmanoff, astdev, subco, subdev, dbstaff, naofficer, nastaff, rndofficer, rndstaff,promotionrankingid";
+    // console.log(query)
 
     pool.query(query,[semesterid], (error, result) => {
         if (error) {

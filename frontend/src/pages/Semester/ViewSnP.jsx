@@ -1,6 +1,8 @@
 "use client"
 import "@/app/globals.css"
+import ConfirmationModal from "@/components/Modals/Confirmation/ConfirmationModal"
 import { EditSemesterModal } from "@/components/Modals/Edit/EditSemesterModal"
+import SimpleInformationModal from "@/components/Modals/Information/SimpleInformationModal"
 import { AddSemesterModal } from "@/components/Modals/Insert/AddSemesterModal"
 import {useEffect, useState} from 'react'
 import DatePicker from 'react-datepicker'
@@ -24,6 +26,9 @@ const ViewSnP= ()=>{
 
     const [isModalOpen, setIsModalOpen] = useState(false)
     const [isModalAddOpen, setIsModalAddOpen] = useState(false)
+
+    const [resetConfirmationModal,setResetConfirmationModal] = useState(false)
+    const [showInfoModal ,setShowInfoModal] = useState(false)
 
     const openModal = (semesterId) => {
         console.log("open")
@@ -181,13 +186,50 @@ const ViewSnP= ()=>{
 
     }
 
+    const resetFinalizeHandle = ()=>{
+        axios
+        .patch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/resetFinalize`)
+        .then((res) =>{
+            console.log(res)
+            if(res.data== 'Success'){
+                setResetConfirmationModal(false)
+                setShowInfoModal(true)
+            }
+        })
+        .catch((error)=>{
+            console.error(error)
+        })
+    }
+
+    const refresh = ()=>{
+        window.location.reload();
+    }
 
 
     if(!loadSem) return <div></div>
     else
     return(
         <div className="bg-base-200 flex flex-col pl-10 pr-10 pt-5 w-full min-h-screen">
-            
+            {resetConfirmationModal && (
+
+                <ConfirmationModal
+                    title = "Reset Finalize Confirmation"
+                    message = "Are you sure you want to reset the finalize ?"
+                    onConfirm = {resetFinalizeHandle}
+                    onCancel = {()=>{
+                        setResetConfirmationModal(false)
+                    }}
+                />
+            )}
+
+            {showInfoModal && (
+
+                <SimpleInformationModal
+                    title = "Successful"
+                    message = "You have successfully reset the finalize option !"
+                    onConfirm = {refresh}
+                />
+            )}
             <article className="prose base mb-5">
                 <h2>Semester and Period</h2>
             </article>
@@ -287,7 +329,7 @@ const ViewSnP= ()=>{
                         <button className="btn btn-primary" onClick={()=>updateChoiceDate()}>Update</button>
                     </div>
                 </div>
-
+                <button className="btn btn-primary mt-10 w-48" onClick={()=>{setResetConfirmationModal(true)}}>Reset Finalize</button>
         </div>
     )
 }

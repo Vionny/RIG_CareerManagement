@@ -77,7 +77,7 @@ export const AddSemesterModal = ({closeModal}) => {
 
           <div className="flex flex-row gap-2">
 
-          <input onChange={(e)=>{setSemesterId(e.target.value)}} type="text" placeholder="Semester ID" className="input input-bordered w-full max-w-xs" />
+          <input onChange={(e)=>{setSemesterId(e.target.value)}} type="text" placeholder="[EVEN/ODD][2223]" className="input input-bordered w-full max-w-xs" />
           <input onChange={(e)=>{setSemesterName(e.target.value)}} type="text" placeholder="Semester Name" className="input input-bordered w-full max-w-xs" />
           </div>
           
