@@ -11,7 +11,7 @@ const userRoutes = require('./Routes/UserRoutes');
 const promotionRoutes = require('./Routes/PromotionRoutes');
 const candidateRoutes = require('./Routes/CandidateRoutes');
 const fileRoutes = require('./Routes/FileRoutes');
-
+const testRoutes = require('./Routes/TestRoutes');
 
 app.use(bodyParser.json());
 app.use(cors());
@@ -22,7 +22,7 @@ app.use(userRoutes);
 app.use(promotionRoutes);
 app.use(candidateRoutes);
 app.use(fileRoutes);
-
+app.use(testRoutes);
 
 app.listen(8080);
 module.exports = { router };

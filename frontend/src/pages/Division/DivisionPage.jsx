@@ -39,8 +39,9 @@ const DivisionPage = () => {
       process.env.NEXT_PUBLIC_BACKEND_URL + "/getTeamMember/" + roleid
     );
     const membersData = membersResponse.data;
-    setMembers((prevMembers) => [...prevMembers, ...membersData]);
+    setMembers(membersData);
   }
+  
 
   useEffect(() => {
     axios
