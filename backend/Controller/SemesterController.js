@@ -161,13 +161,16 @@ const insertSemester = (req, res, next) =>{
     const semesterid = req.body.semesterid
     const semestername = req.body.semestername
     const semesterstartdate = req.body.semesterstartdate
-    const semesterenddate = req.body.semesterstartdate
+    const semesterenddate = req.body.semesterenddate
 
-    const query = "insert into semester  values ($1, $2, $3, $4)"
-
+    const query = "insert into semester (semesterid,semestername,semesterstartdate,semesterenddate)  values ($1, $2, $3, $4)"
+    
     pool.query(query,[semesterid, semestername, semesterstartdate, semesterenddate], (error, result) => {
         if (error) {
             console.log(error)
+            if(error.constraint == "semester_pkey"){
+                res.status(200).send("Exist")
+            }else 
             res.status(500).send('Error insert semester');
         } else {
             res.status(200).send("Success");

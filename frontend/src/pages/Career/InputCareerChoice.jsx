@@ -123,6 +123,11 @@ const InputCareerChoice = () => {
   };
 
   const handleConfirm = () => {
+    if (decision == "tentative") {
+      setShowModal(false)
+      setErrText('You cannot finalize while your decision is tentative !');
+      setEnableErr(true);
+    } else {
     var data = {
       initial: sessionStorage.getItem('initial'),
     };
@@ -137,7 +142,7 @@ const InputCareerChoice = () => {
       })
       .catch((error) => {
         console.error(error);
-      });
+      });}
   };
   const handleCancel =()=>{
     setShowModal(false)

@@ -45,8 +45,19 @@ export const AddSemesterModal = ({closeModal}) => {
         // if(semesterid == null || semesterid.length == 0) setErrText("Please input period field")
         // else if(semesterName == null) setErrText("Please input semester name")
         // else {
-
-        var data = {
+        const currentDate = new Date();
+        if(semesterid == null){
+          setErrText("Please input the semesterid")
+        }else if((semesterid.substring(0,4) !=='EVEN' && semesterid.substring(0,3) !=='ODD') || isNaN(parseInt(semesterid.substring(semesterid.length-4,semesterid.length))) || semesterid.length<7 ||semesterid.length>8){
+          setErrText("Please input the correct format for semester id")
+        }else if(semesterName == null){
+          setErrText("Please input the semester name")
+        }else if(startDate < currentDate){
+          setErrText("You have to choose date more than today !")
+        }else if (startDate > endDate){
+          setErrText("End date must be more than start date !")
+        }else{
+          var data = {
             semesterid: semesterid,
             semestername: semesterName,
             semesterstartdate: startDate,
@@ -60,12 +71,16 @@ export const AddSemesterModal = ({closeModal}) => {
               console.log(res);
               if(res.data== 'Success'){
                 window.location.reload();
+              }else if(res.data == "Exist"){
+                setErrText("ID already exists")
               }
             })
             .catch((error) => {
               console.error(error);
             });
 
+        }
+        
     }
 
     return(
@@ -95,7 +110,14 @@ export const AddSemesterModal = ({closeModal}) => {
 
         </div>
           <button className="btn btn-primary" onClick={()=>insertSemester()}>Add</button>
-
+          {errText && 
+          <div id="toast-danger" className="toast toast-danger mr-7 z-50 flex flex-row items-center w-full max-w-xs p-4 mb-7 text-gray-500 bg-red-400 rounded-lg shadow dark:text-gray-400 dark:bg-gray-800" role="alert">                 
+                <div className="ml-3 font-normal text-white text-lg">{errText}</div>
+                <button type="button" className="ml-auto -mx-1.5 -my-1.5 bg-red-200 text-black hover:text-gray-900 rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5 hover:bg-red-200 inline-flex h-8 w-8 dark:text-gray-500 dark:hover:text-white dark:bg-gray-800 dark:hover:bg-red-400" data-dismiss-target="#toast-danger" aria-label="Close" onClick={()=>{setErrText("")}}>
+                    <span className="sr-only">Close</span>
+                    <svg aria-hidden="true" className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+                </button>
+            </div>}
         
       </div>
     </div>
