@@ -102,6 +102,7 @@ const getRegistrees = (req, res) => {
 });
 
 }
+
 function generateRandomId(length) {
   const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
   let id = '';
@@ -113,6 +114,7 @@ function generateRandomId(length) {
 
   return id;
 }
+
 const insertPromotionRanking = (data,semesterid)=>{
   let success = false;
   console.log(data)

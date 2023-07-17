@@ -8,25 +8,84 @@ const axios = require("axios")
 axios.defaults.headers.post['Content-Type'] = 'application/json';
 
 const AssistantDetail= ({id})=>{
-    // const params = useParams();
-    // const uid = params.uid;
-    // console.log(uid);
-    console.log(id);
 
+    const [comments, setComments] = useState();
+    const [inputCmt, setInputCmt] = useState();
+    const [cmtType, setCmtType] = useState();
+    
+    const [loadCmt, setLoadCmt] = useState(false);
+    const [ast, setAst] = useState();
+    const [semester, setSemester] = useState();
+    const [currAst, setCurrAst] = useState();
+
+    const [haveCmt, setHaveCmt] = useState();
+  
+    // console.log(ast.assistantname);
+    // console.log(comments);
+    useEffect(()=>{
+        setSemester(sessionStorage.getItem('selectedSemester'))
+        setCurrAst(sessionStorage.getItem('initial'))
+
+        axios.get(process.env.NEXT_PUBLIC_BACKEND_URL+'/getComment/'+ id +'/' + semester).then((res) => {
+            console.log(res.data)
+            setComments(res.data)  
+            setLoadCmt(true)
+        })
+
+        axios.get(process.env.NEXT_PUBLIC_BACKEND_URL+'/getUser/'+ id).then((res) => {
+            // console.log(res.data[0])
+            setAst(res.data[0])   
+            setLoadCmt(true)
+        })
+
+        
+    },[loadCmt])
+
+
+
+
+    const insertComment = () =>{
+     
+        if(!comments) setHaveCmt(false)
+        else setHaveCmt(true)
+        var data = {
+            initial: id,
+            semesterid: semester,
+            commentinitial: currAst,
+            commenttype: cmtType,
+            commenttext:inputCmt,   
+        }
+        console.log(data);
+        axios.post(process.env.NEXT_PUBLIC_BACKEND_URL + '/insertComment', data)
+        .then((res) =>{
+            console.log(res)
+            if(res.data== 'Success'){
+    
+                window.location.reload();
+                
+              }
+        })
+        .catch((error)=>{
+            console.error(error)
+        })
+    
+      }
+
+    
+    if(!ast) return(<div></div>)
+    else
     return(
         <div className="bg-base-200 flex flex-col pl-10 pr-10 pt-5 w-full min-h-screen">
-            <div className="card w-full bg-base-100 ">
-                <div className="card-body w-full">
-                    <div className="card-title justify-between">
-                        <p className="card-title mb-2">Assistant Detail {id}</p>
-                        
-                    </div>
 
-                        {/* detail */}
+            <article className="prose base mb-5">
+                <h2>Assistant Management</h2>
+            </article>
+             
+                {/* detail */}
                 <div className="bg-base-100 card w-full h-fit">
-                    <div className="card-body p-3 w-full">
+                    <div className="card-body  w-full">
                         <div className="card-title justify-between">
-                            <p className="card-title">Assistant Detail</p>
+                        
                         </div>
                         <div className="flex flex-row gap-5">
                             <figure className="bg-slate-300 w-fit">
@@ -34,9 +93,10 @@ const AssistantDetail= ({id})=>{
                             </figure>
 
                             <div className="flex flex-row gap-1">
-                                <div className="w-52">
-                                    <h3 className="text-lg font-semibold">Initial</h3>
-                                    <h3 className="text-lg font-semibold">Name</h3>
+                                <div className="w-full">
+                                    <h3 className="text-lg font-semibold">Initial   : {id}</h3>
+                                    <h3 className="text-lg font-semibold">Name      : {ast.assistantname}</h3>
+                                    <h3 className="text-lg font-semibold">Leader    : {!ast.assistantleader ? '-' : ast.assistantleader}</h3>
                                 </div>
 
                                 
@@ -44,7 +104,7 @@ const AssistantDetail= ({id})=>{
                             </div>
                         </div>  
                         
-                        <div className="flex gap-5">
+                        <div className="flex flex-col gap-5">
 
                             <div className="card bg-base-200 p-2 h-fit max-h-96 overflow-y-auto">
                                 <div className=" text-lg font-semibold">Choices</div>
@@ -71,22 +131,71 @@ const AssistantDetail= ({id})=>{
                                 </div>
                             </div>   
 
-                            <div className="card bg-base-200 p-2 h-fit max-h-96 overflow-y-auto">
-                                <div className="text-lg font-semibold">Comments</div>
+                            {
+                                comments!=undefined ? 
 
-                                <div className="flex flex-row gap-2 p-2 items-center rounded bg-red-200">
-                                    <p className="w-10 h-fit">-1</p>
-                                    <div className="flex flex-col">
+                                <div className="card bg-base-200 p-2 h-fit gap-2 max-h-96 overflow-y-auto">
+                                    <div className="text-lg font-semibold ">Comments</div>
 
-                                        <p>Reason Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aperiam quisquam dolorem sint quod maiores eaque fugiat eveniet distinctio rem cupiditate pariatur, consectetur hic rerum ea placeat, iure temporibus, magnam quam?</p>
-                                        <p className="self-end text-sm">by Initial</p>
+                                    {
+                                        
+                                        
+                                        comments.map((com, index)=>{
+
+                                            let bgColor = "";
+                                            let sign = "";
+                                            
+                                            if (com.commenttype === "negative") {
+                                                bgColor = "bg-red-200";
+                                                sign = "-1";
+                                            } else if (com.commenttype === "positive") {
+                                                bgColor = "bg-blue-200";
+                                                sign = "+1";
+                                            } else if (com.commenttype === "neutral") {
+                                                bgColor = "bg-slate-200";
+                                                sign = "0";
+                                            }
+
+                                            return (
+                                            <div className={`flex flex-row gap-2 p-2 items-center rounded ${bgColor}`}>
+                                                <p className="w-10 h-fit ">{sign}</p>
+                                                <div className="flex flex-col w-full">
+
+                                                    <p className="">{com.commenttext}</p>
+                                                    <p className="self-end text-sm">by {com.commenterinitial}</p>
+                                                </div>
+                                            </div>
+                                            )
+                                        })
+                                        
+                                    }
+
+                                    <div className="flex gap-2">
+                                        <textarea className="textarea-md w-9/12 h-28 border rounded resize-none bg-white" onChange={(e) => { setInputCmt(e.target.value); }} 
+                                        placeholder="Comment here.."></textarea>
+
+                                        <div className="flex flex-col gap-3 justify-center w-3/12">
+                                            <select
+                                                className="select h-5 w-full max-w-xs bg-white" 
+                                                value={cmtType}
+                                                onChange={(e) => {
+                                                    setCmtType(e.target.value);
+                                                }}
+                                              >
+                                                <option value = {'positive'}>(+1) Positive</option>
+                                                <option value = {'neutral'}>(0) Neutral</option>
+                                                <option value = {'negative'}>(-1) Negative</option>
+                                            </select>
+
+                                            <button className="btn btn-primary" onClick={()=>insertComment()}>Insert New Comment</button>
+                                        </div>
                                     </div>
-                                </div>
+                                </div>   
 
-                                <div>
-                                    <textarea name="" id="" cols="30" rows="10"></textarea>
-                                </div>
-                            </div>   
+                                :
+                                <div></div>
+                            
+                            }
                         </div>
 
                         <div className="flex flex-col">
@@ -173,9 +282,8 @@ const AssistantDetail= ({id})=>{
                 </div>
 
                         
-                </div>
             </div>
-        </div>
+        
     )
 
 }

@@ -77,6 +77,44 @@ const getTeamMember = (req, res, next) => {
     })
 }
 
+const getComment = (req, res, next) => {
+    const astId = req.params.initial
+    const semesterid = req.params.semesterid
+    console.log(astId);
+    console.log(semesterid);
+
+    const query = "SELECT * from assistantcomment ac JOIN commentcollection cc  ON cc.commentcollectionid = ac.commentcollectionid WHERE cc.initial = $1 AND semesterid = $2"
+    // console.log(query);
+
+    pool.query(query, [astId, semesterid], (error, result) => {
+        if (error) {
+            res.status(500).send('Error fetching comment');
+        } else {
+           res.status(200).send(result.rows);
+        }
+    
+    })
+}
+
+const getProblem = (req, res, next) => {
+
+    const initial = req.params.initial
+    
+    const query = "SELECT * FROM assistant a JOIN assistantrecord ar ON ar.initial = a.initial WHERE a.initial = $1"
+    // console.log(query);
+
+    pool.query(query, [initial], (error, result) => {
+        if (error) {
+            res.status(500).send('Error fetching problem');
+        } else {
+           res.status(200).send(result.rows);
+        }
+    
+    })
+}
+
+
+
 const updateAstCareerChoice = (req,res)=>{
     const initial = req.body.initial
     const careerchoice = req.body.careerchoice
@@ -176,6 +214,63 @@ const insertAssistantLeader = (data)=>{
         });
       });
 }
+
+function generateRandomId(length) {
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let id = '';
+  
+    for (let i = 0; i < length; i++) {
+      const randomIndex = Math.floor(Math.random() * characters.length);
+      id += characters.charAt(randomIndex);
+    }
+  
+    return id;
+}
+
+const insertComment = (req, res, next) =>{
+    console.log(req.body)
+    console.log('hi')
+
+    const initial = req.body.initial
+    const semesterid = req.body.semesterid
+    const commentinitial = req.body.commentinitial
+    const commenttype = req.body.commenttype
+    const commenttext = req.body.commenttext
+    let assistantcommentid = generateRandomId(10)
+    let commentcollectionid = initial.substring(0,2) + semesterid
+    const havecomment = req.body.havecomment
+   
+    const insertCommentQuery = "INSERT INTO commentcollection VALUES ($1, $2, $3)"
+    const insertAssistantCommentQuery = "INSERT INTO assistantcomment VALUES ($1, $2, $3, $4, $5)"
+
+
+    if(!havecomment){
+        pool.query(insertCommentQuery,[commentcollectionid,initial,semesterid], (error, result) => {
+          if (error) {
+              console.log(error)
+              res.status(500).send('Error adding table commentCollection');
+          } else {
+              // res.status(200).send('Success')
+              insertTableDetail()
+          }
+        });
+    }else{
+        insertTableDetail()
+    }
+
+  function insertTableDetail() {
+    pool.query(insertAssistantCommentQuery, [assistantcommentid, commentcollectionid, commentinitial, commenttype, commenttext], (error, result) => {
+      if (error) {
+        console.log(error);
+        res.status(500).send('Error adding table detail promotion registration');
+      } else {
+        res.status(200).send('Success');
+      }
+    });
+  }
+}
+
+
 module.exports = {
     getUser,
     insertCareerChoice,
@@ -186,5 +281,9 @@ module.exports = {
     updateAssistant,
     deleteAssistant,
     inputManyAssistant,
-    insertAssistantLeader
+    insertAssistantLeader,
+    insertComment,
+    getComment,
+    getProblem,
+    generateRandomId
 }
