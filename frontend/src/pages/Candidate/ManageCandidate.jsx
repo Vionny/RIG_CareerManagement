@@ -1,18 +1,23 @@
 "use client"
 import "@/app/globals.css"
 import ManageCandidateDropdown from "@/components/Dropdown/ManageCandidateDropdown";
+import SimpleInformationModal from "@/components/Modals/Information/SimpleInformationModal";
 import {useEffect, useState} from 'react'
 
 const axios = require("axios")
 axios.defaults.headers.post['Content-Type'] = 'application/json';
 
 const ManageCandidate = ()=>{
-
+    const [sortColumn, setSortColumn] = useState(""); // Keeps track of the currently sorted column
+    const [sortOrder, setSortOrder] = useState(""); // Keeps track of the sorting order (asc or desc)
+    
     const [loadRegist, setLoadRegist] = useState(false)
     const [regist,setRegist] = useState({})
     const [currSemester, setCurrSmt] = useState({})
     const [selectedCan,setSelectedCan]= useState()
-    
+    const [showEdit , setShowEdit] = useState()
+    const [showInfoModal, setShowInfoModal] = useState()
+
     useEffect(()=>{
         console.log("h");
         setCurrSmt(sessionStorage.getItem('selectedSemester'));
@@ -29,8 +34,63 @@ const ManageCandidate = ()=>{
         }
 
     },[loadRegist])
+    const handleInputChange = (e, index, fieldName) => {
+        const { value } = e.target;
+      
+        const updatedRegist = [...regist];
+        updatedRegist[index][fieldName] = parseInt(value);
+        setRegist(updatedRegist);
+      
+    };
+      
+      
+    const handleEditClick = (reg) => {
+        
+        console.log(regist)
 
-    console.log(selectedCan);
+        const data = {
+            data : regist
+        }
+
+        axios.patch(process.env.NEXT_PUBLIC_BACKEND_URL+'/updateCandidateRanking', data)
+          .then(response => {
+            if(response.data == 'OK'){
+                setShowInfoModal(true)
+            }
+          })
+          .catch(error => {
+            // Handle the error if needed
+            console.error('Error updating data:', error);
+          });
+      };
+      
+    const refreshPage = ()=>{
+        
+        setShowInfoModal(false)
+        window.location.reload()
+    }
+    
+    const handleSort = (column) => {
+        
+        if (sortColumn === column) {
+        setSortOrder(sortOrder === "asc" ? "desc" : "asc");
+        } else {
+            
+        setSortColumn(column);
+        setSortOrder("asc");
+        }
+    
+        const sortedRegist = [...regist];
+        sortedRegist.sort((a, b) => {
+        if (a[column] < b[column]) return sortOrder === "asc" ? -1 : 1;
+        if (a[column] > b[column]) return sortOrder === "asc" ? 1 : -1;
+        return 0;
+        });
+    
+        // Update the regist array with the sorted data
+        setRegist(sortedRegist);
+    };
+    
 
 
     if(!loadRegist){
@@ -46,7 +106,11 @@ const ManageCandidate = ()=>{
             <article className="prose base">
                 <h2>Candidate Management</h2>
             </article>
-            
+            {showInfoModal && (<SimpleInformationModal
+                title="Successful"
+                message = "You have successfully updated your candidate ranking !"
+                onConfirm = {refreshPage}
+            />)}
             <ManageCandidateDropdown/>
             {/* table */}
             <div className="card w-full bg-base-100 ">
@@ -60,48 +124,94 @@ const ManageCandidate = ()=>{
                                 {/* head */}
                                 <thead>
                                 <tr>                                 
-                                    <th className="sticky w-30 top-0 text-center">Initial</th>
-                                    <th className="sticky w-48 top-0 text-center">Priority 1</th>
-                                    <th className="sticky w-48 top-0 text-center">Priority 2</th>
-                                    <th className="sticky w-48 top-0 text-center">Priority 3</th>
-                                    <th className="sticky w-48 top-0 text-center">Comments</th>
-                                    <th className="whitespace-normal sticky  top-0 text-center">OP</th>
-                                    <th className="whitespace-normal sticky  top-0 text-center">Resman</th>
-                                    <th className="whitespace-normal sticky  top-0 text-center">DB Staff</th>
-                                    <th className="whitespace-normal sticky  top-0 text-center">NA Staff</th>
-                                    <th className="whitespace-normal sticky  top-0 text-center">NA Officer</th>
-                                    <th className="whitespace-normal sticky  top-0 text-center">RnD Staff</th>
-                                    <th className="whitespace-normal sticky  top-0 text-center">RnD Officer</th>
-                                    <th className="whitespace-normal sticky  top-0 text-center">Subco</th>
-                                    <th className="whitespace-normal sticky  top-0 text-center">SubDev</th>
-                                    <th className="whitespace-normal sticky  top-0 text-center">AstDev</th>
-                                    <th className="whitespace-normal sticky  top-0 text-center">Edit</th>
+                                    <th className="sticky w-30 top-0 text-center" onClick={() => handleSort("initial")}>Initial
+                                    {sortColumn === "initial" && (
+                                        <span>{sortOrder === "asc" ? "▲" : "▼"}</span>
+                                    )}</th>
+                                    <th className="sticky w-48 top-0 text-center" onClick={() => handleSort("priorityone")}>Priority 1
+                                    {sortColumn === "priorityone" && (
+                                        <span>{sortOrder === "asc" ? "▲" : "▼"}</span>
+                                    )}</th>
+                                    <th className="sticky w-48 top-0 text-center" onClick={() => handleSort("prioritytwo")}>Priority 2
+                                    {sortColumn === "prioritytwo" && (
+                                        <span>{sortOrder === "asc" ? "▲" : "▼"}</span>
+                                    )}</th>
+                                    <th className="sticky w-48 top-0 text-center" onClick={() => handleSort("prioritythree")}>Priority 3
+                                    {sortColumn === "prioritythree" && (
+                                        <span>{sortOrder === "asc" ? "▲" : "▼"}</span>
+                                    )}</th>
+                                    <th className="sticky w-48 top-0 text-center" onClick={() => handleSort("commentamount")}>Comments
+                                    {sortColumn === "commentamount" && (
+                                        <span>{sortOrder === "asc" ? "▲" : "▼"}</span>
+                                    )}</th>
+                                    <th className="whitespace-normal sticky  top-0 text-center" onClick={() => handleSort("opofficer")}>OP
+                                    {sortColumn === "opofficer" && (
+                                        <span>{sortOrder === "asc" ? "▲" : "▼"}</span>
+                                    )}</th>
+                                    <th className="whitespace-normal sticky  top-0 text-center" onClick={() => handleSort("resmanoff")}>Resman
+                                    {sortColumn === "resmanoff" && (
+                                        <span>{sortOrder === "asc" ? "▲" : "▼"}</span>
+                                    )}</th>
+                                    <th className="whitespace-normal sticky  top-0 text-center" onClick={() => handleSort("dbstaff")}>DB Staff
+                                    {sortColumn === "dbstaff" && (
+                                        <span>{sortOrder === "asc" ? "▲" : "▼"}</span>
+                                    )}</th>
+                                    <th className="whitespace-normal sticky  top-0 text-center" onClick={() => handleSort("nastaff")}>NA Staff
+                                    {sortColumn === "nastaff" && (
+                                        <span>{sortOrder === "asc" ? "▲" : "▼"}</span>
+                                    )}</th>
+                                    <th className="whitespace-normal sticky  top-0 text-center" onClick={() => handleSort("naofficer")}>NA Officer
+                                    {sortColumn === "naofficer" && (
+                                        <span>{sortOrder === "asc" ? "▲" : "▼"}</span>
+                                    )}</th>
+                                    <th className="whitespace-normal sticky  top-0 text-center" onClick={() => handleSort("rndstaff")}>RnD Staff
+                                    {sortColumn === "rndstaff" && (
+                                        <span>{sortOrder === "asc" ? "▲" : "▼"}</span>
+                                    )}</th>
+                                    <th className="whitespace-normal sticky  top-0 text-center" onClick={() => handleSort("rndofficer")}>RnD Officer
+                                    {sortColumn === "rndofficer" && (
+                                        <span>{sortOrder === "asc" ? "▲" : "▼"}</span>
+                                    )}</th>
+                                    <th className="whitespace-normal sticky  top-0 text-center" onClick={() => handleSort("subco")}>Subco
+                                    {sortColumn === "subco" && (
+                                        <span>{sortOrder === "asc" ? "▲" : "▼"}</span>
+                                    )}</th>
+                                    <th className="whitespace-normal sticky  top-0 text-center" onClick={() => handleSort("subdev")}>SubDev
+                                    {sortColumn === "subdev" && (
+                                        <span>{sortOrder === "asc" ? "▲" : "▼"}</span>
+                                    )}</th>
+                                    <th className="whitespace-normal sticky  top-0 text-center" onClick={() => handleSort("astdev")}>AstDev
+                                    {sortColumn === "astdev" && (
+                                        <span>{sortOrder === "asc" ? "▲" : "▼"}</span>
+                                    )}</th>
                                 </tr>
                                 </thead>
                                 <tbody>
 
                                 {regist.map((reg, index) => (
                                     <tr key={index}  className="clickable hover border-1" onClick={()=>{setSelectedCan(reg.initial)}}>
-                                        <td className="whitespace-normal w-48 border">{reg.initial}</td>
-                                        <td className="whitespace-normal w-48 border">{reg.priorityone ?reg.priorityone : '-'}</td>
+                        
+                                        <td className="border">{reg.initial}</td>
+                                        <td className="whitespace-normal w-48 border">{reg.priorityone}</td>
                                         <td className="whitespace-normal w-48 border">{reg.prioritytwo == null ? '-' : reg.prioritytwo}</td>
                                         <td className="whitespace-normal w-48 border">{reg.prioritythree == null ? '-' : reg.prioritythree}</td>
                                         <td className="whitespace-normal w-48 border">{reg.commentamount ? reg.commentamount : 0}</td>
-                                        <td className="whitespace-normal w-48 border"><input type="text" value = {reg.opofficer ? reg.opofficer : 0} className="input input-bordered w-full max-w-xs" /></td>
-                                        <td className="whitespace-normal w-48 border"><input type="text" value = {reg.resmanoff ? reg.resmanoff : 0} className="input input-bordered w-full max-w-xs" /></td>
-                                        <td className="whitespace-normal w-48 border"><input type="text" value = {reg.dbstaff ? reg.dbstaff : 0} className="input input-bordered w-full max-w-xs" /></td>
-                                        <td className="whitespace-normal w-48 border"><input type="text" value = {reg.nastaff ? reg.nastaff : 0} className="input input-bordered w-full max-w-xs" /></td>
-                                        <td className="whitespace-normal w-48 border"><input type="text" value = {reg.naofficer ? reg.naofficer : 0} className="input input-bordered w-full max-w-xs" /></td>
-                                        <td className="whitespace-normal w-48 border"><input type="text" value = {reg.rndstaff ? reg.rndstaff : 0} className="input input-bordered w-full max-w-xs" /></td>
-                                        <td className="whitespace-normal w-48 border"><input type="text" value = {reg.rndofficer ? reg.rndofficer :0} className="input input-bordered w-full max-w-xs" /></td>
-                                        <td className="whitespace-normal w-48 border"><input type="text" value = {reg.subco ? reg.subco : 0} className="input input-bordered w-full max-w-xs" /></td>
-                                        <td className="whitespace-normal w-48 border"><input type="text" value = {reg.subdev ? reg.subdev : 0} className="input input-bordered w-full max-w-xs" /></td>
-                                        <td className="whitespace-normal w-48 border"><input type="text" value = {reg.astdev ? reg.astdev : 0} className="input input-bordered w-full max-w-xs" /></td>
+                                        <td><input type="text" placeholder="Type here" value ={reg.opofficer ? reg.opofficer : 0} className="input input-bordered w-12 text-center max-w-xs" onChange={(e) => handleInputChange(e, index, 'opofficer')} /></td>
+                                        <td><input type="text" placeholder="Type here" value={reg.resmanoff ? reg.resmanoff : 0} className="input input-bordered w-12 text-center max-w-xs" onChange={(e) => handleInputChange(e, index, 'resmanoff')} /></td>
+                                        <td><input type="text" placeholder="Type here" value={reg.dbstaff ? reg.dbstaff : 0} className="input input-bordered w-12 text-center max-w-xs" onChange={(e) => handleInputChange(e, index, 'dbstaff')} /></td>
+                                        <td><input type="text" placeholder="Type here" value={reg.nastaff ? reg.nastaff : 0} className="input input-bordered w-12 text-center max-w-xs" onChange={(e) => handleInputChange(e, index, 'nastaff')} /></td>
+                                        <td><input type="text" placeholder="Type here" value={reg.naofficer ? reg.naofficer : 0} className="input input-bordered w-12 text-center max-w-xs" onChange={(e) => handleInputChange(e, index, 'naofficer')} /></td>
+                                        <td><input type="text" placeholder="Type here" value={reg.rndstaff ? reg.rndstaff : 0} className="input input-bordered w-12 text-center max-w-xs" onChange={(e) => handleInputChange(e, index, 'rndstaff')} /></td>
+                                        <td><input type="text" placeholder="Type here" value={reg.rndofficer ? reg.rndofficer : 0} className="input input-bordered w-12 text-center max-w-xs" onChange={(e) => handleInputChange(e, index, 'rndofficer')} /></td>
+                                        <td><input type="text" placeholder="Type here" value={reg.subco ? reg.subco : 0} className="input input-bordered w-12 text-center max-w-xs" onChange={(e) => handleInputChange(e, index, 'subco')} /></td>
+                                        <td><input type="text" placeholder="Type here" value={reg.subdev ? reg.subdev : 0} className="input input-bordered w-12 text-center max-w-xs" onChange={(e) => handleInputChange(e, index, 'subdev')} /></td>
+                                        <td><input type="text" placeholder="Type here" value={reg.astdev ? reg.astdev : 0} className="input input-bordered w-12 text-center max-w-xs" onChange={(e) => handleInputChange(e, index, 'astdev')} /></td>
+                                        
                                     </tr>
                                 ))}
-
                                 </tbody>
                             </table>
+                            <button className="btn btn-outline btn-info m-2 text-sm" onClick={() => handleEditClick(regist)}>Edit All</button>
                             </div>
                     </div>
                 </div>
