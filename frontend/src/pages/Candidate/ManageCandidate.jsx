@@ -40,7 +40,7 @@ const ManageCandidate = ()=>{
         const { value } = e.target;
       
         const updatedRegist = [...regist];
-        updatedRegist[index][fieldName] = parseInt(value);
+        updatedRegist[index][fieldName] = value
         setRegist(updatedRegist);
       
     };
@@ -117,12 +117,31 @@ const ManageCandidate = ()=>{
             {/* table */}
             <div className="card w-full bg-base-100 ">
                     <div className="card-body p-3 w-full">
-                        <div className="card-title justify-between">
-                            <p className="card-title mb-1">Promotion Registrant</p>
+                        <div className="card-title justify-between w-full mx-5 mt-5">
+                            <p className="card-title text-2xl">Promotion Registrant</p>
+                            <button className="btn btn-info text-sm mr-10"  onClick={() => handleEditClick(regist)}>Update</button>
                         </div>
-                        
-                        <div className="max-h-96 h-96 overflow-auto p-5 ">
-                            <table className="table table-compact w-full border text-center">
+                        <div className="flex justify-center space-x-4">
+                            <div className="flex items-center">
+                                <div className="w-3 h-3 bg-red-500 mr-2"></div>
+                                <span className="text-red-500">Rejected (x)</span>
+                            </div>
+                            <div className="flex items-center">
+                                <div className="w-3 h-3 bg-gray-500 mr-2"></div>
+                                <span className="text-gray-500">Not Candidate (-)</span>
+                            </div>
+                            <div className="flex items-center">
+                                <div className="w-3 h-3 bg-amber-400 mr-2"></div>
+                                <span className="text-amber-400">Tentative (o)</span>
+                            </div>
+                            <div className="flex items-center">
+                                <div className="w-3 h-3 bg-green-400 mr-2"></div>
+                                <span className="text-green-400">Accepted (0+)</span>
+                            </div>
+                        </div>
+
+                        <div className="max-h-96 h-96 p-5 ">
+                            <table className="table table-compact w-full overflow-auto  border text-center">
                                 {/* head */}
                                 <thead>
                                 <tr>                                 
@@ -190,30 +209,171 @@ const ManageCandidate = ()=>{
                                 </thead>
                                 <tbody>
 
-                                {regist.map((reg, index) => {
+                                {(regist.map((reg, index) => {
                                     return <tr key={index}  className="clickable hover border-1" onClick={()=>{setSelectedCan(reg.initial)}}>
                         
                                         <td className="border">{reg.initial}</td>
                                         <td className="whitespace-normal w-48 border">{reg.priorityone == null ? '-' : reg.prioritytwo}</td>
                                         <td className="whitespace-normal w-48 border">{reg.prioritytwo == null ? '-' : reg.prioritytwo}</td>
                                         <td className="whitespace-normal w-48 border">{reg.prioritythree == null ? '-' : reg.prioritythree}</td>
-                                        <td className="whitespace-normal w-48 border">{reg.commentamount ? reg.commentamount : 0}</td>
-                                        <td><input type="text" placeholder="Type here" value ={reg.opofficer ? reg.opofficer : 0} className={`input input-bordered w-12 text-center max-w-xs ${reg.opofficer ==0 ? 'bg-red-300':'bg-green-300'}`} onChange={(e) => handleInputChange(e, index, 'opofficer')} /></td>
-                                        <td><input type="text" placeholder="Type here" value={reg.resmanoff ? reg.resmanoff : 0} className={`input input-bordered w-12 text-center max-w-xs ${reg.resmanoff ==0 ? 'bg-red-300':'bg-green-300'}`} onChange={(e) => handleInputChange(e, index, 'resmanoff')} /></td>
-                                        <td><input type="text" placeholder="Type here" value={reg.dbstaff ? reg.dbstaff : 0} className={`input input-bordered w-12 text-center max-w-xs ${reg.dbstaff ==0 ? 'bg-red-300':'bg-green-300'}`} onChange={(e) => handleInputChange(e, index, 'dbstaff')} /></td>
-                                        <td><input type="text" placeholder="Type here" value={reg.nastaff ? reg.nastaff : 0} className={`input input-bordered w-12 text-center max-w-xs ${reg.nastaff ==0 ? 'bg-red-300':'bg-green-300'}`} onChange={(e) => handleInputChange(e, index, 'nastaff')} /></td>
-                                        <td><input type="text" placeholder="Type here" value={reg.naofficer ? reg.naofficer : 0} className={`input input-bordered w-12 text-center max-w-xs ${reg.naofficer ==0 ? 'bg-red-300':'bg-green-300'}`} onChange={(e) => handleInputChange(e, index, 'naofficer')} /></td>
-                                        <td><input type="text" placeholder="Type here" value={reg.rndstaff ? reg.rndstaff : 0} className={`input input-bordered w-12 text-center max-w-xs ${reg.rndstaff ==0 ? 'bg-red-300':'bg-green-300'}`} onChange={(e) => handleInputChange(e, index, 'rndstaff')} /></td>
-                                        <td><input type="text" placeholder="Type here" value={reg.rndofficer ? reg.rndofficer : 0} className={`input input-bordered w-12 text-center max-w-xs ${reg.rndofficer ==0 ? 'bg-red-300':'bg-green-300'}`} onChange={(e) => handleInputChange(e, index, 'rndofficer')} /></td>
-                                        <td><input type="text" placeholder="Type here" value={reg.subco ? reg.subco : 0} className={`input input-bordered w-12 text-center max-w-xs ${reg.subco ==0 ? 'bg-red-300':'bg-green-300'}`} onChange={(e) => handleInputChange(e, index, 'subco')} /></td>
-                                        <td><input type="text" placeholder="Type here" value={reg.subdev ? reg.subdev : 0} className={`input input-bordered w-12 text-center max-w-xs ${reg.subdev ==0 ? 'bg-red-300':'bg-green-300'}`} onChange={(e) => handleInputChange(e, index, 'subdev')} /></td>
-                                        <td><input type="text" placeholder="Type here" value={reg.astdev ? reg.astdev : 0} className={`input input-bordered w-12 text-center max-w-xs ${reg.astdev ==0 ? 'bg-red-300':'bg-green-300'}`} onChange={(e) => handleInputChange(e, index, 'astdev')} /></td>
+                                        <td className="whitespace-normal w-48 border">{reg.commentamount ? reg.commentamount : '-'}</td>
+                                        <td>
+                                        <input
+                                            type="text"
+                                            maxLength={1}
+                                            placeholder="Type here"
+                                            value={reg.opofficer ? reg.opofficer : ''}
+                                            className={`input input-bordered w-12 text-center max-w-xs ${
+                                            reg.opofficer === 'x' ? 'bg-red-300' :
+                                            reg.opofficer === '-' ? 'bg-gray-300' :
+                                            reg.opofficer === 'o' ? 'bg-yellow-200' :
+                                            reg.opofficer > 0 ? 'bg-green-300' : ''
+                                            }`}
+                                            onChange={(e) => handleInputChange(e, index, 'opofficer')}
+                                        />
+                                        </td>
+                                        <td>
+                                        <input
+                                            type="text"
+                                            maxLength={1}
+                                            placeholder="Type here"
+                                            value={reg.resmanoff ? reg.resmanoff : ''}
+                                            className={`input input-bordered w-12 text-center max-w-xs ${
+                                            reg.resmanoff === 'x' ? 'bg-red-300' :
+                                            reg.resmanoff === '-' ? 'bg-gray-300' :
+                                            reg.resmanoff === 'o' ? 'bg-yellow-200' :
+                                            reg.resmanoff > 0 ? 'bg-green-300' : ''
+                                            }`}
+                                            onChange={(e) => handleInputChange(e, index, 'resmanoff')}
+                                        />
+                                        </td>
+                                        <td>
+                                        <input
+                                            type="text"
+                                            maxLength={1}
+                                            placeholder="Type here"
+                                            value={reg.dbstaff ? reg.dbstaff : ''}
+                                            className={`input input-bordered w-12 text-center max-w-xs ${
+                                            reg.dbstaff === 'x' ? 'bg-red-300' :
+                                            reg.dbstaff === '-' ? 'bg-gray-300' :
+                                            reg.dbstaff === 'o' ? 'bg-yellow-200' :
+                                            reg.dbstaff > 0 ? 'bg-green-300' : ''
+                                            }`}
+                                            onChange={(e) => handleInputChange(e, index, 'dbstaff')}
+                                        />
+                                        </td>
+                                        <td>
+                                        <input
+                                            type="text"
+                                            maxLength={1}
+                                            placeholder="Type here"
+                                            value={reg.nastaff ? reg.nastaff : ''}
+                                            className={`input input-bordered w-12 text-center max-w-xs ${
+                                            reg.nastaff === 'x' ? 'bg-red-300' :
+                                            reg.nastaff === '-' ? 'bg-gray-300' :
+                                            reg.nastaff === 'o' ? 'bg-yellow-200' :
+                                            reg.nastaff > 0 ? 'bg-green-300' : ''
+                                            }`}
+                                            onChange={(e) => handleInputChange(e, index, 'nastaff')}
+                                        />
+                                        </td>
+                                        <td>
+                                        <input
+                                            type="text"
+                                            maxLength={1}
+                                            placeholder="Type here"
+                                            value={reg.naofficer ? reg.naofficer : ''}
+                                            className={`input input-bordered w-12 text-center max-w-xs ${
+                                            reg.naofficer === 'x' ? 'bg-red-300' :
+                                            reg.naofficer === '-' ? 'bg-gray-300' :
+                                            reg.naofficer === 'o' ? 'bg-yellow-200' :
+                                            reg.naofficer > 0 ? 'bg-green-300' : ''
+                                            }`}
+                                            onChange={(e) => handleInputChange(e, index, 'naofficer')}
+                                        />
+                                        </td>
+                                        <td>
+                                        <input
+                                            type="text"
+                                            maxLength={1}
+                                            placeholder="Type here"
+                                            value={reg.rndstaff ? reg.rndstaff : ''}
+                                            className={`input input-bordered w-12 text-center max-w-xs ${
+                                            reg.rndstaff === 'x' ? 'bg-red-300' :
+                                            reg.rndstaff === '-' ? 'bg-gray-300' :
+                                            reg.rndstaff === 'o' ? 'bg-yellow-200' :
+                                            reg.rndstaff > 0 ? 'bg-green-300' : ''
+                                            }`}
+                                            onChange={(e) => handleInputChange(e, index, 'rndstaff')}
+                                        />
+                                        </td>
+                                        <td>
+                                        <input
+                                            type="text"
+                                            maxLength={1}
+                                            placeholder="Type here"
+                                            value={reg.rndofficer ? reg.rndofficer : ''}
+                                            className={`input input-bordered w-12 text-center max-w-xs ${
+                                            reg.rndofficer === 'x' ? 'bg-red-300' :
+                                            reg.rndofficer === '-' ? 'bg-gray-300' :
+                                            reg.rndofficer === 'o' ? 'bg-yellow-200' :
+                                            reg.rndofficer > 0 ? 'bg-green-300' : ''
+                                            }`}
+                                            onChange={(e) => handleInputChange(e, index, 'rndofficer')}
+                                        />
+                                        </td>
+                                        <td>
+                                        <input
+                                            type="text"
+                                            maxLength={1}
+                                            placeholder="Type here"
+                                            value={reg.subco ? reg.subco : ''}
+                                            className={`input input-bordered w-12 text-center max-w-xs ${
+                                            reg.subco === 'x' ? 'bg-red-300' :
+                                            reg.subco === '-' ? 'bg-gray-300' :
+                                            reg.subco === 'o' ? 'bg-yellow-200' :
+                                            reg.subco > 0 ? 'bg-green-300' : ''
+                                            }`}
+                                            onChange={(e) => handleInputChange(e, index, 'subco')}
+                                        />
+                                        </td>
+                                        <td>
+                                        <input
+                                            type="text"
+                                            maxLength={1}
+                                            placeholder="Type here"
+                                            value={reg.subdev ? reg.subdev : ''}
+                                            className={`input input-bordered w-12 text-center max-w-xs ${
+                                            reg.subdev === 'x' ? 'bg-red-300' :
+                                            reg.subdev === '-' ? 'bg-gray-300' :
+                                            reg.subdev === 'o' ? 'bg-yellow-200' :
+                                            reg.subdev > 0 ? 'bg-green-300' : ''
+                                            }`}
+                                            onChange={(e) => handleInputChange(e, index, 'subdev')}
+                                        />
+                                        </td>
+                                        <td>
+                                        <input
+                                            type="text"
+                                            maxLength={1}
+                                            placeholder="Type here"
+                                            value={reg.astdev ? reg.astdev : ''}
+                                            className={`input input-bordered w-12 text-center max-w-xs ${
+                                            reg.astdev === 'x' ? 'bg-red-300' :
+                                            reg.astdev === '-' ? 'bg-gray-300' :
+                                            reg.astdev === 'o' ? 'bg-yellow-200' :
+                                            reg.astdev > 0 ? 'bg-green-300' : ''
+                                            }`}
+                                            onChange={(e) => handleInputChange(e, index, 'astdev')}
+                                        />
+                                        </td>
+
                                         
                                     </tr>
-                                })}
+                                }))}
                                 </tbody>
                             </table>
-                            <button className="btn btn-outline btn-info m-2 text-sm" onClick={() => handleEditClick(regist)}>Edit All</button>
+                            
                             </div>
                     </div>
                 </div>

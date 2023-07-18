@@ -135,30 +135,20 @@ function generateRandomId(length) {
 
 const insertPromotionRanking = (data,semesterid)=>{
   let success = false;
-  console.log(data)
-  console.log(semesterid)
+  // console.log(data)
+  // console.log(semesterid)
   data.forEach((item) => {
       const { initial, opofficer, resmanoff, astdev, subco, subdev, dbstaff, naofficer, nastaff, rndofficer, rndstaff} = item;
       console.log(item)
 
-      const query = "INSERT INTO promotionranking (promotionrankingid, initial, semesterid, opofficer, resmanoff, astdev, subco, subdev, dbstaff, naofficer, nastaff, rndofficer, rndstaff) SELECT $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13 WHERE NOT EXISTS (  SELECT * FROM promotionranking WHERE initial = $2 AND semesterid = $3 )";
+      const query = "INSERT INTO promotionranking (promotionrankingid, initial, semesterid, opofficer, resmanoff, astdev, subco, subdev, dbstaff, naofficer, nastaff, rndofficer, rndstaff) SELECT $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13 WHERE NOT exists (  SELECT * FROM promotionranking WHERE initial = $2 AND semesterid = $3 )";
       let promotionrankingid = generateRandomId(10)
       console.log(promotionrankingid)
       pool.query(query, [promotionrankingid, initial,semesterid, opofficer, resmanoff, astdev, subco, subdev, dbstaff, naofficer, nastaff, rndofficer, rndstaff], (error, results) => {
-        if (error) {
-          success = false;
-          // console.error(error);
-          console.log(error)
-        } else {
-          console.log('Success');
-        }
+          success = true
       });
     });
-    if (success) {
-      return 'Success';
-    } else {
-      return 'False';
-    }
+    return 'Success'
 }
 
 

@@ -106,6 +106,8 @@ const readAstLeaderInput = (req, res, next) => {
         })
         .on('end', () => {
           const result = insertPromotionRanking(assistants, semesterid[0]); 
+          
+          // console.log(result+'sadsadas')
           if (result === 'Success') {
             const responseData = { message: 'Success', data: assistants };
             res.json(responseData);

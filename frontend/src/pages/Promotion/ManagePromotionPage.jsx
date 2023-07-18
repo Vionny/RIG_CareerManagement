@@ -10,9 +10,6 @@ const ManagePromotionPage = ()=>{
     const [registers, setRegist] = useState();
     const [loadRegist, setLoadRegist] = useState(false);
     const [currSemester,setCurrSemesters] = useState()
-
-
-    
     
     useEffect(()=>{
         // console.log(sessionStorage.getItem('selectedSemester'));

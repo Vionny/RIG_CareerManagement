@@ -312,7 +312,19 @@ const insertComment = (req, res, next) =>{
   }
 }
 
+const resetFinalize = (req,res)=>{
 
+    const query = `UPDATE assistant SET fpfinalize = false`
+    pool.query(query, (error, result) => {
+        if (error) {
+          console.log(error);
+          res.status(500).send('Error adding table detail promotion registration');
+        } else {
+          res.status(200).send('Success');
+        }
+      });
+
+}
 
 
 
@@ -333,5 +345,6 @@ module.exports = {
     getComment,
     getProblem,
     generateRandomId,
-    updateRecords
+    updateRecords,
+    resetFinalize
 }

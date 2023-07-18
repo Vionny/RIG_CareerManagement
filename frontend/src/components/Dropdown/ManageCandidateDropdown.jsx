@@ -28,6 +28,7 @@ const ManageCandidateDropdown= ()=>{
                 'Content-Type': 'multipart/form-data' // Set the correct content type
                 }
             }).then((res)=>{
+                console.log(res)
                 if(res.data.message == 'Success'){
                     // setTitle("Success !")
                     // setMessage("You have successfully assistant's leaders !")

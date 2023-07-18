@@ -159,7 +159,7 @@ const AssistantPage= ()=>{
     }
 
     const handleCancel =()=>{
-        setShowModal(false)
+        setShowConfirmModal(false)
     }
 
     const deleteAssistant = (astId) =>{

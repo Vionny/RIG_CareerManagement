@@ -1,7 +1,8 @@
 const { pool } = require("../Database/DatabaseConfig");
+const { generateRandomId } = require("./UserController");
 
 const  getAllSemester = (req, res, next) =>{
-    const query = "SELECT semesterid, semestername, TO_CHAR(semesterstartdate:: DATE, 'yyyy-mm-dd') semesterstartdate, TO_CHAR(semesterenddate:: DATE, 'yyyy-mm-dd') semesterenddate FROM semester"
+    const query = "SELECT semesterid, semestername, TO_CHAR(semesterstartdate:: DATE, 'yyyy-mm-dd') semesterstartdate, TO_CHAR(semesterenddate:: DATE, 'yyyy-mm-dd') semesterenddate FROM semester ORDER BY semesterstartdate DESC"
 
     pool.query(query, (error, result) => {
         if (error) {
@@ -161,13 +162,16 @@ const insertSemester = (req, res, next) =>{
     const semesterid = req.body.semesterid
     const semestername = req.body.semestername
     const semesterstartdate = req.body.semesterstartdate
-    const semesterenddate = req.body.semesterstartdate
+    const semesterenddate = req.body.semesterenddate
 
-    const query = "insert into semester  values ($1, $2, $3, $4)"
-
+    const query = "insert into semester (semesterid,semestername,semesterstartdate,semesterenddate)  values ($1, $2, $3, $4)"
+    
     pool.query(query,[semesterid, semestername, semesterstartdate, semesterenddate], (error, result) => {
         if (error) {
             console.log(error)
+            if(error.constraint == "semester_pkey"){
+                res.status(200).send("Exist")
+            }else 
             res.status(500).send('Error insert semester');
         } else {
             res.status(200).send("Success");
@@ -207,7 +211,42 @@ const updateSemester = (req, res, next) =>{
     });
 }
 
+const insertAnnouncement = (req, res, next) =>{
 
+    const announcementid = generateRandomId(10)
+    const initial = req.body.initial
+    const semesterid = req.body.semesterid
+    const announcementcontent = req.body.announcementcontent
+
+    const query = `INSERT INTO announcements( announcementsid, initial, semesterid, announcementcontent) VALUES ($1, $2, $3, $4);`
+
+    pool.query(query,[announcementid, initial, semesterid, announcementcontent], (error, result) => {
+        if (error) {
+            console.log(error);
+            res.status(500).send('Error update semester');
+        } else {
+            res.status(200).send("Success");
+        }
+    });
+
+}
+
+const getAnnouncement = (req, res, next) =>{
+    
+    const semesterid = req.params.semesterid
+
+    const query = `SELECT * FROM announcements WHERE semesterid = $1`
+
+    pool.query(query,[semesterid], (error, result) => {
+        if (error) {
+            console.log(error);
+            res.status(500).send('Error update semester');
+        } else {
+            res.status(200).send(result.rows);
+        }
+    });
+
+}
 
 module.exports = {
     getAllSemester,
@@ -221,5 +260,7 @@ module.exports = {
     updateSemester,
     updatePromotionDate,
     updateChoiceDate,
-    getSemesterDate
+    getSemesterDate,
+    insertAnnouncement,
+    getAnnouncement
 };

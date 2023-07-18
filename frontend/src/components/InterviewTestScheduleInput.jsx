@@ -1,3 +1,4 @@
+"use client"
 import { useEffect, useState } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
@@ -18,7 +19,7 @@ const InterviewTestScheduleInput = () => {
     const [loadBATest,setLoadBATest] = useState(false)
     const [registrees, setRegistrees] = useState()
     const [loadRegistrees, setLoadRegistrees] = useState()
-    const [selectedRegistrees, setSelectedRegistrees] = useState()
+    const [selectedRegistrees, setSelectedRegistrees] = useState(null)
     const [selectedRole,setSelectedRole] = useState()
     const [room,setRoom] = useState()
     const [role,setRole] = useState()
@@ -37,15 +38,13 @@ const InterviewTestScheduleInput = () => {
         axios.get(process.env.NEXT_PUBLIC_BACKEND_URL+'/promotion/getRegistrees/'+sessionStorage.getItem('selectedSemester')).then((res)=>{
             console.log(res.data)
             setRegistrees(res.data)
-            axios.get(process.env.NEXT_PUBLIC_BACKEND_URL+'/getInterviewer').then((res)=>{
-                setInterviewers(res.data)
-                setLoadRegistrees(true)
-            })
+            setLoadRegistrees(true)
         })
     }
   }, [currSemester,loadRegistrees]);
   
   useEffect(() => {
+    console.log(selectedRegistrees)
     if(selectedRegistrees){
         axios.get(
             process.env.NEXT_PUBLIC_BACKEND_URL +
@@ -84,7 +83,6 @@ const InterviewTestScheduleInput = () => {
 
     var data = {
         initial : sessionStorage.getItem('initial'),
-        interviewer : selectedInterviewer,
         semesterid : sessionStorage.getItem('selectedSemester').trim(),
         interviewdate : stamp.toString(),
         roleid : selectedRole,
@@ -122,28 +120,27 @@ const InterviewTestScheduleInput = () => {
     <div>
       {showInfoModal && (<SimpleInformationModal
                   title="Successful"
-                  message = {"You have successfully inserted " + selectedRegistrees +" interview schedule with "+selectedInterviewer}
+                  message = {"You have successfully inserted an interview schedule"}
                   onConfirm = {refreshPage}
               />)}
       <form onSubmit={handleSubmit}>
       <div className="card w-full bg-base-100 shadow-xl mt-7">
         <div className="card-body">
             <h1 className="card-title">Interview Test Schedule</h1>
-            <div className="flex flex-row mt-3 min-w-full">
+            <div className="inline-flex flex-row mt-3 min-w-full">
                 <div className="dropdown justify-start w-fit">
-                    <select className="btn btn-ghost bg-base-100 w-32 flex justify-start normal-case  text-base  "  value={(selectedRegistrees ? selectedRegistrees : "Choose Registrees")} onChange={(event) => {
+                    <select className="btn btn-ghost bg-base-100 w-32 flex justify-start normal-case  text-base  "  value={selectedRegistrees ? selectedRegistrees : "Choose Registrees"} onChange={(event) => {
                         // console.log(event.target.value)
                         setSelectedRegistrees(event.currentTarget.value)
                         }}>
-                        {
-                            registrees.map((reg,index)=>{
+                        {registrees &&
+                            (registrees.map((reg,index)=>{
                             return <option className="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-full h-max" key={index} value={reg.initial}>{reg.initial}</option>
-                        })
+                        }))
                         }
                     </select>
                 </div>
-                <div className="dropdown justify-start w-56">
-                {interviewers&& (<select className="btn btn-ghost bg-base-100 w-72 ml-20 flex justify-start normal-case  text-base"  value={(selectedInterviewer ? selectedInterviewer.interviewersname : "Choose Interviewers")} onChange={(event) => {
+                {/* {interviewers&& (<select className="btn btn-ghost bg-base-100 w-72 ml-20 flex justify-start normal-case  text-base" placeholder='Choose Role'  value={selectedInterviewer ? selectedInterviewer.interviewersname : "Choose Interviewers"} onChange={(event) => {
                         setSelectedInterviewer(event.currentTarget.value)
                         }}>
                         {
@@ -151,20 +148,17 @@ const InterviewTestScheduleInput = () => {
                             return <option className="dropdown-content menu p-2 text-center shadow bg-base-100 rounded-box w-full h-max" key={index} value={r.initial}>{r.assistantname}</option>
                         })
                         }
-                </select>)}
-                {role&& (<select className="btn btn-ghost bg-base-100 w-72  flex justify-start normal-case  text-base"  value={(selectedRole ? selectedRole.rolename : "Choose Role")} onChange={(event) => {
+                </select>)} */}
+                {(<select className="btn btn-ghost bg-base-100 w-72 ml-5  justify-start normal-case  text-base"  value={selectedRole ? selectedRole.rolename : "Choose Role"} placeholder='Choose Role' onChange={(event) => {
                         // console.log(event.target.value)
                         setSelectedRole(event.currentTarget.value)
                         }}>
-                        {
+                        {role &&( 
                             role.map((r,index)=>{
                             return <option className="dropdown-content menu p-2 text-center shadow bg-base-100 rounded-box w-full h-max" key={index} value={r.roleid}>{r.rolename}</option>
-                        })
+                        }))
                         }
                 </select>)}
-
-                
-                </div>
             </div>
             
             <div className="flex flex-row mt-3">

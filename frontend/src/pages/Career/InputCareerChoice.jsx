@@ -21,14 +21,31 @@ const InputCareerChoice = () => {
   const router = useRouter();
   const [semester , setSemester] = useState({});
   const [showModal, setShowModal] = useState(false);
-
+  const [semesters , setSemesters] = useState({});
+  const [selectedSemester, setSelectedSemester] = useState()
+  const [loadSem,setLoadSem] = useState(false);
+  const [currSemesters,setCurrSemesters] = useState()
   const options = {
     weekday: 'long',
     day: 'numeric',
     month: 'long',
     year: 'numeric',
   };
+  useEffect(()=>{
+    axios.get(process.env.NEXT_PUBLIC_BACKEND_URL+'/getAllSemester').then((res) => {
+        console.log(res.data)
+        setSemesters(res.data)  
+        setSelectedSemester(res.data.filter((semester) => semester.semesterid.includes(sessionStorage.getItem('selectedSemester'))))
 
+        console.log(selectedSemester)
+        setLoadSem(true)
+    })
+
+    setCurrSemesters(sessionStorage.getItem('selectedSemester'))
+    // console.log("curr smt" +currSemester);
+
+    
+},[loadSem])
   useEffect(() => {
     if (user) {
         setFuturePlan(user.futureplan)
@@ -106,6 +123,11 @@ const InputCareerChoice = () => {
   };
 
   const handleConfirm = () => {
+    if (decision == "tentative") {
+      setShowModal(false)
+      setErrText('You cannot finalize while your decision is tentative !');
+      setEnableErr(true);
+    } else {
     var data = {
       initial: sessionStorage.getItem('initial'),
     };
@@ -120,20 +142,20 @@ const InputCareerChoice = () => {
       })
       .catch((error) => {
         console.error(error);
-      });
+      });}
   };
   const handleCancel =()=>{
     setShowModal(false)
   }
   
-  if (!loadUs, !user) return <div></div>;
+  if (!loadUs, !user,!loadSem) return <div></div>;
   else {
       return (
         <div className="pl-10 pr-10 pt-5 bg-base-200 min-h-screen w-full">
           <article className="prose base mb-5">
             <h2>
               <span>Career Choice for </span>
-              <span>Even 2022/2023</span>
+              <span>{selectedSemester ? selectedSemester[0].semestername : ''}</span>
             </h2>
           </article>
 
