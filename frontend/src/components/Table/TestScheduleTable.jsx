@@ -29,7 +29,7 @@ const TestScheduleTable = ()=>{
               <hr className="border-1 border-black" />
               <div>
                 <div className="max-h-80 overflow-auto">
-                  <table className="table w-full table-compact">
+                  <table className="table w-full table-compact text-center">
                     <thead>
                       <tr>
                             <th className="sticky top-0 py-2 text-center">Role</th>
@@ -62,7 +62,7 @@ const TestScheduleTable = ()=>{
           </div>
         );
       } else {
-        return <div>No schedule available.</div>;
+        return <div></div>;
       }
       
 

@@ -151,7 +151,26 @@ const insertPromotionRanking = (data,semesterid)=>{
     return 'Success'
 }
 
+const getPromotionRegistered = (req,res)=>{
 
+  const initial = req.params.initial
+  const semesterid = req.params.semesterid
+
+  const query = `SELECT priority, registrationreason,period, rolename FROM promotionregistration pr JOIN promotionregistrationdetail prd ON pr.promotionregistrationid = prd.promotionregistrationid JOIN role r ON r.roleid = prd.roleid WHERE initial = $1 AND semesterid = $2 ORDER BY priority ASC`
+
+  pool.query(query,[initial, semesterid], (error, result) => {
+    if (error) {
+        console.log(error)
+        res.send('Error fetching registrant choices');
+    } else {
+        if (result.rows.length === 0) {
+            res.status(200).send('0');
+          } 
+        else res.status(200).send(result.rows);
+    }
+  });
+
+}
 
 module.exports={
     insertPromotionRegistration,
@@ -160,5 +179,6 @@ module.exports={
     getRegistrees,
     insertPromotionRanking,
     generateRandomId,
-    getRegistrantChoices
+    getRegistrantChoices,
+    getPromotionRegistered
 }

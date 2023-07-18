@@ -2,6 +2,7 @@
 import "@/app/globals.css"
 import AnnouncementComponent from "@/components/Announcement";
 import BATestTable from "@/components/Table/BATestTable";
+import RegisteredTable from "@/components/Table/RegisteredTable";
 import TestScheduleTable from "@/components/Table/TestScheduleTable";
 import { useRouter } from 'next/navigation';
 
@@ -15,6 +16,7 @@ const HomePage = () => {
                 <div className="flex flex-col w-3/5 mr-10 ml-10">
                     <BATestTable/>
                     <TestScheduleTable/>
+                    <RegisteredTable/>
                 </div>
                 <div className="w-2/5 m-5 ml-10">
                     <AnnouncementComponent/>
