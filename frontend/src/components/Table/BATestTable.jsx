@@ -67,7 +67,7 @@ const BATestTable = ()=>{
     if(!loadBATest) return <div></div>
     else 
     return (
-        <div className="card w-full bg-base-100 shadow-xl mt-5">
+        <div className="card w-full bg-base-100 shadow-xl mt-5 ">
             <div className="card-body">
                 <h2 className="card-title">BA Test Schedule</h2>
                 <label className="card-title text-lg font-normal mt-5"> {BATest ? BATest.date.toLocaleDateString('en-GB', options) : ''}  {BATest ? 'at ' +BATest.time : ''} {BATest ? ' - ' +BATest.enddate.toLocaleDateString('en-GB', options) : ''}  {BATest ? 'at ' +BATest.endTime : ''}</label>

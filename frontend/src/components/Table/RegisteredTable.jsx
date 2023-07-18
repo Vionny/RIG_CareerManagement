@@ -8,7 +8,7 @@ const RegisteredTable = ()=>{
     const [schedule,setSchedule] = useState()
 
     useEffect(()=>{
-        axios.get(process.env.NEXT_PUBLIC_BACKEND_URL + '/getSchedule/'+sessionStorage.getItem('selectedSemester')+'/'+sessionStorage.getItem('initial')).then((res)=>{
+        axios.get(process.env.NEXT_PUBLIC_BACKEND_URL + '/promotion/getPromotionRegistered/'+sessionStorage.getItem('selectedSemester')+'/'+sessionStorage.getItem('initial')).then((res)=>{
             console.log(res.data)
             setSchedule(res.data)
             setLoadSchedule(true)
@@ -25,32 +25,27 @@ const RegisteredTable = ()=>{
         return (
           <div className="bg-base-400 w-full  mt-5">
             <div className="bg-base-100 card shadow-xl w-full flex-auto p-5 px-7">
-              <h1 className="card-title mb-2">Interview Schedule</h1>
+              <h1 className="card-title mb-2">Registered Promotion</h1>
               <hr className="border-1 border-black" />
               <div>
                 <div className="max-h-80 overflow-auto">
-                  <table className="table w-full table-compact">
+                  <table className="table w-full table-compact text-center">
                     <thead>
                       <tr>
-                            <th className="sticky top-0 py-2 text-center">Role</th>
-                            <th className="sticky top-0 py-4 text-center">Date</th>
-                            <th className="sticky top-0 py-4 text-center">Time</th>
-                            <th className="sticky top-0 py-4 text-center">Room</th>
+                            <th className="sticky top-0 py-2 text-center">Priority</th>
+                            <th className="sticky top-0 py-4 text-center">Role</th>
+                            <th className="sticky top-0 py-4 text-center">Registration Reason</th>
+                            <th className="sticky top-0 py-4 text-center">Period</th>
                       </tr>
                     </thead>
                     <tbody>
                       {schedule.map((a, index) => {
-                        const scheduleDate = new Date(a.interviewdatetime);
-                        const hours = scheduleDate.getHours();
-                        const minutes = scheduleDate.getMinutes();
-                        const formattedTime = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
-      
                         return (
                           <tr key={index}>
+                            <td>{a.priority}</td>
                             <td>{a.rolename}</td>
-                            <td>{scheduleDate.toLocaleDateString('en-GB', options)}</td>
-                            <td>{formattedTime}</td>
-                            <td>{a.interviewroom}</td>
+                            <td>{a.registrationreason}</td>
+                            <td>{a.period}</td>
                           </tr>
                         );
                       })}
@@ -62,7 +57,7 @@ const RegisteredTable = ()=>{
           </div>
         );
       } else {
-        return <div>No schedule available.</div>;
+        return <div></div>;
       }
       
 
