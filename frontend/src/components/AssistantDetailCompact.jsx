@@ -92,7 +92,7 @@ const AssistantDetailCompact = ({id}) =>{
 
 
         
-    },[semester])
+    },[semester, id])
 
     if(ast != undefined)
     return(

@@ -1,7 +1,7 @@
 "use client"
 import "@/app/globals.css"
-import { UserContext } from "@/components/UserContext"
 import {useContext, useEffect, useState} from 'react'
+import BarChart from "@/components/BarChart"
 const axios = require("axios")
 axios.defaults.headers.post['Content-Type'] = 'application/json';
 
@@ -9,7 +9,10 @@ const ManagePromotionPage = ()=>{
 
     const [registers, setRegist] = useState();
     const [loadRegist, setLoadRegist] = useState(false);
-    const [currSemester,setCurrSemesters] = useState()
+    const [currSemester,setCurrSemesters] = useState();
+    const [registCount, setRegistCount] = useState();
+    const [availSlot, setAvailSlot] = useState();
+    const [roleCandidate, setRoleCandidate] = useState();
     
     useEffect(()=>{
         // console.log(sessionStorage.getItem('selectedSemester'));
@@ -18,17 +21,49 @@ const ManagePromotionPage = ()=>{
             
             axios.get(process.env.NEXT_PUBLIC_BACKEND_URL+'/promotion/getPromotionRegistrant/'+currSemester).then((res) => {
                 if(res.data!== undefined){
-                    console.log(res.data[0])
-                
+                    // console.log(res.data[0])               
                     setRegist(res.data)  
                     setLoadRegist(true)
-                    console.log(registers);
+                    // console.log(registers);
                 }
             })
+
+            axios.get(process.env.NEXT_PUBLIC_BACKEND_URL+'/getRegistCount/'+currSemester).then((res) => {
+                if(res.data!== undefined){
+                    // console.log(res.data)
+                
+                    setRegistCount(res.data)  
+                    
+                    // console.log(registeregistCountrs);
+                }
+            })
+
+            axios.get(process.env.NEXT_PUBLIC_BACKEND_URL+'/getRoleAvailSlot').then((res) => {
+                if(res.data!== undefined){
+                    // console.log(res.data)
+                
+                    setAvailSlot(res.data)  
+                    
+                    // console.log(registeregistCountrs);
+                }
+            })
+
+            axios.get(process.env.NEXT_PUBLIC_BACKEND_URL+'/getRoleCandidate/' + currSemester).then((res) => {
+                if(res.data!== undefined){
+                    // console.log(res.data)
+                
+                    setRoleCandidate(res.data[0])  
+                    
+                    // console.log(registeregistCountrs);
+                }
+            })
+
         }
 
      
     },[currSemester])
+
+  
 
 
 
@@ -42,11 +77,13 @@ const ManagePromotionPage = ()=>{
                 <h2>Promotion Management</h2>
             </article>
 
-            <div className="card bg-base-100  flex-auto h-96 ">
-                <div className="card-body flex flex-col">
-                    <h2 className="card-title ">Candidate Statistic</h2>
-                    <textarea className="textarea-md w-full h-64 resize-none bg-base-200" placeholder="My reason is..."></textarea>
-                </div>
+            <div className="card bg-base-100  flex-auto">
+                <div className="card-body flex flex-col h-96 p-3">
+                    <h2 className="card-title ">Candidate Statistic</h2>           
+                    <div className="w-80">
+                        <BarChart  style={{ height: "50px" }} options={{ maintainAspectRatio: false }} regisData={registCount} candidateData={roleCandidate} slotData={availSlot}/>
+                    </div>         
+                </div> 
             </div> 
 
             <div className="card bg-base-100  flex-auto h-96 ">
