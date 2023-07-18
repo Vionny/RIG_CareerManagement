@@ -22,7 +22,6 @@ const AssistantPage= ()=>{
     const [selectedAst, setSelectedAst] = useState();
     const [showConfirmModal, setShowConfirmModal] = useState(false);
 
-    const [searchQuery, setSearchQuery] = useState('');
     const [keyword, setKeyword] = useState('');
     const [filteredData, setFilteredData] = useState([]);
     const [selectedOption, setSelectedOption] = useState('None');
@@ -37,7 +36,7 @@ const AssistantPage= ()=>{
     const [generation, setGeneration] = useState(['None','23-1','22-1','21-1','20-1','19-1','18-1','22-2','21-2','20-2','19-2','18-2'])
 
     const [showInfoModal,setShowInfoModal] = useState(false);
-    const [inputAstFilePath, setInputAstFilePath] = useState()
+
 
 
     useEffect(()=>{
@@ -200,12 +199,7 @@ const AssistantPage= ()=>{
                 onConfirm={refreshPage}
             />)}
 
-            {isModalOpen && (
-                    <div className="modal-backdrop bg-black" >
-                        <EditAssistantModal assistant={ast} closeModal={closeModal}/>
-                        {/* <EditSemesterModal semesterid={selectedSemesterId} closeModal={closeModal} /> */}
-                    </div>
-            )}
+           
 
             {showConfirmModal && (
                 <ConfirmationModal
@@ -289,12 +283,10 @@ const AssistantPage= ()=>{
                                 {!filtered
                                 ?
                                 users.map((us, index) => (
-                                    <tr className="clickable hover"
+                                    <tr className="hover"
                                     key={index}>
                                         <td>
-                                            <Link  href={`assistant/detail/${us.initial}`}>
                                             {us.initial}
-                                            </Link>
                                         </td>
                                         <td>{us.assistantname}</td>
                                         <td>{us.rolename}</td>
@@ -303,8 +295,12 @@ const AssistantPage= ()=>{
                                         <td>{us.eligiblepromotionstatus ? 'Eligible' : 'Not Eligible'}</td>
                                         <td>{us.eligibleforresign ? 'Eligible' : 'Not Eligible'}</td>
                                         <td className="flex gap-2">
-                                           <button onClick={() => openModal(us.initial)}>Edit</button> 
-                                           <button onClick={() => clickDelete(us.initial)}>Delete</button> 
+                                           <button onClick={() => openModal(us.initial)}>
+                                                <Link  href={`assistant/detail/${us.initial}`}>
+                                                    Show
+                                                </Link>
+                                            </button> 
+                                           
                                         </td>
                                         
                                          
@@ -323,8 +319,11 @@ const AssistantPage= ()=>{
                                             <td>{us.eligiblepromotionstatus ? 'Eligible' : 'Not Eligible'}</td>
                                             <td>{us.eligibleforresign ? 'Eligible' : 'Not Eligible'}</td>
                                             <td className="flex gap-2">
-                                               <button onClick={() => openModal(us.initial)}>Edit</button> 
-                                               <button onClick={() => clickDelete(us.initial)}>Delete</button> 
+                                                <button >
+                                                    <Link  href={`assistant/detail/${us.initial}`}>
+                                                        Show
+                                                    </Link>
+                                                </button> 
                                             </td>
                                             
                                              

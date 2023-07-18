@@ -1,15 +1,15 @@
 "use client"
 import "@/app/globals.css"
-import { EditAssistantModal } from "@/components/Modals/Edit/EditAssistantModal"
 import {useEffect, useState} from 'react'
-import ConfirmationModal from "@/components/Modals/Confirmation/ConfirmationModal";
-import { useRouter } from 'next/navigation'
+import Link from "next/link"; 
+
+
 const axios = require("axios")
 axios.defaults.headers.post['Content-Type'] = 'application/json';
 
-const AssistantDetail= ({id})=>{
+const AssistantDetailCompact = ({id}) =>{
 
-    const router = useRouter()
+
     const [comments, setComments] = useState();
     const [inputCmt, setInputCmt] = useState();
     const [cmtType, setCmtType] = useState('positive');
@@ -17,14 +17,8 @@ const AssistantDetail= ({id})=>{
     const [ast, setAst] = useState();
     const [selectedAst, setSelectedAst] = useState();
     const [semester, setSemester] = useState();
-    const [currAst, setCurrAst] = useState();
     const [choices, setChoices] = useState();
     const [records, setRecords] = useState();
-    const [haveCmt, setHaveCmt] = useState();
-
-    const [showConfirmModalRecord, setShowConfirmModalRecord] = useState(false);
-    const [showConfirmModal, setShowConfirmModal] = useState(false);
-    const [isModalOpen, setIsModalOpen] = useState(false);
 
     //record
     const [hcletter, setHcLetter] = useState();
@@ -42,21 +36,13 @@ const AssistantDetail= ({id})=>{
     const [teachLate, setTeachLate] = useState();
     const [teachPermit, setTeachPermit] = useState();
 
-
-
     useEffect(() => {
         setSemester(sessionStorage.getItem('selectedSemester'));
-        setCurrAst(sessionStorage.getItem('initial'))
+    
 
         
       }, []);
 
-    
-    useEffect(() =>{
-        if(!comments) setHaveCmt(false)
-        else setHaveCmt(true)
-    }, [comments])
-    
 
     useEffect(()=>{
        
@@ -108,146 +94,11 @@ const AssistantDetail= ({id})=>{
         
     },[semester])
 
-
-
-    const insertComment = () =>{
-            
-        var data = {
-            initial: id,
-            semesterid: semester,
-            commentinitial: currAst,
-            commenttype: cmtType,
-            commenttext:inputCmt, 
-            havecomment: haveCmt  
-        }
-        console.log(data);
-        axios.post(process.env.NEXT_PUBLIC_BACKEND_URL + '/insertComment', data)
-        .then((res) =>{
-            console.log(res)
-            if(res.data== 'Success'){
-    
-                window.location.reload();
-                
-              }
-        })
-        .catch((error)=>{
-            console.error(error)
-        })
-    
-      }
-
-    const updateRecords = () =>{
-            
-        var data = {
-            initial: id,
-            hcletter: hcletter,
-            astpvletter:astpvLetter,
-            abscence: absence,
-            forgot:forgot,
-            late: late,
-            toleration: toleration,
-            leave: leave,
-            sick: sick,
-            alpha: alpha,
-            casemakingdl: casemakedl,
-            correctiondl: correctiondl,
-            teachingabscence: teachAbsence,
-            teachinglate: teachLate,
-            teachingpermission: teachPermit          
-
-        }
-        console.log(data);
-        axios.post(process.env.NEXT_PUBLIC_BACKEND_URL + '/updateRecords', data)
-        .then((res) =>{
-            console.log(res)
-            if(res.data== 'Success'){
-    
-                window.location.reload();
-                
-              }
-        })
-        .catch((error)=>{
-            console.error(error)
-        })
-    
-      }
-
-    const handleCancel =()=>{
-        setShowConfirmModalRecord(false)
-    }
-
-    const openModal = (astId) => {
-        console.log("open");
-        console.log(astId);
-        setAst(astId);
-        setIsModalOpen(true);
-      }
-
-    const closeModal = () => {
-        setIsModalOpen(false)
-    }
-
-    const clickDelete = (astId) =>{
-        setShowConfirmModal(true)
-        setSelectedAst(astId)
-    }
-
-    const handleCancelDelete =()=>{
-        setShowConfirmModal(false)
-    }
-
-    const deleteAssistant = (astId) =>{
-        axios
-        .delete(`${process.env.NEXT_PUBLIC_BACKEND_URL}/deleteAssistant/${astId}`)
-        .then((res) =>{
-            console.log(res)
-            if(res.data== 'Success'){
-
-                router.push('/assistant/view');
-              }
-        })
-        .catch((error)=>{
-            console.error(error)
-        })
-    }
-    
-    if(!ast) return(<div></div>)
-    else
+    if(ast != undefined)
     return(
-        <div className="bg-base-200 flex flex-col pl-10 pr-10 pt-5 w-full min-h-screen">
-            {showConfirmModalRecord && (
-                <ConfirmationModal
-                  show = {showConfirmModalRecord}
-                  title="Confirmation"
-                  onConfirm={() =>{updateRecords()}}
-                  message="Are you sure you want to update the records?"
-                  onCancel={handleCancel}
-                />
-              )}
-
-            {isModalOpen && (
-                    <div className="modal-backdrop bg-black" >
-                        <EditAssistantModal assistant={ast} closeModal={closeModal}/>
-                       
-                    </div>
-            )}
-
-            {showConfirmModal && (
-                <ConfirmationModal
-                  show = {showConfirmModal}
-                  title="Confirmation"
-                  message="Are you sure you want to delete this assistant?"
-                  onConfirm={() =>{deleteAssistant(selectedAst)}}
-                  onCancel={handleCancelDelete}
-                />
-              )}
-
-            <article className="prose base mb-5">
-                <h2>Assistant Management</h2>
-            </article>
-             
-                {/* detail */}
-                <div className="bg-base-100 card w-full h-fit">
+       <div>
+        {/* detail */}
+        <div className="bg-base-100 card w-full h-fit">
                     <div className="card-body flex w-full gap-5">
                         
                         <div className="flex w-fullspace-x-28">
@@ -270,8 +121,11 @@ const AssistantDetail= ({id})=>{
                             </div>  
 
                             <div className="absolute top-0 right-3 flex gap-1">
-                                <button className="button button-primary" onClick={() => openModal(id)}>Edit</button> 
-                                <button onClick={() => clickDelete(id)}>Delete</button> 
+                                <button >
+                                    <Link  href={`assistant/detail/${id}`}>
+                                        Show
+                                    </Link>
+                                </button> 
                             </div>
                         </div>
                         
@@ -363,26 +217,7 @@ const AssistantDetail= ({id})=>{
                                     }
                                     </div>
 
-                                    <div className="flex gap-2">
-                                        <textarea className="textarea-md w-9/12 h-28 border rounded resize-none bg-white" onChange={(e) => { setInputCmt(e.target.value); }} 
-                                        placeholder="Comment here.."></textarea>
-
-                                        <div className="flex flex-col gap-3 justify-center w-3/12">
-                                            <select
-                                                className="select h-5 w-full bg-white text-center" 
-                                                value={cmtType}
-                                                onChange={(e) => {
-                                                    setCmtType(e.target.value);
-                                                }}
-                                              >
-                                                <option value = {'positive'}>(+1) Positive</option>
-                                                <option value = {'neutral'}>(0) Neutral</option>
-                                                <option value = {'negative'}>(-1) Negative</option>
-                                            </select>
-
-                                            <button className="btn btn-primary" onClick={()=>insertComment()}>Insert New Comment</button>
-                                        </div>
-                                    </div>
+                            
                                 </div>   
 
                                 :
@@ -416,25 +251,25 @@ const AssistantDetail= ({id})=>{
                                         {records.map((rec, index) => (
                                         <tr key={index}>
                                             <td className="">
-                                                <input className="input input-bordered text-center w-24" type="text" value={hcletter ? hcletter : 0} onChange={(e) => {const value = parseInt(e.target.value); if (!isNaN(value)) {setHcLetter(value)} else {setHcLetter(null);}}} />
+                                                <input className="input input-bordered text-center w-24" type="text" value={hcletter ? hcletter : 0} readOnly/>
                                             </td>
                                             <td className="">
-                                                <input className="input input-bordered text-center w-24" type="text" value={astpvLetter ? astpvLetter : 0} onChange={(e) => {const value = parseInt(e.target.value); if (!isNaN(value)) {setAstpvLetter(value)} else {setAstpvLetter(null);}}} />            
+                                                <input className="input input-bordered text-center w-24" type="text" value={astpvLetter ? astpvLetter : 0} readOnly />            
                                             </td>
                                             <td className="text-center">
-                                                <input className="input input-bordered text-center w-24" type="text" value={absence ? absence : 0} onChange={(e) => {const value = parseInt(e.target.value); if (!isNaN(value)) {setAbsence(value)} else {setAbsence(null);}}} />            
+                                                <input className="input input-bordered text-center w-24" type="text" value={absence ? absence : 0} readOnly />            
                                             </td>
                                             <td className="text-center">
-                                                <input className="input input-bordered text-center w-24" type="text" value={forgot ? forgot :  0} onChange={(e) => {const value = parseInt(e.target.value); if (!isNaN(value)) {setForgot(value)} else {setForgot(null);}}} />            
+                                                <input className="input input-bordered text-center w-24" type="text" value={forgot ? forgot :  0} readOnly />            
                                             </td>
                                             <td className="text-center">
-                                                <input className="input input-bordered text-center w-24" type="text" value={late ? late : 0} onChange={(e) => {const value = parseInt(e.target.value); if (!isNaN(value)) {setLate(value)} else {setLate(null);}}} />            
+                                                <input className="input input-bordered text-center w-24" type="text" value={late ? late : 0} readOnly />            
                                             </td>
                                             <td className="text-center">
-                                                <input className="input input-bordered text-center w-24" type="text" value={toleration ? toleration : 0} onChange={(e) => {const value = parseInt(e.target.value); if (!isNaN(value)) {setTolerate(value)} else {setTolerate(null);}}} />            
+                                                <input className="input input-bordered text-center w-24" type="text" value={toleration ? toleration : 0} readOnly />            
                                             </td>
                                             <td className="text-center">
-                                                <input className="input input-bordered text-center w-24" type="text" value={leave ? leave : 0} onChange={(e) => {const value = parseInt(e.target.value); if (!isNaN(value)) {setLeave(value)} else {setLeave(null);}}} />            
+                                                <input className="input input-bordered text-center w-24" type="text" value={leave ? leave : 0} readOnly />            
                                             </td>
                                       
                                         </tr>
@@ -461,25 +296,25 @@ const AssistantDetail= ({id})=>{
                                         {records.map((rec, index) => (
                                         <tr key={index}>
                                             <td className="">
-                                                <input className="input input-bordered text-center w-24" type="text" value={sick ? sick : 0} onChange={(e) => {const value = parseInt(e.target.value); if (!isNaN(value)) {setSick(value)} else {setSick(null);}}} />
+                                                <input className="input input-bordered text-center w-24" type="text" value={sick ? sick : 0} readOnly />
                                             </td>
                                             <td className="">
-                                                <input className="input input-bordered text-center w-24" type="text" value={alpha ? alpha : 0} onChange={(e) => {const value = parseInt(e.target.value); if (!isNaN(value)) {setAlpha(value)} else {setAlpha(null);}}}/>            
+                                                <input className="input input-bordered text-center w-24" type="text" value={alpha ? alpha : 0} readOnly/>            
                                             </td>
                                             <td className="text-center">
-                                                <input className="input input-bordered text-center w-24" type="text" value={casemakedl ? casemakedl : 0}onChange={(e) => {const value = parseInt(e.target.value); if (!isNaN(value)) {setCasemakedl(value)} else {setCasemakedl(null);}}} />            
+                                                <input className="input input-bordered text-center w-24" type="text" value={casemakedl ? casemakedl : 0} readOnly />            
                                             </td>
                                             <td className="text-center">
-                                                <input className="input input-bordered text-center w-24" type="text" value={correctiondl ? correctiondl :  0} onChange={(e) => {const value = parseInt(e.target.value); if (!isNaN(value)) {setCorrectiondl(value)} else {setCorrectiondl(null);}}} />            
+                                                <input className="input input-bordered text-center w-24" type="text" value={correctiondl ? correctiondl :  0} readOnly />            
                                             </td>
                                             <td className="text-center">
-                                                <input className="input input-bordered text-center w-24" type="text" value={teachAbsence ? teachAbsence : 0} onChange={(e) => {const value = parseInt(e.target.value); if (!isNaN(value)) {setTeachAbsence(value)} else {setTeachAbsence(null);}}} />            
+                                                <input className="input input-bordered text-center w-24" type="text" value={teachAbsence ? teachAbsence : 0} readOnly/>            
                                             </td>
                                             <td className="text-center">
-                                                <input className="input input-bordered text-center w-24" type="text" value={teachLate ? teachLate : 0} onChange={(e) => {const value = parseInt(e.target.value); if (!isNaN(value)) {setTeachLate(value)} else {setAbsence(null);}}} />            
+                                                <input className="input input-bordered text-center w-24" type="text" value={teachLate ? teachLate : 0} readOnly />            
                                             </td>
                                             <td className="text-center">
-                                                <input className="input input-bordered text-center w-24" type="text" value={teachPermit ? teachPermit : 0} onChange={(e) => {const value = parseInt(e.target.value); if (!isNaN(value)) {setTeachPermit(value)} else {setTeachPermit(null);}}} />            
+                                                <input className="input input-bordered text-center w-24" type="text" value={teachPermit ? teachPermit : 0} readOnly />            
                                             </td>
                                       
                                         </tr>
@@ -487,21 +322,15 @@ const AssistantDetail= ({id})=>{
                                     </tbody>
                                 </table>
                             </div>
-                            
-                            <button className="btn btn-primary self-end" onClick={()=>{setShowConfirmModalRecord(true)}} >Update Records</button>
-
+    
                         </div>
                         :
                         <div></div>
                     }
                         </div>
-                        </div>
-                        
-                        
-                        </div>
-                        
-                        )
-                        
+            </div>
+       </div>
+    )
 }
 
-export default AssistantDetail;
+export default AssistantDetailCompact;

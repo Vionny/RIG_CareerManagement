@@ -2,6 +2,7 @@
 import "@/app/globals.css"
 import ManageCandidateDropdown from "@/components/Dropdown/ManageCandidateDropdown";
 import SimpleInformationModal from "@/components/Modals/Information/SimpleInformationModal";
+import AssistantDetailCompact from "@/components/AssistantDetailCompact";
 import {useEffect, useState} from 'react'
 
 const axios = require("axios")
@@ -17,6 +18,7 @@ const ManageCandidate = ()=>{
     const [selectedCan,setSelectedCan]= useState()
     const [showEdit , setShowEdit] = useState()
     const [showInfoModal, setShowInfoModal] = useState()
+
 
     useEffect(()=>{
         console.log("h");
@@ -216,6 +218,13 @@ const ManageCandidate = ()=>{
                     </div>
                 </div>
 
+
+                {selectedCan ?
+              
+                    <AssistantDetailCompact id={selectedCan}/>
+                    :
+                    <div></div>
+                }
                 
 
 

@@ -36,7 +36,7 @@ export const EditAssistantModal = ({assistant, closeModal}) => {
       var data = {
         eligiblepromotionstatus: eligiblePromotion,
         eligibleforresign: eligibleResign,
-        assistantleader: leader,
+        leader: leader,
         initial: assistant
   
       }

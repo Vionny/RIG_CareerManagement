@@ -114,6 +114,37 @@ const getProblem = (req, res, next) => {
     })
 }
 
+const updateRecords = (req, res, next) => {
+
+   
+    const hcletter = req.body.hcletter
+    const astpvletter = req.body.astpvletter
+    const abscence = req.body.abscence
+    const forgot = req.body.forgot
+    const late = req.body.late
+    const toleration = req.body.toleration
+    const leave = req.body.leave
+    const sick = req.body.sick
+    const alpha = req.body.alpha
+    const casemakingdl = req.body.casemakingdl
+    const correctiondl = req.body.correctiondl
+    const teachingabscence = req.body.teachingabscence
+    const teachinglate = req.body.teachinglate
+    const teachingpermission = req.body.teachingpermission
+    const initial = req.body.initial
+
+    const query = "UPDATE assistantrecord SET hcletter = $1, astpvletter = $2, abscence = $3, forgot = $4, late = $5, toleration = $6, leave = $7, sick = $8, alpha = $9, casemakingdl = $10, correctiondl = $11, teachingabscence = $12, teachinglate = $13, teachingpermission = $14 WHERE initial = $15"
+    
+    pool.query(query, [hcletter, astpvletter, abscence, forgot, late, toleration, leave, sick, alpha, casemakingdl,correctiondl, teachingabscence, teachinglate,  teachingpermission, initial], (error, result) => {
+        if (error) {
+            res.status(500).send('Error update records');
+        } else {
+           res.status(200).send("Success");
+        }
+    
+    })
+}
+
 
 
 const updateAstCareerChoice = (req,res)=>{
@@ -139,14 +170,19 @@ const updateAstCareerChoice = (req,res)=>{
 const updateAssistant = (req, res, next) =>{
     const eligiblepromotionstatus = req.body.eligiblepromotionstatus
     const eligibleforresign = req.body.eligibleforresign
+    const leader = req.body.leader
     const initial = req.body.initial
     
-    const query = "UPDATE assistant SET eligiblepromotionstatus = $1, eligibleforresign = $2 WHERE initial = $3 "
+    const query = "UPDATE assistant SET eligiblepromotionstatus = $1, eligibleforresign = $2, assistantleader = $3 WHERE initial = $4 "
 
-    pool.query(query,[eligiblepromotionstatus, eligibleforresign, initial], (error, result) => {
+    // console.log("initial update ast" + initial);
+    // console.log("eligible resign update ast" + eligibleforresign);
+    // console.log("eligibile promotion update ast" + eligiblepromotionstatus);
+
+    pool.query(query,[eligiblepromotionstatus, eligibleforresign, leader, initial], (error, result) => {
         if (error) {
             console.log(error);
-            res.status(500).send('Error update semester');
+            res.status(500).send('Error update ast');
         } else {
             res.status(200).send("Success");
         }
@@ -263,7 +299,7 @@ const insertComment = (req, res, next) =>{
     } 
 
 
-    
+
   function insertTableDetail() {
     pool.query(insertAssistantCommentQuery, [assistantcommentid, commentcollectionid, commentinitial, commenttype, commenttext], (error, result) => {
       if (error) {
@@ -296,5 +332,6 @@ module.exports = {
     insertComment,
     getComment,
     getProblem,
-    generateRandomId
+    generateRandomId,
+    updateRecords
 }
