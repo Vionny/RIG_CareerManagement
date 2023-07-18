@@ -21,7 +21,7 @@ const insertPromotionRegistration = (req, res, next) =>{
           if (error) {
             console.log(insertTableDetailQuery,insertTableDetailQuery)
               console.log(error)
-              res.status(500).send('Error adding table header promotion registration');
+              if(error.constraint =='promotionregistration_pkey'){ insertTableDetail()}
           } else {
               // res.status(200).send('Success')
               insertTableDetail()
@@ -37,6 +37,8 @@ const insertPromotionRegistration = (req, res, next) =>{
         console.log(error);
         res.status(500).send('Error adding table detail promotion registration');
       } else {
+        const item = [ { initial : initial, opofficer : '-', resmanoff : '-', astdev : '-', subco : '-', subdev : '-', dbstaff : '-', naofficer : '-', nastaff : '-', rndofficer : '-', rndstaff : '-'}]
+        insertPromotionRanking(item,semesterid)
         res.status(200).send('Success');
       }
     });
@@ -144,7 +146,7 @@ const insertPromotionRanking = (data,semesterid)=>{
       const query = "INSERT INTO promotionranking (promotionrankingid, initial, semesterid, opofficer, resmanoff, astdev, subco, subdev, dbstaff, naofficer, nastaff, rndofficer, rndstaff) SELECT $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13 WHERE NOT exists (  SELECT * FROM promotionranking WHERE initial = $2 AND semesterid = $3 )";
       let promotionrankingid = generateRandomId(10)
       console.log(promotionrankingid)
-      pool.query(query, [promotionrankingid, initial,semesterid, opofficer, resmanoff, astdev, subco, subdev, dbstaff, naofficer, nastaff, rndofficer, rndstaff], (error, results) => {
+      pool.query(query, [promotionrankingid, initial,semesterid, (opofficer? opofficer : '-'), (resmanoff? resmanoff : '-'), (astdev?astdev : '-'), (subco ? subco : '-'), (subdev ? subdev: '-'), (dbstaff ? dbstaff : '-'), (naofficer ? naofficer : '-'), (nastaff? nastaff : '-'), (rndofficer ? rndofficer : '-'), (rndstaff?rndstaff: '-')], (error, results) => {
           success = true
       });
     });

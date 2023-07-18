@@ -74,7 +74,7 @@ const AssistantDetail= ({id})=>{
             setAst(res.data[0])            
         })
 
-        axios.get(process.env.NEXT_PUBLIC_BACKEND_URL+'/getProblem/'+ id).then((res) => {
+        axios.get(process.env.NEXT_PUBLIC_BACKEND_URL+'/getProblem/'+ id+'/'+sessionStorage.getItem('selectedSemester')).then((res) => {
             if (res.data && res.data.length > 0) {
                 console.log(res.data[0])
                 setHcLetter(res.data[0]?.hcletter ?? 0)
@@ -258,8 +258,8 @@ const AssistantDetail= ({id})=>{
                         <div className="flex w-fullspace-x-28">
 
                             <div className="flex flex-row gap-5">
-                                <figure className="bg-slate-300 w-fit">
-                                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRp7fl8up-1-T7_OD4AbWBCs9T7CK6iaFGGpA&usqp=CAU" className="w-44" alt="Photo" />
+                                <figure className="bg-slate-300 w-fit border-black">
+                                    <img src="" className="w-44 h-72" alt="Photo" />
                                 </figure>
 
                                 <div className="flex flex-row gap-1">

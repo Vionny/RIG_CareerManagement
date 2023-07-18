@@ -31,7 +31,9 @@ const ViewSnP= ()=>{
     const [showInfoModal ,setShowInfoModal] = useState(false)
 
     const [errText, setErrText] = useState(null)
-
+    const [infoModal,setInfoModal] = useState()
+    const [deleteConfirmationModal,setDeleteConfirmationModal] = useState(false)
+    const [toDelete,setToDelete] = useState()
     const openModal = (semesterId) => {
         console.log("open")
         setSelectedSemesterId(semesterId)
@@ -152,8 +154,8 @@ const ViewSnP= ()=>{
             .then((res) =>{
                 // console.log(res)
                 if(res.data== 'Success'){
-
-                    window.location.reload();
+                    setInfoModal("You have successfully update promotion date !")
+                    setShowInfoModal(true)
                 }
             })
             .catch((error)=>{
@@ -183,43 +185,50 @@ const ViewSnP= ()=>{
         if(semesterstartdate > startRegistration || semesterenddate < endRegistration ){
             setErrText("Choice Date must be between the semester period")
         }else{
-            // var data = {
-            //     choicestartdate: startRegistration,
-            //     choiceenddate: endRegistration,
-            //     semesterid: currSemester
-            // }
+            var data = {
+                choicestartdate: startRegistration,
+                choiceenddate: endRegistration,
+                semesterid: currSemester
+            }
 
-            // console.log(data);
-            // axios
-            // .post(process.env.NEXT_PUBLIC_BACKEND_URL + '/updateChoiceDate', data)
-            // .then((res) =>{
-            //     console.log(res)
-            //     if(res.data== 'Success'){
-
-            //         window.location.reload();
-            //     }
-            // })
-            // .catch((error)=>{
-            //     console.error(error)
-            // })
+            console.log(data);
+            axios
+            .post(process.env.NEXT_PUBLIC_BACKEND_URL + '/updateChoiceDate', data)
+            .then((res) =>{
+                console.log(res)
+                if(res.data== 'Success'){
+                    setInfoModal("You have successfully update choice date !")
+                    setShowInfoModal(true)
+                }
+            })
+            .catch((error)=>{
+                console.error(error)
+            })
         }
 
     }
 
     const deleteSemester = (semesterid) =>{
         
-        axios
-        .delete(`${process.env.NEXT_PUBLIC_BACKEND_URL}/deleteSemester/${semesterid}`)
-        .then((res) =>{
-            console.log(res)
-            if(res.data== 'Success'){
-
-                window.location.reload();
-              }
-        })
-        .catch((error)=>{
-            console.error(error)
-        })
+        if(sessionStorage.getItem('selectedSemester') === semesterid){
+            setErrText("You cannot delete the semester that you currently select !")
+        }else{
+            axios
+            .delete(`${process.env.NEXT_PUBLIC_BACKEND_URL}/deleteSemester/${semesterid}`)
+            .then((res) =>{
+                console.log(res)
+                if(res.data== 'Success'){
+                    setDeleteConfirmationModal(false)
+                    setInfoModal("You have successfully delete the semester !")
+                    setShowInfoModal(true)
+                }
+            })
+            .catch((error)=>{
+                console.error(error)
+            })
+        
+        }
+        
 
     }
 
@@ -230,6 +239,7 @@ const ViewSnP= ()=>{
             console.log(res)
             if(res.data== 'Success'){
                 setResetConfirmationModal(false)
+                setInfoModal("You have successfully reset the finalize option !")
                 setShowInfoModal(true)
             }
         })
@@ -239,6 +249,7 @@ const ViewSnP= ()=>{
     }
 
     const refresh = ()=>{
+        setShowInfoModal(false)
         window.location.reload();
     }
 
@@ -258,11 +269,22 @@ const ViewSnP= ()=>{
                     }}
                 />
             )}
+            {deleteConfirmationModal && (
+
+            <ConfirmationModal
+                title = "Delete Semester Confirmation"
+                message = "Are you sure you want to delete the semester ?"
+                onConfirm = {()=>{deleteSemester(toDelete)}}
+                onCancel = {()=>{
+                    setDeleteConfirmationModal(false)
+                }}
+            />
+            )}
             {showInfoModal && (
 
                 <SimpleInformationModal
                     title = "Successful"
-                    message = "You have successfully reset the finalize option !"
+                    message = {infoModal}
                     onConfirm = {refresh}
                 />
             )}
@@ -318,7 +340,9 @@ const ViewSnP= ()=>{
                                         
                                         <td className="flex flex-col items-center">
                                             <button onClick={() => openModal(sem.semesterid)}>Edit</button>
-                                            <button onClick={() => deleteSemester(sem.semesterid)}>Delete</button>
+                                            <button onClick={() => {setToDelete(sem.semesterid)
+                                                setDeleteConfirmationModal(true)}
+                                            }>Delete</button>
                                         </td>
                                         
                                     </tr>

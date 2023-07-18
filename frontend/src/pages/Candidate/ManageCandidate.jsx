@@ -213,7 +213,7 @@ const ManageCandidate = ()=>{
                                     return <tr key={index}  className="clickable hover border-1" onClick={()=>{setSelectedCan(reg.initial)}}>
                         
                                         <td className="border">{reg.initial}</td>
-                                        <td className="whitespace-normal w-48 border">{reg.priorityone == null ? '-' : reg.prioritytwo}</td>
+                                        <td className="whitespace-normal w-48 border">{reg.priorityone == null ? '-' : reg.priorityone}</td>
                                         <td className="whitespace-normal w-48 border">{reg.prioritytwo == null ? '-' : reg.prioritytwo}</td>
                                         <td className="whitespace-normal w-48 border">{reg.prioritythree == null ? '-' : reg.prioritythree}</td>
                                         <td className="whitespace-normal w-48 border">{reg.commentamount ? reg.commentamount : '-'}</td>

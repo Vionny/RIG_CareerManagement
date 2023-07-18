@@ -105,7 +105,7 @@ const AssistantDetailCompact = ({id}) =>{
 
                             <div className="flex flex-row gap-5">
                                 <figure className="bg-slate-300 w-fit">
-                                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRp7fl8up-1-T7_OD4AbWBCs9T7CK6iaFGGpA&usqp=CAU" className="w-44" alt="Photo" />
+                                    <img src="" className="w-44 h-72" alt="Photo" />
                                 </figure>
 
                                 <div className="flex flex-row gap-1">

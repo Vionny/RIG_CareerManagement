@@ -100,11 +100,11 @@ const getComment = (req, res, next) => {
 const getProblem = (req, res, next) => {
 
     const initial = req.params.initial
-    
-    const query = "SELECT * FROM assistant a LEFT JOIN assistantrecord ar ON ar.initial = a.initial WHERE a.initial = $1"
+    const semesterid = req.params.semesterid 
+    const query = "SELECT * FROM assistant a LEFT JOIN assistantrecord ar ON ar.initial = a.initial WHERE a.initial = $1 AND semesterid = $2"
     // console.log(query);
 
-    pool.query(query, [initial], (error, result) => {
+    pool.query(query, [initial,semesterid], (error, result) => {
         if (error) {
             res.status(500).send('Error fetching problem');
         } else {

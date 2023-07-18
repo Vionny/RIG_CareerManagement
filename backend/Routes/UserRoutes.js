@@ -12,7 +12,7 @@ router.post('/updateAssistant',updateAssistant)
 router.get('/getTeamMember/:roleid', getTeamMember)
 router.get('/getAllUser', getAllUser)
 router.get('/getComment/:initial/:semesterid', getComment)
-router.get('/getProblem/:initial', getProblem)
+router.get('/getProblem/:initial/:semesterid', getProblem)
 router.get('/getAnnouncement/:semesterid',getAnnouncement)
 
 router.post('/insertCareerChoice',insertCareerChoice)
