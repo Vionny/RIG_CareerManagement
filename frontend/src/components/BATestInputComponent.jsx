@@ -17,6 +17,7 @@ const BATestInputComponent = () => {
   const [currSemester,setCurrSemester] = useState(sessionStorage.getItem('selectedSemester'))
   const [BATest,setBATest] = useState()
   const [loadBATest,setLoadBATest] = useState(false)
+  const [semester,setSemester] = useState('');
 
   const options = {
     weekday: 'long',
@@ -31,6 +32,11 @@ const BATestInputComponent = () => {
       axios.get(process.env.NEXT_PUBLIC_BACKEND_URL + '/getBATestSchedule/' + currSemester)
         .then((res) => {
           console.log(res);
+          axios.get(process.env.NEXT_PUBLIC_BACKEND_URL+'/getSelectedSemester/'+sessionStorage.getItem('selectedSemester')).then((res) => {
+            setSemester(res.data[0])  
+
+            console.log(semester[0])
+          })
           if (res.data[0]) {
             const batestDateTimeString = res.data[0].batestdate;
             const batestDateTime = new Date(batestDateTimeString);
@@ -92,47 +98,68 @@ const BATestInputComponent = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    console.log(date,time)
-    const timestamp = new Date(date);
-    const timeParts = time.split(':');
-    timestamp.setHours(parseInt(timeParts[0], 10)+7);
-    timestamp.setMinutes(parseInt(timeParts[1], 10));
-    timestamp.setSeconds(0);
-    const toInsert = new Date(timestamp);
-    const stamp = toInsert.toISOString().slice(0, 19).replace('T', ' ');    
-    console.log(stamp)
-
-    const timestamp2 = new Date(date2);
-    const timeParts2 = time.split(':');
-    timestamp2.setHours(parseInt(timeParts2[0], 10)+7);
-    timestamp2.setMinutes(parseInt(timeParts2[1], 10));
-    timestamp2.setSeconds(0);
-    const toInsert2 = new Date(timestamp2);
-    const stamp2 = toInsert2.toISOString().slice(0, 19).replace('T', ' ');   
-    var data = {
-        semesterid : sessionStorage.getItem('selectedSemester').trim(),
-        batestdate : stamp.toString(),
-        batestenddate : stamp2.toString()
-      };
-
-      console.log(data);
-      axios
-        .post(process.env.NEXT_PUBLIC_BACKEND_URL + '/BATestHandler', data)
-        .then((res) => {
-          console.log(res);
-          if (res.data === 'Success') {
-            setTitle('Successful')
-            setModalMessage('You have successfully inserted the BA Test Schedule')
-            setShowInfoModal(true)
-          }else if(res.data ==='Update'){
-            setTitle('Successful')
-            setModalMessage('You have successfully updated the BA Test Schedule')
-            setShowInfoModal(true)
-          }
-        })
-        .catch((error) => {
-          console.error(error);
-        });
+    
+    console.log({
+      date : 'Date1 ' + date,
+      time : 'Time1 ' + time,
+      date2 : 'Date2 ' + date2,
+      time2 : 'Time2 ' + time2,
+       
+    })
+    if(!time || !time2){
+      setMessage("Please choose the time")
+    }else{
+      const timestamp = new Date(date);
+      const timeParts = time.split(':');
+      timestamp.setHours(parseInt(timeParts[0], 10)+7);
+      timestamp.setMinutes(parseInt(timeParts[1], 10));
+      timestamp.setSeconds(0);
+      const toInsert = new Date(timestamp);
+      const stamp = toInsert.toISOString().slice(0, 19).replace('T', ' ');    
+  
+      const timestamp2 = new Date(date2);
+      const timeParts2 = time.split(':');
+      timestamp2.setHours(parseInt(timeParts2[0], 10)+7);
+      timestamp2.setMinutes(parseInt(timeParts2[1], 10));
+      timestamp2.setSeconds(0);
+      const toInsert2 = new Date(timestamp2);
+      const stamp2 = toInsert2.toISOString().slice(0, 19).replace('T', ' '); 
+  
+      const semesterstartdate  = new Date(semester.semesterstartdate);
+      const semesterenddate  = new Date(semester.semesterenddate);
+      console.log(semesterstartdate,semesterenddate)
+      if(semesterstartdate > toInsert || semesterenddate < toInsert2){
+        setMessage('BA Test Date must be within this semester period')
+      }else if(stamp >= stamp2){
+        setMessage('Date start BA Test must be less than date end BA Test')
+      }else{
+        var data = {
+          semesterid : sessionStorage.getItem('selectedSemester').trim(),
+          batestdate : stamp.toString(),
+          batestenddate : stamp2.toString()
+        };
+  
+        console.log(data);
+        axios
+          .post(process.env.NEXT_PUBLIC_BACKEND_URL + '/BATestHandler', data)
+          .then((res) => {
+            console.log(res);
+            if (res.data === 'Success') {
+              setTitle('Successful')
+              setModalMessage('You have successfully inserted the BA Test Schedule')
+              setShowInfoModal(true)
+            }else if(res.data ==='Update'){
+              setTitle('Successful')
+              setModalMessage('You have successfully updated the BA Test Schedule')
+              setShowInfoModal(true)
+            }
+          })
+          .catch((error) => {
+            console.error(error);
+          });
+      }
+    }
+    
   };
   const refreshPage = ()=>{
         

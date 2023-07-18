@@ -101,7 +101,7 @@ const getProblem = (req, res, next) => {
 
     const initial = req.params.initial
     
-    const query = "SELECT * FROM assistant a JOIN assistantrecord ar ON ar.initial = a.initial WHERE a.initial = $1"
+    const query = "SELECT * FROM assistant a LEFT JOIN assistantrecord ar ON ar.initial = a.initial WHERE a.initial = $1"
     // console.log(query);
 
     pool.query(query, [initial], (error, result) => {
@@ -132,17 +132,20 @@ const updateRecords = (req, res, next) => {
     const teachinglate = req.body.teachinglate
     const teachingpermission = req.body.teachingpermission
     const initial = req.body.initial
+    const semesterid = req.body.semesterid
+    const recordid = 'RC'+initial.substring(0,2) +semesterid.trim()
+    const query = `INSERT INTO assistantrecord (recordid, initial, semesterid, hcletter, astpvletter, abscence, forgot, late, toleration, leave, sick, alpha, casemakingdl, correctiondl, teachingabscence, teachinglate, teachingpermission)
+    VALUES ($16, $15, $17, $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)
+    ON CONFLICT (recordid) DO UPDATE SET hcletter = $1, astpvletter = $2, abscence = $3, forgot = $4, late = $5, toleration = $6, leave = $7, sick = $8, alpha = $9, casemakingdl = $10, correctiondl = $11, teachingabscence = $12, teachinglate = $13, teachingpermission = $14 WHERE assistantrecord.initial = $15`;
 
-    const query = "UPDATE assistantrecord SET hcletter = $1, astpvletter = $2, abscence = $3, forgot = $4, late = $5, toleration = $6, leave = $7, sick = $8, alpha = $9, casemakingdl = $10, correctiondl = $11, teachingabscence = $12, teachinglate = $13, teachingpermission = $14 WHERE initial = $15"
-    
-    pool.query(query, [hcletter, astpvletter, abscence, forgot, late, toleration, leave, sick, alpha, casemakingdl,correctiondl, teachingabscence, teachinglate,  teachingpermission, initial], (error, result) => {
-        if (error) {
-            res.status(500).send('Error update records');
-        } else {
-           res.status(200).send("Success");
-        }
-    
-    })
+    pool.query(query, [hcletter, astpvletter, abscence, forgot, late, toleration, leave, sick, alpha, casemakingdl, correctiondl, teachingabscence, teachinglate, teachingpermission, initial, recordid, semesterid], (error, result) => {
+    if (error) {
+        res.status(500).send('Error updating records');
+    } else {
+        res.status(200).send('Success');
+    }
+    });
+
 }
 
 
