@@ -27,20 +27,22 @@ const AssistantDetail= ({id})=>{
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     //record
-    const [hcletter, setHcLetter] = useState();
-    const [astpvLetter, setAstpvLetter] = useState();
-    const [absence, setAbsence] = useState();
-    const [forgot, setForgot] = useState();
-    const [late, setLate] = useState();
-    const [toleration, setTolerate] = useState();
-    const [leave, setLeave] = useState();
-    const [sick, setSick] = useState();
-    const [alpha, setAlpha] = useState();
-    const [casemakedl, setCasemakedl] = useState();
-    const [correctiondl, setCorrectiondl] = useState();
-    const [teachAbsence, setTeachAbsence] = useState();
-    const [teachLate, setTeachLate] = useState();
-    const [teachPermit, setTeachPermit] = useState();
+    //record
+    const [hcletter, setHcLetter] = useState(0);
+    const [astpvLetter, setAstpvLetter] = useState(0);
+    const [absence, setAbsence] = useState(0);
+    const [forgot, setForgot] = useState(0);
+    const [late, setLate] = useState(0);
+    const [toleration, setTolerate] = useState(0);
+    const [leave, setLeave] = useState(0);
+    const [sick, setSick] = useState(0);
+    const [alpha, setAlpha] = useState(0);
+    const [casemakedl, setCasemakedl] = useState(0);
+    const [correctiondl, setCorrectiondl] = useState(0);
+    const [teachAbsence, setTeachAbsence] = useState(0);
+    const [teachLate, setTeachLate] = useState(0);
+    const [teachPermit, setTeachPermit] = useState(0);
+
 
 
 
@@ -75,20 +77,21 @@ const AssistantDetail= ({id})=>{
         axios.get(process.env.NEXT_PUBLIC_BACKEND_URL+'/getProblem/'+ id).then((res) => {
             if (res.data && res.data.length > 0) {
                 console.log(res.data[0])
-                setHcLetter(res.data[0].hcletter)
-                setAstpvLetter(res.data[0].astpvletter)
-                setAbsence(res.data[0].abscence)
-                setForgot(res.data[0].forgot)
-                setLate(res.data[0].late)
-                setTolerate(res.data[0].toleration)
-                setLeave(res.data[0].leave)
-                setSick(res.data[0].sick)
-                setAlpha(res.data[0].alpha)
-                setCasemakedl(res.data[0].casemakingdl)
-                setCorrectiondl(res.data[0].correctiondl)
-                setTeachAbsence(res.data[0].teachingabscence)
-                setTeachLate(res.data[0].teachinglate)
-                setTeachPermit(res.data[0].teachingpermission)
+                setHcLetter(res.data[0]?.hcletter ?? 0)
+                setAstpvLetter(res.data[0]?.astpvletter ?? 0)
+                setAbsence(res.data[0]?.abscence ?? 0)
+                setForgot(res.data[0]?.forgot ?? 0)
+                setLate(res.data[0]?.late ?? 0)
+                setTolerate(res.data[0]?.toleration ?? 0)
+                setLeave(res.data[0]?.leave ?? 0)
+                setSick(res.data[0]?.sick ?? 0)
+                setAlpha(res.data[0]?.alpha ?? 0)
+                setCasemakedl(res.data[0]?.casemakingdl ?? 0)
+                setCorrectiondl(res.data[0]?.correctiondl ?? 0)
+                setTeachAbsence(res.data[0]?.teachingabscence ?? 0)
+                setTeachLate(res.data[0]?.teachinglate ?? 0)
+                setTeachPermit(res.data[0]?.teachingpermission ?? 0)
+
             }       
             setRecords(res.data)     
         })
@@ -138,6 +141,7 @@ const AssistantDetail= ({id})=>{
 
     const updateRecords = () =>{
             
+            
         var data = {
             initial: id,
             hcletter: hcletter,
@@ -153,7 +157,8 @@ const AssistantDetail= ({id})=>{
             correctiondl: correctiondl,
             teachingabscence: teachAbsence,
             teachinglate: teachLate,
-            teachingpermission: teachPermit          
+            teachingpermission: teachPermit,
+            semesterid : sessionStorage.getItem('selectedSemester')       
 
         }
         console.log(data);
