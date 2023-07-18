@@ -14,6 +14,38 @@ const ManagePromotionPage = ()=>{
     const [availSlot, setAvailSlot] = useState();
     const [roleCandidate, setRoleCandidate] = useState();
     
+    const [filtered, setFiltered] = useState(false);
+    const [keyword, setKeyword] = useState('');
+    const [filteredData, setFilteredData] = useState([]);
+    const [selectedOption, setSelectedOption] = useState('None');
+    const [loadChart, setLoadChart] = useState(false)
+    useEffect(()=>{
+        if(registers){
+
+            if(selectedOption === "None" && keyword === "") setFiltered(false);
+            else if(selectedOption === "None" && keyword !== ""){
+                // console.log("no selection optin");
+                setFilteredData( registers.filter(register => register.initial.toLowerCase().includes(keyword.toLowerCase()) || register.assistantname.toLowerCase().includes(keyword.toLowerCase())) || register.rolename.toLowerCase().includes(keyword.toLowerCase()));
+                setFiltered(true);
+            }
+            else if(selectedOption !== "None" && keyword !== ""){
+                // console.log("filter and search");
+                setFiltered(true);
+                setFilteredData( 
+                    registers.filter( register => register.initial.toLowerCase().includes(keyword.toLowerCase()) || register.assistantname.toLowerCase().includes(keyword.toLowerCase()) || register.rolename.toLowerCase().includes(keyword.toLowerCase())
+                    ).filter((register) => register.initial.includes(selectedOption))
+                );
+                
+            }
+            else{              
+                setFiltered(true);
+                setFilteredData(registers.filter(register => register.initial.includes(selectedOption)));
+
+            }
+        }
+        
+    },[keyword, selectedOption])
+
     useEffect(()=>{
         // console.log(sessionStorage.getItem('selectedSemester'));
         setCurrSemesters(sessionStorage.getItem('selectedSemester'))
@@ -77,11 +109,11 @@ const ManagePromotionPage = ()=>{
                 <h2>Promotion Management</h2>
             </article>
 
-            <div className="card bg-base-100  flex-auto">
-                <div className="card-body flex flex-col h-96 p-3">
-                    <h2 className="card-title ">Candidate Statistic</h2>           
+            <div className="card bg-base-100  flex-auto ">
+                <div className="card-body flex flex-col h-96 p-3 m-5">
+                    <h2 className="card-title mb-5">Candidate Statistic</h2>           
                     <div className="w-80">
-                        <BarChart  style={{ height: "50px" }} options={{ maintainAspectRatio: false }} regisData={registCount} candidateData={roleCandidate} slotData={availSlot}/>
+                        <BarChart  style={{ height: "50px" }} options={{ maintainAspectRatio: false }} regisData={registCount} candidateData={roleCandidate} slotData={availSlot} load={setLoadChart}/>
                     </div>         
                 </div> 
             </div> 
@@ -90,7 +122,7 @@ const ManagePromotionPage = ()=>{
                 <div className="card-body flex flex-col">
                     <h2 className="card-title ">Promotion Registrant</h2>
                     <div>
-                    <input type="text" placeholder="Search" className="input input-bordered w-full max-w-xs" />
+                    <input type="text" placeholder="Search" className="input input-bordered w-full my-2 max-w-xs" onChange={e => setKeyword(e.target.value)}/>
                     </div>
                     <table className="table table-compact w-full">
                                 {/* head */}
@@ -107,7 +139,9 @@ const ManagePromotionPage = ()=>{
                                 </tr>
                                 </thead>
                                 <tbody>
-                                {registers.map((res, index) => (
+                                {!filtered
+                                ?
+                                registers.map((res, index) => (
                                     <tr key={index}  >
                                         <td>{res.initial}</td>
                                         <td>{res.assistantname}</td>
@@ -121,7 +155,25 @@ const ManagePromotionPage = ()=>{
                                         
                                          
                                     </tr>
-                                    ))}
+                                    ))
+                                    :
+                                    filteredData.map((res, index) => (
+                                        
+                                        <tr key={index}  >
+                                        <td>{res.initial}</td>
+                                        <td>{res.assistantname}</td>
+                                        <td>{res.rolename}</td>
+                                        <td>{res.registrationreason}</td>
+                                        <td>{res.priority}</td>
+                                        <td>{res.period}</td>
+                                        <td>{res.eligiblepromotionstatus ? 'Eligible' : 'Not Eligible'}</td>
+                                       
+                                        
+                                        
+                                         
+                                        </tr>
+                                    ))
+                                    }
                                 </tbody>
                             </table>
                 </div> 
