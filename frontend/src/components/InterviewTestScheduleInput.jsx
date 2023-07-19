@@ -21,6 +21,7 @@ const InterviewTestScheduleInput = () => {
     if (sessionStorage.getItem('selectedSemester')) {
       axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/promotion/getRegistrees/${sessionStorage.getItem('selectedSemester')}`)
         .then((res) => {
+          console.log(res.data);
           setRegistrees(res.data);
           axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/getSelectedSemester/${sessionStorage.getItem('selectedSemester')}`)
             .then((res) => {
@@ -124,13 +125,22 @@ const InterviewTestScheduleInput = () => {
         />
       )}
       <form onSubmit={handleSubmit}>
-        <div className="card w-full bg-base-100 shadow-xl mt-7">
+        <div className="card w-full bg-base-100 mt-7">
           <div className="card-body">
             <h1 className="card-title">Interview Test Schedule</h1>
+
+           {registrees == 0 ? 
+            
+              <div></div>
+            
+
+            :
+
+           
             <div className="inline-flex flex-row mt-3 min-w-full">
               <div className="dropdown justify-start w-fit">
                 <select
-                  className="btn btn-ghost bg-base-100 w-32 flex justify-start normal-case text-base"
+                  className="btn btn-ghost bg-base-100 w-72 flex justify-start normal-case text-base"
                   value={selectedRegistrees}
                   onChange={(event) => setSelectedRegistrees(event.target.value)}
                 >
@@ -151,6 +161,7 @@ const InterviewTestScheduleInput = () => {
                 ))}
               </select>
             </div>
+           }
 
             <div className="flex flex-row mt-3">
               <div>

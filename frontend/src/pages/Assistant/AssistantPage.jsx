@@ -50,6 +50,7 @@ const AssistantPage= ()=>{
 
     useEffect(()=>{
         if(users){
+            console.log(users);
 
             if(selectedOption === "None" && keyword === "") setFiltered(false);
             else if(selectedOption === "None" && keyword !== ""){
@@ -292,8 +293,8 @@ const AssistantPage= ()=>{
                                         <td>{us.rolename}</td>
                                         <td>{us.assistantleader ? us.assistantleader : 'None'}</td>
                                         <td>{us.careerchoice=="" ? 'Unknown' : us.careerchoice}</td>
-                                        <td>{us.eligiblepromotionstatus ? 'Eligible' : 'Not Eligible'}</td>
                                         <td>{us.eligibleforresign ? 'Eligible' : 'Not Eligible'}</td>
+                                        <td>{us.eligiblepromotionstatus ? 'Eligible' : 'Not Eligible'}</td>
                                         <td className="flex gap-2">
                                            <button onClick={() => openModal(us.initial)}>
                                                 <Link  href={`assistant/detail/${us.initial}`}>

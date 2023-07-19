@@ -14,7 +14,7 @@ const getUser = (req, res, next) =>{
 }
 
 const getAllUser = (req, res, next) =>{
-    const query = "SELECT initial, assistantname, rolename, ast.careerchoice, ast.eligiblepromotionstatus, ast.eligibleforresign  FROM assistant ast JOIN role rl ON ast.roleid = rl.roleid ORDER BY initial ASC"
+    const query = "SELECT initial, assistantname, rolename, ast.careerchoice, ast.eligiblepromotionstatus, ast.eligibleforresign, assistantleader  FROM assistant ast JOIN role rl ON ast.roleid = rl.roleid ORDER BY initial ASC"
 
     pool.query(query,(error, result) => {
         if (error) {
@@ -48,10 +48,11 @@ const insertCareerChoice = (req, res, next) =>{
 
 const finalizeCareerChoice = (req, res, next) =>{
     const initial = req.body.initial
-
-    const query = "UPDATE assistant SET fpfinalize = true WHERE initial = $1"
+    const careerchoice = req.body.careerchoice
+    const futureplan = req.body.futureplan
+    const query = "UPDATE assistant SET fpfinalize = true, careerchoice = $1, futureplan = $2 WHERE initial = $3"
     
-    pool.query(query,[initial], (error, result) =>{
+    pool.query(query,[careerchoice, futureplan,initial], (error, result) =>{
         if (error) {
             console.log(error)
             res.status(500).send('Error finalizing');
@@ -285,7 +286,7 @@ const insertComment = (req, res, next) =>{
     const insertAssistantCommentQuery = "INSERT INTO assistantcomment VALUES ($1, $2, $3, $4, $5)"
 
 
-    if(!havecomment){
+    if(havecomment == 0){
       console.log("masuk have comment");
 
         pool.query(insertCommentQuery,[commentcollectionid,initial,semesterid], (error, result) => {

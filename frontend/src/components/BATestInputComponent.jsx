@@ -176,7 +176,7 @@ const BATestInputComponent = () => {
                   onConfirm = {refreshPage}
               />)}
       <form onSubmit={handleSubmit}>
-      <div className="card w-full bg-base-100 shadow-xl mt-7">
+      <div className="card w-full bg-base-100 mt-7">
         <div className="card-body">
             <h2 className="card-title">BA Test Schedule</h2>
             <label className="card-title text-lg font-normal mt-5">Current Date : {BATest ? BATest.date.toLocaleDateString('en-GB', options) : ''}  {BATest ? 'at ' +BATest.time : ''} {BATest ? ' - ' +BATest.enddate.toLocaleDateString('en-GB', options) : ''}  {BATest ? 'at ' +BATest.endTime : ''}</label>
@@ -197,7 +197,7 @@ const BATestInputComponent = () => {
 
             <div className="flex flex-row mt-3">
                 <div>
-                    <label className='text-lg mr-10'>End Date</label>
+                    <label className='text-lg mr-12'>End Date</label>
                     <DatePicker className="border-gray-400 input w-full max-w-xs"
                     value={date2}
                         selected={date2}

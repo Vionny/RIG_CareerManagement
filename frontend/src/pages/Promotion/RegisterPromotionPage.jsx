@@ -8,6 +8,7 @@ const axios = require("axios")
 axios.defaults.headers.post['Content-Type'] = 'application/json';
 
 const RegisterPromotionPage = ()=>{
+
     const router = useRouter()
 
     const [division,setDivision] = useState({})
@@ -27,6 +28,7 @@ const RegisterPromotionPage = ()=>{
     const [title, setTitle] = useState('');
     const [showModal, setShowModal] = useState(false);
     const [semester , setSemester] = useState({});
+    const [selectedSmt , setSelectedSmt] = useState({});
     const btnActive = false;
     const options = {
         weekday: 'long',
@@ -101,6 +103,17 @@ const RegisterPromotionPage = ()=>{
         });
     }, [loadRole, user]);
 
+    useEffect(()=>{
+        axios.get(process.env.NEXT_PUBLIC_BACKEND_URL + '/getSelectedSemester/'+ sessionStorage.getItem('selectedSemester')).then((res) => {
+            console.log(res.data[0].semestername);
+            setSelectedSmt(res.data[0].semestername)
+      });
+    }, []);
+        
+    
+
+
+
     const insertPromotion = () => {
         if(periodInput == null || periodInput.length == 0) setErrText("Please input period field")
         else if(selectedRole == undefined) setErrText("Please choose a role to register")
@@ -145,7 +158,7 @@ const RegisterPromotionPage = ()=>{
             <div className=" pl-10 pr-10 py-5 bg-base-200 min-h-screen w-full ">
     
                 <article className="prose base mb-5">
-                    <h2>Promotion Registration for Even 2022/2023</h2>
+                    <h2>Promotion Registration for {selectedSmt}</h2>
                 </article>
                 {errText && (
                     <div id="toast-danger" className="toast toast-danger mr-5 z-50 flex flex-row items-center w-full max-w-xs p-4 mb-4 text-gray-500 bg-red-400 rounded-lg shadow dark:text-gray-400 dark:bg-gray-800" role="alert">
@@ -238,7 +251,8 @@ const RegisterPromotionPage = ()=>{
     
         )
     }
-    
 }
 
 export default RegisterPromotionPage
+    
+

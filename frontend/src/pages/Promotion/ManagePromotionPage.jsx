@@ -109,79 +109,118 @@ const ManagePromotionPage = ()=>{
                 <h2>Promotion Management</h2>
             </article>
 
-            <div className="card bg-base-100  flex-auto ">
-                <div className="card-body flex flex-col h-96 p-3 m-5">
-                    <h2 className="card-title mb-5">Candidate Statistic</h2>           
-                    <div className="w-80">
-                        <BarChart  style={{ height: "50px" }} options={{ maintainAspectRatio: false }} regisData={registCount} candidateData={roleCandidate} slotData={availSlot} load={setLoadChart}/>
-                    </div>         
+            {registers ?
+             
+            
+            <div>
+                <div className="card bg-base-100  flex-auto ">
+                    <div className="card-body flex flex-col h-96 p-3 m-5">
+                        <h2 className="card-title mb-5">Candidate Statistic</h2>           
+                        <div className="w-80">
+                            <BarChart  style={{ height: "50px" }} options={{ maintainAspectRatio: false }} regisData={registCount} candidateData={roleCandidate} slotData={availSlot} load={setLoadChart}/>
+                        </div>         
+                    </div> 
                 </div> 
-            </div> 
 
-            <div className="card bg-base-100  flex-auto h-96 ">
-                <div className="card-body flex flex-col">
-                    <h2 className="card-title ">Promotion Registrant</h2>
-                    <div>
-                    <input type="text" placeholder="Search" className="input input-bordered w-full my-2 max-w-xs" onChange={e => setKeyword(e.target.value)}/>
-                    </div>
-                    <table className="table table-compact w-full">
-                                {/* head */}
-                                <thead>
-                                <tr>
-                                   
-                                    <th>Initial</th>
-                                    <th>Name</th>
-                                    <th>Choice</th>
-                                    <th>Reason</th>
-                                    <th>Priority</th>
-                                    <th>Period</th>
-                                    <th>Eligibility</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                {!filtered
-                                ?
-                                registers.map((res, index) => (
-                                    <tr key={index}  >
-                                        <td>{res.initial}</td>
-                                        <td>{res.assistantname}</td>
-                                        <td>{res.rolename}</td>
-                                        <td>{res.registrationreason}</td>
-                                        <td>{res.priority}</td>
-                                        <td>{res.period}</td>
-                                        <td>{res.eligiblepromotionstatus ? 'Eligible' : 'Not Eligible'}</td>
-                                       
-                                        
-                                        
-                                         
+                <div className="card bg-base-100 mt-10  flex-auto h-96 ">
+                    <div className="card-body flex flex-col">
+                        <h2 className="card-title ">Promotion Registrant</h2>
+                        <div>
+                        <input type="text" placeholder="Search" className="input input-bordered w-full my-2 max-w-xs" onChange={e => setKeyword(e.target.value)}/>
+                        </div>
+                        <table className="table table-compact w-full">
+                                    {/* head */}
+                                    <thead>
+                                    <tr>
+                                    
+                                        <th>Initial</th>
+                                        <th>Name</th>
+                                        <th>Choice</th>
+                                        <th>Reason</th>
+                                        <th>Priority</th>
+                                        <th>Period</th>
+                                        <th>Eligibility</th>
                                     </tr>
-                                    ))
-                                    :
-                                    filteredData.map((res, index) => (
-                                        
+                                    </thead>
+                                    <tbody>
+                                    {!filtered
+                                    ?
+                                    registers.map((res, index) => (
                                         <tr key={index}  >
-                                        <td>{res.initial}</td>
-                                        <td>{res.assistantname}</td>
-                                        <td>{res.rolename}</td>
-                                        <td>{res.registrationreason}</td>
-                                        <td>{res.priority}</td>
-                                        <td>{res.period}</td>
-                                        <td>{res.eligiblepromotionstatus ? 'Eligible' : 'Not Eligible'}</td>
-                                       
+                                            <td>{res.initial}</td>
+                                            <td>{res.assistantname}</td>
+                                            <td>{res.rolename}</td>
+                                            <td>{res.registrationreason}</td>
+                                            <td>{res.priority}</td>
+                                            <td>{res.period}</td>
+                                            <td>{res.eligiblepromotionstatus ? 'Eligible' : 'Not Eligible'}</td>
                                         
-                                        
-                                         
+                                            
+                                            
+                                            
                                         </tr>
-                                    ))
-                                    }
-                                </tbody>
-                            </table>
+                                        ))
+                                        :
+                                        filteredData.map((res, index) => (
+                                            
+                                            <tr key={index}  >
+                                            <td>{res.initial}</td>
+                                            <td>{res.assistantname}</td>
+                                            <td>{res.rolename}</td>
+                                            <td>{res.registrationreason}</td>
+                                            <td>{res.priority}</td>
+                                            <td>{res.period}</td>
+                                            <td>{res.eligiblepromotionstatus ? 'Eligible' : 'Not Eligible'}</td>
+                                        
+                                            
+                                            
+                                            
+                                            </tr>
+                                        ))
+                                        }
+                                    </tbody>
+                                </table>
+                    </div> 
+                </div>
+                </div>
+                :
+                <div>
+                <div className="card bg-base-100  flex-auto ">
+                    <div className="card-body flex flex-col h-96 p-3 m-5">
+                        <h2 className="card-title mb-5">Candidate Statistic</h2>           
+                        <div className="w-80">
+                        </div>         
+                    </div> 
                 </div> 
+
+                <div className="card bg-base-100 mt-10 flex-auto h-96 ">
+                    <div className="card-body flex flex-col">
+                        <h2 className="card-title ">Promotion Registrant</h2>
+                        <div>
+                        <input type="text" placeholder="Search" className="input input-bordered w-full my-2 max-w-xs" onChange={e => setKeyword(e.target.value)}/>
+                        </div>
+                        <table className="table table-compact w-full">
+                                    <thead>
+                                    <tr>
+                                    
+                                        <th>Initial</th>
+                                        <th>Name</th>
+                                        <th>Choice</th>
+                                        <th>Reason</th>
+                                        <th>Priority</th>
+                                        <th>Period</th>
+                                        <th>Eligibility</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                </table>
+                    </div> 
+                </div>
+                </div>
+                                    
+            }
             </div>
-         </div>
-
-
-
     )
 }
 

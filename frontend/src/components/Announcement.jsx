@@ -12,10 +12,11 @@ const AnnouncementComponent = ()=>{
     const [message,setMessage] = useState()
     const [announcement ,setAnnouncement] = useState()
     useEffect(()=>{
-
+        console.log(sessionStorage.getItem('selectedSemester'));
         axios.get(process.env.NEXT_PUBLIC_BACKEND_URL + '/getAnnouncement/'+sessionStorage.getItem('selectedSemester'))
-            .then((res) =>{
-                setAnnouncement(res.data)
+        .then((res) =>{     
+            console.log(res.data);          
+            setAnnouncement(res.data)
             }
         )
 
@@ -50,18 +51,24 @@ const AnnouncementComponent = ()=>{
     if(!user) return <div></div>
     else {
         if(!(user.roleid.includes("RL006") || user.roleid.includes("RL005"))) 
-        return <div className="card w-full bg-base-100 max-h-screen shadow-xl">
+        return <div className="card w-full bg-base-100 max-h-screen">
                     <div className="card-body">
                         <h2 className="card-title">Announcement</h2>
                         <div className="overflow-y-auto">
-                            <div className="card bg-gray-100 p-5 h-fit gap-2 max-h-96 overflow-y-auto">
-                                <div className="flex gap-2">
-                                    <label>Announcement 1</label>
-                                    
+                        {announcement && (<div >
+                            {announcement.map((a,index)=>{
+                                return <div className="card mt-5 bg-gray-100 p-5 h-fit gap-2 max-h-96 overflow-y-auto">
+                                    <div className="flex gap-2">
+                                        <label>{a.announcementcontent}</label>
+                                    </div>
+                                    <label className= "min-w-full text-end self-end justify-end">- {a.initial}</label>
                                 </div>
-                                <label className= "text-end">- SX22-1</label>
-                            </div> 
+                            })
+                            }
+                            
+                        </div> )}
                         </div>
+
                     </div>  
                 </div>
         else return(

@@ -123,6 +123,7 @@ const InputCareerChoice = () => {
   };
 
   const handleConfirm = () => {
+    console.log(decision)
     if (decision == "tentative") {
       setShowModal(false)
       setErrText('You cannot finalize while your decision is tentative !');
@@ -130,6 +131,8 @@ const InputCareerChoice = () => {
     } else {
     var data = {
       initial: sessionStorage.getItem('initial'),
+      careerchoice : choice,
+      futureplan : futurePlan,  
     };
     console.log(data);
     axios

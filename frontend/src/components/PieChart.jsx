@@ -7,10 +7,10 @@ const PieChart = ({ data }) => {
 
   useEffect(() => {
     if (chartRef.current) {
-      const ctx = chartRef.current.getContext("2d");
-      const myChart = new Chart(ctx, {
-        type: "pie",
-        data: {
+      var ctx = document.getElementById('myChart').getContext('2d');
+      var myChart = new Chart(ctx, {
+          type: 'pie',
+          data: {
           labels: ["Willing", "Tentative", "Not Willing"],
           datasets: [
             {
@@ -52,7 +52,8 @@ const PieChart = ({ data }) => {
   return (
     <div className="flex items-center w-full h-full">
       {/* Pie chart */}
-      <canvas ref={chartRef} className="w-full h-full"></canvas>
+      <canvas ref={chartRef} className="w-full h-full" id="myChart"></canvas>
+      {/* <canvas id='myChart'></canvas> */}
     </div>
   );
 };

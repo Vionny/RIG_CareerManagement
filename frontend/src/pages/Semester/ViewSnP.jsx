@@ -4,6 +4,7 @@ import ConfirmationModal from "@/components/Modals/Confirmation/ConfirmationModa
 import { EditSemesterModal } from "@/components/Modals/Edit/EditSemesterModal"
 import SimpleInformationModal from "@/components/Modals/Information/SimpleInformationModal"
 import { AddSemesterModal } from "@/components/Modals/Insert/AddSemesterModal"
+import { staticGenerationAsyncStorage } from "next/dist/client/components/static-generation-async-storage"
 import {useEffect, useState} from 'react'
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
@@ -138,10 +139,16 @@ const ViewSnP= ()=>{
         const dateObject2 = new Date(year2, month2, day2);
         const semesterenddate = dateObject2
 
+        console.log("start" + startPromotion + "end" +endPromotion)
         console.log(semesterenddate,semesterstartdate)
-        if(semesterstartdate > startRegistration || semesterenddate < endRegistration ){
+        if(semesterstartdate >  startPromotion|| semesterenddate < endPromotion ){
             setErrText("Promotion Date must be between the semester period")
-        }else{
+        }
+        else if (startPromotion > endPromotion){
+            setErrText("Start Date must be before End Date")
+
+        }
+        else{
             var data = {
                 promotionstartdate: startPromotion,
                 promotionenddate: endPromotion,
@@ -184,7 +191,11 @@ const ViewSnP= ()=>{
         console.log(semesterenddate,semesterstartdate)
         if(semesterstartdate > startRegistration || semesterenddate < endRegistration ){
             setErrText("Choice Date must be between the semester period")
-        }else{
+        }
+        else if (startRegistration > endRegistration){
+            setErrText("Start Date must be before End Date")
+        }
+        else{
             var data = {
                 choicestartdate: startRegistration,
                 choiceenddate: endRegistration,

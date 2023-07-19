@@ -76,6 +76,7 @@ const AssistantDetail= ({id})=>{
 
         axios.get(process.env.NEXT_PUBLIC_BACKEND_URL+'/getProblem/'+ id+'/'+sessionStorage.getItem('selectedSemester')).then((res) => {
             if (res.data && res.data.length > 0) {
+                
                 console.log(res.data[0])
                 setHcLetter(res.data[0]?.hcletter ?? 0)
                 setAstpvLetter(res.data[0]?.astpvletter ?? 0)
@@ -92,8 +93,25 @@ const AssistantDetail= ({id})=>{
                 setTeachLate(res.data[0]?.teachinglate ?? 0)
                 setTeachPermit(res.data[0]?.teachingpermission ?? 0)
 
+                setRecords(res.data)  
+            }   else{
+                console.log('hi')
+                setHcLetter(0)
+                setAstpvLetter(0)
+                setAbsence(0)
+                setForgot(0)
+                setLate(0)
+                setTolerate(0)
+                setLeave(0)
+                setSick(0)
+                setAlpha(0)
+                setCasemakedl(0)
+                setCorrectiondl(0)
+                setTeachAbsence(0)
+                setTeachLate(0)
+                setTeachPermit(0)
+                setRecords(0)
             }       
-            setRecords(res.data)     
         })
         .catch((error) =>{
             console.error(error);
@@ -121,7 +139,7 @@ const AssistantDetail= ({id})=>{
             commentinitial: currAst,
             commenttype: cmtType,
             commenttext:inputCmt, 
-            havecomment: haveCmt  
+            havecomment: comments.length  
         }
         console.log(data);
         axios.post(process.env.NEXT_PUBLIC_BACKEND_URL + '/insertComment', data)
@@ -274,9 +292,9 @@ const AssistantDetail= ({id})=>{
                                 </div>
                             </div>  
 
-                            <div className="absolute top-0 right-3 flex gap-1">
-                                <button className="button button-primary" onClick={() => openModal(id)}>Edit</button> 
-                                <button onClick={() => clickDelete(id)}>Delete</button> 
+                            <div className="absolute top-0 right-3 flex m-5 gap-1">
+                                <button className="btn btn-outline btn-info" onClick={() => openModal(id)}>Edit</button> 
+                                <button className="btn btn-outline btn-error ml-5" onClick={() => clickDelete(id)}>Delete</button> 
                             </div>
                         </div>
                         
@@ -328,12 +346,32 @@ const AssistantDetail= ({id})=>{
                               <div></div>
                             )                         
                         } 
-
+                            
                             {
                                 comments!=undefined ? 
 
                                 <div className="card bg-base-200 p-2 h-fit gap-2 ">
                                     <div className="text-lg font-semibold ">Comments</div>
+                                    <div className="flex gap-2">
+                                        <textarea className="textarea-md w-9/12 h-28 border rounded resize-none bg-white" onChange={(e) => { setInputCmt(e.target.value); }} 
+                                        placeholder="Comment here.."></textarea>
+
+                                        <div className="flex flex-col gap-3 justify-center w-3/12">
+                                            <select
+                                                className="select h-5 w-full bg-white text-center" 
+                                                value={cmtType}
+                                                onChange={(e) => {
+                                                    setCmtType(e.target.value);
+                                                }}
+                                              >
+                                                <option value = {'positive'}>(+1) Positive</option>
+                                                <option value = {'neutral'}>(0) Neutral</option>
+                                                <option value = {'negative'}>(-1) Negative</option>
+                                            </select>
+
+                                            <button className="btn btn-primary" onClick={()=>insertComment()}>Insert New Comment</button>
+                                        </div>
+                                    </div>
                                     <div className="max-h-96 overflow-y-auto">
                                     {
                                           
@@ -368,26 +406,7 @@ const AssistantDetail= ({id})=>{
                                     }
                                     </div>
 
-                                    <div className="flex gap-2">
-                                        <textarea className="textarea-md w-9/12 h-28 border rounded resize-none bg-white" onChange={(e) => { setInputCmt(e.target.value); }} 
-                                        placeholder="Comment here.."></textarea>
-
-                                        <div className="flex flex-col gap-3 justify-center w-3/12">
-                                            <select
-                                                className="select h-5 w-full bg-white text-center" 
-                                                value={cmtType}
-                                                onChange={(e) => {
-                                                    setCmtType(e.target.value);
-                                                }}
-                                              >
-                                                <option value = {'positive'}>(+1) Positive</option>
-                                                <option value = {'neutral'}>(0) Neutral</option>
-                                                <option value = {'negative'}>(-1) Negative</option>
-                                            </select>
-
-                                            <button className="btn btn-primary" onClick={()=>insertComment()}>Insert New Comment</button>
-                                        </div>
-                                    </div>
+                                    
                                 </div>   
 
                                 :
@@ -497,7 +516,104 @@ const AssistantDetail= ({id})=>{
 
                         </div>
                         :
-                        <div></div>
+                        <div className="flex flex-col w-full card bg-base-200 p-2 h-fit gap-2 ">
+
+                            <div className="text-lg font-semibold">Records</div>
+
+                            <div className="w-full">
+                                <table className="table w-full border-solid border-2">
+                                    <thead >
+                                        <tr>
+                                            <th className="whitespace-normal text-center w-24">HC Letter</th>
+                                            <th className="whitespace-normal text-center w-24">Ast Spv Letter</th>
+                                            <th className="whitespace-normal text-center w-24">Absence</th>
+                                            <th className="whitespace-normal text-center w-24">Forgot</th>
+                                            <th className="whitespace-normal text-center w-24">Late</th>
+                                            <th className="whitespace-normal text-center w-24">Toleration</th>
+                                            <th className="whitespace-normal text-center w-24">Leave</th>
+                                                                                        
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+                                        
+                                        <tr >
+                                            <td className="">
+                                                <input className="input input-bordered text-center w-24" type="text" value={hcletter ? hcletter : 0} onChange={(e) => {const value = parseInt(e.target.value); if (!isNaN(value)) {setHcLetter(value)} else {setHcLetter(null);}}} />
+                                            </td>
+                                            <td className="">
+                                                <input className="input input-bordered text-center w-24" type="text" value={astpvLetter ? astpvLetter : 0} onChange={(e) => {const value = parseInt(e.target.value); if (!isNaN(value)) {setAstpvLetter(value)} else {setAstpvLetter(null);}}} />            
+                                            </td>
+                                            <td className="text-center">
+                                                <input className="input input-bordered text-center w-24" type="text" value={absence ? absence : 0} onChange={(e) => {const value = parseInt(e.target.value); if (!isNaN(value)) {setAbsence(value)} else {setAbsence(null);}}} />            
+                                            </td>
+                                            <td className="text-center">
+                                                <input className="input input-bordered text-center w-24" type="text" value={forgot ? forgot :  0} onChange={(e) => {const value = parseInt(e.target.value); if (!isNaN(value)) {setForgot(value)} else {setForgot(null);}}} />            
+                                            </td>
+                                            <td className="text-center">
+                                                <input className="input input-bordered text-center w-24" type="text" value={late ? late : 0} onChange={(e) => {const value = parseInt(e.target.value); if (!isNaN(value)) {setLate(value)} else {setLate(null);}}} />            
+                                            </td>
+                                            <td className="text-center">
+                                                <input className="input input-bordered text-center w-24" type="text" value={toleration ? toleration : 0} onChange={(e) => {const value = parseInt(e.target.value); if (!isNaN(value)) {setTolerate(value)} else {setTolerate(null);}}} />            
+                                            </td>
+                                            <td className="text-center">
+                                                <input className="input input-bordered text-center w-24" type="text" value={leave ? leave : 0} onChange={(e) => {const value = parseInt(e.target.value); if (!isNaN(value)) {setLeave(value)} else {setLeave(null);}}} />            
+                                            </td>
+                                      
+                                        </tr>
+                                        
+                                    </tbody>
+
+                                </table>
+                            </div>
+
+                            <div className="">
+                                <table className="table w-full border-solid border-2">
+                                    <thead className="p-0">
+                                        <tr className="p-0">   
+                                            <th className="whitespace-normal text-center w-24">Sick</th>
+                                            <th className="whitespace-normal text-center w-24">Alpha</th>
+                                            <th className="whitespace-normal text-center w-24">Casemake Deadline</th>
+                                            <th className="whitespace-normal text-center w-24">Correction Deadline</th>
+                                            <th className="whitespace-normal text-center w-24">Teaching Absence</th>
+                                            <th className="whitespace-normal text-center w-24">Teaching Late</th>
+                                            <th className="whitespace-normal text-center w-24">Teaching Permission</th>                                          
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        
+                                        <tr>
+                                            <td className="">
+                                                <input className="input input-bordered text-center w-24" type="text" value={sick ? sick : 0} onChange={(e) => {const value = parseInt(e.target.value); if (!isNaN(value)) {setSick(value)} else {setSick(null);}}} />
+                                            </td>
+                                            <td className="">
+                                                <input className="input input-bordered text-center w-24" type="text" value={alpha ? alpha : 0} onChange={(e) => {const value = parseInt(e.target.value); if (!isNaN(value)) {setAlpha(value)} else {setAlpha(null);}}}/>            
+                                            </td>
+                                            <td className="text-center">
+                                                <input className="input input-bordered text-center w-24" type="text" value={casemakedl ? casemakedl : 0}onChange={(e) => {const value = parseInt(e.target.value); if (!isNaN(value)) {setCasemakedl(value)} else {setCasemakedl(null);}}} />            
+                                            </td>
+                                            <td className="text-center">
+                                                <input className="input input-bordered text-center w-24" type="text" value={correctiondl ? correctiondl :  0} onChange={(e) => {const value = parseInt(e.target.value); if (!isNaN(value)) {setCorrectiondl(value)} else {setCorrectiondl(null);}}} />            
+                                            </td>
+                                            <td className="text-center">
+                                                <input className="input input-bordered text-center w-24" type="text" value={teachAbsence ? teachAbsence : 0} onChange={(e) => {const value = parseInt(e.target.value); if (!isNaN(value)) {setTeachAbsence(value)} else {setTeachAbsence(null);}}} />            
+                                            </td>
+                                            <td className="text-center">
+                                                <input className="input input-bordered text-center w-24" type="text" value={teachLate ? teachLate : 0} onChange={(e) => {const value = parseInt(e.target.value); if (!isNaN(value)) {setTeachLate(value)} else {setAbsence(null);}}} />            
+                                            </td>
+                                            <td className="text-center">
+                                                <input className="input input-bordered text-center w-24" type="text" value={teachPermit ? teachPermit : 0} onChange={(e) => {const value = parseInt(e.target.value); if (!isNaN(value)) {setTeachPermit(value)} else {setTeachPermit(null);}}} />            
+                                            </td>
+                                      
+                                        </tr>
+                                        
+                                    </tbody>
+                                </table>
+                            </div>
+                            
+                            <button className="btn btn-primary self-end" onClick={()=>{setShowConfirmModalRecord(true)}} >Update Records</button>
+
+                        </div>
                     }
                         </div>
                         </div>
